@@ -1,0 +1,42 @@
+Package: c2z
+Type: Package
+Title: A Reference Manager in R
+Version: 0.1.0
+Date: 2023-03-11
+Authors@R: person("Øystein Olav","Skaar", role=c("aut","cre","cph"),
+    email="oeysan@gmail.com",
+    comment = c(ORCID = "0000-0001-5605-3492"))
+Maintainer: Øystein Olav Skaar <oeysan@gmail.com>
+Description: Cristin to Zotero (c2z) aims at obtaining total dominion 
+    over Cristin (Current Research Information SysTem in Norway) and Zotero. 
+    The package enables manipulating Zotero libraries using R. Import 
+    references from Cristin, regjeringen.no, CRAN, ISBN (Alma, LoC), and DOI 
+    (CrossRef, DataCite) to a Zotero library. Add, edit, copy, or delete 
+    items, including attacments and collections, and export references to 
+    BibLaTeX (and other formats).
+License: MIT + file LICENSE
+URL: https://github.com/oeysan/c2z/,
+    https://oeysan.github.io/c2z/
+BugReports: https://github.com/oeysan/c2z/issues/
+Depends:
+    R (>= 4.1)
+Imports: 
+    dplyr,
+    httr,
+    jsonlite,
+    purrr,
+    rvest,
+    rlang,
+    stats,
+    tibble,
+    tidyr,
+    tidyselect,
+    utils
+Suggests:
+    knitr,
+    readr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+VignetteBuilder: knitr

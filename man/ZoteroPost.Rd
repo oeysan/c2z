@@ -36,6 +36,20 @@ A list with information on the specified Zotero library (e.g., posted collection
 \description{
 Create or update collections and items in a specified library
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Delete everything in a group
+    example <- ZoteroPost(
+      Zotero(user = FALSE, id = "4988497", doi = "10.1126/sciadv.abd1705"),
+      post.collections = FALSE,
+    )
+  }
+}
+}
 \seealso{
 \code{\link[dplyr]{select}}, \code{\link[dplyr]{bind}},
  \code{\link[dplyr]{mutate}}

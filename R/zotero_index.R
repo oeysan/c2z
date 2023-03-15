@@ -2,6 +2,16 @@
 #' @description The function creates a index containing key information about the present Zotero items
 #' @param data Tibble containing Zotero-type metadata (e.g., from Cristin)
 #' @return A tibble
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Access the default group library
+#'     example <- ZoteroLibrary(Zotero(user = FALSE))
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example$items)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}},
 #'  \code{\link[dplyr]{across}}, \code{\link[dplyr]{na_if}},
@@ -15,7 +25,7 @@
 ZoteroIndex <- \(data) {
 
   # Visible bindings
-  creators <- title <- parentItem <- key <- itemType <- name <-
+  creators <- title <- parentItem <- key <- itemType <- name <- index <-
     dateModified <- initials <- creatorType <- first.creator <- NULL
 
   # Function to find and format (last-) name
@@ -137,104 +147,116 @@ ZoteroIndex <- \(data) {
 
   }
 
-  # Add columns to avoid errors
-  index <- AddMissing(data,
-                      c("key",
-                        "itemType",
-                        "parentItem",
-                        "creators",
-                        "note",
-                        "date",
-                        "title"),
-                      na.type = "") |>
-    # Replace empty string with NA
-    dplyr::mutate_if(is.character, list(~na_if(.,""))) |>
-    dplyr::mutate(
-      # Create creators citation with first initial only
-      initials = purrr::pmap_chr(
-        list(creators), ~ CreatorName(.x, 1, TRUE, FALSE)
-      ),
-      first.creator = purrr::pmap_chr(
-        list(creators), ~ CreatorName(.x, 1)
-      ),
-      title = case_when(
-        # Create title from note content
-        itemType == "note" ~ purrr::pmap_chr(list(note), NoteContent),
-        # Else run TitleOrder function
-        TRUE ~ purrr::pmap_chr(list(title), TitleOrder)
-      ),
-      # Extract year (four digits) from date field
-      date = sub('.*?(\\d{4}).*', '\\1', date)
-    ) |>
-    group_by(first.creator) |>
-    mutate(
-      creators = case_when(
-        is.na(first.creator) ~ "N.A.",
-        dplyr::n_distinct(initials) > 1 ~ purrr::pmap_chr(
-          list(creators), ~ EtAl(.x, TRUE, TRUE)
+  # run if not NULL
+  if (!is.null(data)) {
+
+    # Add columns to avoid errors
+    index <- AddMissing(data,
+                        c("key",
+                          "itemType",
+                          "parentItem",
+                          "creators",
+                          "note",
+                          "date",
+                          "title"),
+                        na.type = "") |>
+      # Replace empty string with NA
+      dplyr::mutate_if(is.character, list(~na_if(.,""))) |>
+      dplyr::mutate(
+        # Create creators citation with first initial only
+        initials = purrr::pmap_chr(
+          list(creators), ~ CreatorName(.x, 1, TRUE, FALSE)
         ),
-        TRUE ~ purrr::pmap_chr(list(creators), EtAl)
-      )
-    ) |>
-    # Ungroup fo fix titles
-    ungroup () |>
-    # Order data as title to create correct sequence of publications
-    dplyr::arrange(title) |>
-    # Group by authors and date
-    dplyr::group_by(creators, date) |>
-    dplyr::mutate(
-      # Edit date field
-      date = dplyr::case_when(
-        is.na(date) ~ "n.d.",
-        # Append a,b,c etc. to date for publications by authors with same year
-        dplyr::n() > 1 ~ paste0(date, letters[dplyr::row_number()]),
-        # Do not change date if no duplicates are found
-        TRUE ~ date
-      )
-    ) |>
-    # Ungroup tibble to move on to the extras (i.e., notes, attachments)
-    dplyr::ungroup() |>
-    # Group by parent.item
-    dplyr::group_by(parentItem) |>
-    dplyr::mutate(
-      title = dplyr::case_when(
-        # Append standalone note if note type items has no parent
-        is.na(parentItem) & itemType == "note" ~ sprintf(
-          "%s (Standalone Note)", title
+        first.creator = purrr::pmap_chr(
+          list(creators), ~ CreatorName(.x, 1)
         ),
-        # Else use default title
-        is.na(parentItem) ~ title,
-        # Else set appendix number and type as prefix to items with parents
-        !is.na(parentItem) & dplyr::n() > 1 ~
-          sprintf("Appendix #%s: %s (%s)",
-                  dplyr::row_number(),
-                  title,
-                  itemType),
-        # Else if there are not multiple extras set single appendix as prefix
-        TRUE ~ sprintf("Appendix: %s (%s)", title, itemType)
-      )) |>
-    # Ungroup to add author and date fields to extras
-    dplyr::ungroup() |>
-    dplyr::mutate(
-      creators = dplyr::case_when(
-        # Use authors from parent
-        !is.na(parentItem) ~ creators[match(parentItem, key)],
-        TRUE ~ creators
-      ),
-      date = dplyr::case_when(
-        # Else use date from parent
-        !is.na(parentItem) ~ date[match(parentItem, key)],
-        TRUE ~ date
+        title = case_when(
+          # Create title from note content
+          itemType == "note" ~ purrr::pmap_chr(list(note), NoteContent),
+          # Else run TitleOrder function
+          TRUE ~ purrr::pmap_chr(list(title), TitleOrder)
+        ),
+        # Extract year (four digits) from date field
+        date = sub('.*?(\\d{4}).*', '\\1', date)
+      ) |>
+      group_by(first.creator) |>
+      mutate(
+        creators = case_when(
+          is.na(first.creator) ~ "N.A.",
+          dplyr::n_distinct(initials) > 1 ~ purrr::pmap_chr(
+            list(creators), ~ EtAl(.x, TRUE, TRUE)
+          ),
+          TRUE ~ purrr::pmap_chr(list(creators), EtAl)
+        )
+      ) |>
+      # Ungroup fo fix titles
+      ungroup () |>
+      # Order data as title to create correct sequence of publications
+      dplyr::arrange(title) |>
+      # Group by authors and date
+      dplyr::group_by(creators, date) |>
+      dplyr::mutate(
+        # Edit date field
+        date = dplyr::case_when(
+          is.na(date) ~ "n.d.",
+          # Append a,b,c etc. to date for publications by authors with same year
+          dplyr::n() > 1 ~ paste0(date, letters[dplyr::row_number()]),
+          # Do not change date if no duplicates are found
+          TRUE ~ date
+        )
+      ) |>
+      # Ungroup tibble to move on to the extras (i.e., notes, attachments)
+      dplyr::ungroup() |>
+      # Group by parent.item
+      dplyr::group_by(parentItem) |>
+      dplyr::mutate(
+        title = dplyr::case_when(
+          # Append standalone note if note type items has no parent
+          is.na(parentItem) & itemType == "note" ~ sprintf(
+            "%s (Standalone Note)", title
+          ),
+          # Else use default title
+          is.na(parentItem) ~ title,
+          # Else set appendix number and type as prefix to items with parents
+          !is.na(parentItem) & dplyr::n() > 1 ~
+            sprintf("Appendix #%s: %s (%s)",
+                    dplyr::row_number(),
+                    title,
+                    itemType),
+          # Else if there are not multiple extras set single appendix as prefix
+          TRUE ~ sprintf("Appendix: %s (%s)", title, itemType)
+        )) |>
+      # Ungroup to add author and date fields to extras
+      dplyr::ungroup() |>
+      dplyr::mutate(
+        creators = dplyr::case_when(
+          # Use authors from parent
+          !is.na(parentItem) ~ creators[match(parentItem, key)],
+          TRUE ~ creators
+        ),
+        date = dplyr::case_when(
+          # Else use date from parent
+          !is.na(parentItem) ~ date[match(parentItem, key)],
+          TRUE ~ date
+        )
+      ) |>
+      # Name column add date if date does not exist in creators
+      dplyr::mutate(
+        name = dplyr::case_when(
+          grepl(".*(\\d{4}\\)).*", creators) ~ sprintf(
+            "%s %s", creators, title),
+          TRUE ~ sprintf("%s (%s) %s", creators, date, title)
+        )
+      ) |>
+      # Select columns
+      dplyr::select(key, parentItem, itemType, name, creators, date, title) |>
+      # Sort by name with attachments/notes at bottom of table
+      dplyr::arrange(
+        itemType == "attachment" | itemType == "note"
       )
-    ) |>
-    # Name column
-    dplyr::mutate(name = sprintf("%s (%s) %s", creators, date, title)) |>
-    # Select columns
-    dplyr::select(key, parentItem, itemType, name, creators, date, title) |>
-    # Sort by name with attachments/notes at bottom of table
-    dplyr::arrange(
-      itemType == "attachment" | itemType == "note"
-    )
+
+
+  }
 
   return (index)
 

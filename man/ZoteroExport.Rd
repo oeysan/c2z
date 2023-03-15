@@ -50,6 +50,24 @@ A list with information on the specified Zotero library (e.g., exported items, b
 \description{
 Export Zotero items to a specified format (e.g., BibLaTeX) using a CSL format (e.g., APA7)
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Export 1 items from the default group
+    example <- ZoteroExport(
+      Zotero(user = FALSE,
+             library = TRUE,
+             max.results = 1,
+             item.type = "-attachment || note")
+    )
+    # Display exported
+    cat(example$export)
+  }
+}
+}
 \seealso{
 \code{\link[dplyr]{select}}
  \code{\link[tidyselect]{where}}

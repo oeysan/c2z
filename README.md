@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News">
-<img src="https://img.shields.io/badge/News-2023.03.11 @ 23:36:31-purple.svg" alt="News"/>
+<img src="https://img.shields.io/badge/News-2023.03.15 @ 11:39:48-purple.svg" alt="News"/>
 </a><br/><a href="#" id="cran" 
 title="CRAN Version">
 <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version" />
 </a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version">
-<img src="https://img.shields.io/badge/GitHub-0.1.0-red.svg?style=flat-square" alt="GitHub Version" />
+<img src="https://img.shields.io/badge/GitHub-0.1.1-red.svg?style=flat-square" alt="GitHub Version" />
 </a><br/><a href="inst/extdata/LICENSE.md" id="license" title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License" />
 </a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" 
@@ -180,8 +180,7 @@ example <- Zotero(
   delete.collections = TRUE,
   delete.items = TRUE
 )
-#> Conducting initial query 
-#> Found 0 results 
+#> Found 0 collections 
 #> Creating a new collection named c2z-example 
 #> Adding 1 collection to library using 1 POST request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
@@ -189,7 +188,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success KRD9VJ2W
+#> 1 success 9J6YRHPK
 #> 
 #> $post.summary.collections
 #> 
@@ -197,19 +196,18 @@ example <- Zotero(
 #>         1         0         0 
 #> 
 #> 
-#> Conducting initial query 
-#> Found 0 results 
-#> Collection c2z-example (KRD9VJ2W) contains: 0 subcollections and 0 items 
+#> Found 0 subcollections 
+#> Collection c2z-example (9J6YRHPK) contains: 0 subcollections and 0 items 
 #> Searching 2 items using ISBN 
 #> Adding 2 formated items to Zotero list 
 #> Adding 2 items to library using 1 POST request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:01-----------------
+#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
 #> $post.status.items
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success UQTJKZT4
-#> 2 success K3577XYM
+#> 1 success UFMUWH5B
+#> 2 success XB86PTAZ
 #> 
 #> $post.summary.items
 #> 
@@ -218,7 +216,9 @@ example <- Zotero(
 #> 
 #> 
 #> Exporting 2 items 
-#> Items exported as biblatex 
+#> Found 2 export items 
+#> Found 2 bibliography items 
+#> 2 items exported as biblatex 
 #> Deleting 1 collection using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
 #> Deleting 2 items using 1 DELETE request 

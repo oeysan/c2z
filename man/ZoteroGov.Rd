@@ -20,7 +20,17 @@ A Zotero-type matrix (tibble)
 Query regjeringen by search word and type and fetch metadata
 }
 \details{
-DETAILS
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Search the default entity, Norwegian official reports in regjeringen.no
+    example <- ZoteroGov("2001:4")
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example)$name
+  }
+}
 }
 \seealso{
 \code{\link[httr]{RETRY}}

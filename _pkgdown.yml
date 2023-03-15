@@ -18,7 +18,7 @@ navbar:
     - twitter
     - github
   components:
-    components:
+    components: ~
     todo:
       text: Todo
       href: TODO.html
@@ -26,3 +26,4 @@ navbar:
       icon: fa-twitter
       href: http://twitter.com/motsegn
       aria-label: Twitter
+

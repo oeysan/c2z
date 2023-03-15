@@ -29,6 +29,16 @@
 #' Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Simple `Cristin` search by id with import set as FALSE
+#'     example <- Cristin(id = "840998", zotero.import = FALSE)
+#'     # Use `ZoteroIndex` to print `CristinWrangler`
+#'     ZoteroIndex(CristinWrangler(example$results)$results)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[tidyr]{unnest}}, {\link[tidyr]{nest}}
 #'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{across}},
@@ -599,6 +609,7 @@ CristinWrangler <- \(data,
 
       } # End use.identifiers
 
+
       # Set meta as Cristin if not defined by external data
       if (!is.data.frame(meta)) meta <- GoFish(ZoteroFormat(meta), NULL)
 
@@ -606,12 +617,12 @@ CristinWrangler <- \(data,
       meta$accessDate <-  as.character(Sys.time())
 
       # Remove any missing creators
-      if (any(!is.na(meta$creators[[1]]))) {
+      if (any(!is.na(GoFish(meta$creators[[1]])))) {
       meta$creators[[1]] <-  meta$creators[[1]] |>
         dplyr::filter_all(dplyr::any_vars(!is.na(.)))
       }
       # Sett as NULL if no creators
-      if (is.null(meta$creators[[1]])) meta$creators <- NA
+      if (is.null(GoFish(meta$creators[[1]], NULL))) meta$creators <- NA
 
       # Add or append results
       results <- AddAppend(meta, results)

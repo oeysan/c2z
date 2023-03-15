@@ -13,6 +13,21 @@
 #' @param save.path Location to store data on disk, Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., exported items, bibliography and citations)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Export 1 items from the default group
+#'     example <- ZoteroExport(
+#'       Zotero(user = FALSE,
+#'              library = TRUE,
+#'              max.results = 1,
+#'              item.type = "-attachment || note")
+#'     )
+#'     # Display exported
+#'     cat(example$export)
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}
 #'  \code{\link[tidyselect]{where}}
@@ -30,6 +45,9 @@ ZoteroExport <- \(zotero,
                   save.data = FALSE,
                   save.path = NULL,
                   silent = FALSE) {
+
+  # Visible bindings
+  itemType <- key <- NULL
 
   # Run if items exists and
   if (!is.null(zotero$items)) {
@@ -65,13 +83,12 @@ ZoteroExport <- \(zotero,
     }
 
     # Get keys from items that is not attachments or notes
-    export.keys <- zotero$items$key[
-      !grepl('attachment|note', zotero$items$itemType)
-    ]
+    export.keys <- zotero$items |>
+      dplyr::filter(!grepl("attachment|note", itemType)) |>
+      dplyr::pull(key)
 
     # JUST SOME MORE.....
-    n.exported <- Pluralis(length(export.keys),
-                           "item", "items")
+    n.exported <- Pluralis(length(export.keys), "item", "items")
 
     # Saving data
     zotero$log <- LogCat(paste("Exporting", n.exported),
@@ -87,7 +104,8 @@ ZoteroExport <- \(zotero,
                                                collapse=","),
                              format = format,
                              force = TRUE,
-                             silent = TRUE)
+                             silent = silent,
+                             result.type = "export item")
 
     # Add export data
     zotero$export <- export.data$results
@@ -109,17 +127,23 @@ ZoteroExport <- \(zotero,
                             include = include,
                             style = style,
                             force = TRUE,
-                            silent = TRUE)
+                            silent = FALSE,
+                            result.type = "bibliography item")
 
       zotero$bibliography <- bib.data$bibliography
       zotero$citation <- bib.data$citation
     }
 
-
-    # Saving data
-    zotero$log <- LogCat(paste("Items exported as", format),
-                         silent = silent,
-                         log = zotero$log)
+    # Message log
+    zotero$log <- LogCat(
+      sprintf(
+        "%s exported as %s",
+        Pluralis(nrow(zotero$items), "item", "items"),
+        format
+      ),
+      silent = silent,
+      log = zotero$log
+    )
 
     # Do if save data is TRUE
     if (save.data) {

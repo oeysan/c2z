@@ -25,6 +25,7 @@ ZoteroGet(
   locale = "en-US",
   all.results = TRUE,
   max.results = NULL,
+  result.type = NULL,
   force = FALSE,
   silent = FALSE
 )
@@ -71,6 +72,8 @@ id, API key, collections, and items)}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
 
+\item{result.type}{Pointless linguistics to display result type (default = `result`), Default: NULL}
+
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
@@ -80,6 +83,22 @@ A list with information on the specified Zotero library (e.g., collections and i
 }
 \description{
 Get
+}
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Query default group Zotero libray for 1 item
+    example <- ZoteroGet(
+      Zotero(user = FALSE),
+      max.results = 1
+    )
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example$result)$name
+  }
+}
 }
 \seealso{
 \code{\link[httr]{RETRY}}

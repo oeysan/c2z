@@ -14,6 +14,16 @@
 #'  \code{\link[stats]{setNames}}
 #'  \code{\link[jsonlite]{toJSON, fromJSON}}
 #' @rdname ZoteroIsbn
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Search libraries for ISBN metadata
+#'     example <- ZoteroIsbn("978-1529797138")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'   }
+#' }
 #' @export
 ZoteroIsbn <- \(key, meta = list()) {
 

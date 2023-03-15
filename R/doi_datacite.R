@@ -3,6 +3,18 @@
 #' @param data XML data from DataCite containing metadata
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # `DoiDatacite` is called from `ZoteroDoi` (if item found)
+#'     example <- ZoteroDoi("https://doi.org/10.13140/rg.2.2.31532.74885")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'     # Display catalog
+#'     example$libraryCatalog
+#'   }
+#' }
 #' @rdname DoiDatacite
 #' @export
 DoiDatacite <- \(data, meta) {

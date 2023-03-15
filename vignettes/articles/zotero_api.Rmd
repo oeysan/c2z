@@ -14,7 +14,7 @@ library(c2z)
 ```
 
 Also, please see the [magnificent vignette](articles/c2z_vignette.html) and 
-other [documentation](https://oeysan.github.io/c2z/),
+other [documentation](https://oeysan.github.io/c2z/).
 
 ## Step 1: Locate Zotero settings
 

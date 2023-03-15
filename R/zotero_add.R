@@ -7,6 +7,16 @@
 #' @param isbn Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return Will add data to the Zotero list
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Add items from `ZoteroIsbn` to the default Zotero list
+#'     example <- ZoteroAdd(Zotero(), isbn = "978-1529797138")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example$items)$name
+#'   }
+#' }
 #' @rdname ZoteroAdd
 #' @export
 ZoteroAdd <- \(zotero,

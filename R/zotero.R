@@ -11,9 +11,11 @@
 #' @param create Create missing collections, Default: FALSE
 #' @param limit Number of results per query (max 100), Default: 100
 #' @param start Starting position of query (0 = first result), Default: 0
+#' @param get.items Fetch items along with collections, Default: TRUE
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
+#' @param result.type Pointless linguistics to display result type (default = `result`), Default: NULL
 #' @param add Use `ZoteroAdd` to add items to Zotero list, Default: TRUE
 #' @param all.results Find all results in query, Default: TRUE
 #' @param items Predefined metadata (as tibble), Default: NULL
@@ -39,7 +41,7 @@
 #' @param change.library Stage changing of library (e.g., from a group to a personal library), Default: FALSE
 #' @param copy.user Nre user type (The functions will use `group` as prefix if FALSE), Default: TRUE
 #' @param copy.id New id, Default: NULL
-#' @param copy.api New API key, Default: NULL
+#' @param copy.api New API key. Set API to `NA` if key is not needed, Default: NULL
 #' @param post Use `ZoteroPost` to post collections and/or items, Default: FALSE
 #' @param post.collections Try to copy specified collections, Default: TRUE
 #' @param post.items Try to copy specified items?, Default: TRUE
@@ -53,7 +55,7 @@
 #' @param user User type (The functions will use `group` as prefix if FALSE), Default: TRUE
 #' @param index Create an index of items, Default: FALSE
 #' @param id User or group ID, Default: NULL
-#' @param api API key to connect with the Zotero library. See \href{https://oeysan.github.io/c2z/}{README}, Default: NULL
+#' @param api API key to connect with the Zotero library. Set API to `NA` if key is not needed. See \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API}, Default: NULL
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param base.url Base url of the Zotero API, Default: 'https://api.zotero.org'
 #' @param debug Let you test the Zotero API for errors, Default: FALSE
@@ -63,6 +65,15 @@
 #' @param log A list for storing log elements, Default: list()
 #' @return A list with information on the specified Zotero library (e.g., id, API key, collections, and items)
 #' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Create the default Zotero list
+#'     example <- Zotero()
+#'     # Print the list
+#'     print(example)
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}}
 #' @rdname Zotero
@@ -78,9 +89,11 @@ Zotero <- \(collection.names = NULL,
             create = FALSE,
             limit = 100,
             start = 0,
+            get.items = TRUE,
             item.type = NULL,
             all.results = TRUE,
             max.results = NULL,
+            result.type = NULL,
             add = TRUE,
             items = NULL,
             doi = NULL,
@@ -155,13 +168,13 @@ Zotero <- \(collection.names = NULL,
   }
 
   # Determine whether to use user or group id
-  zotero$user <- user
+  if (is.null(zotero$user)) zotero$user <- user
   if (zotero$user) {
     zotero$id <- if (is.null(id)) Sys.getenv("ZOTERO_USER") else id
     if (is.null(zotero$id)) {
       zotero$log <- LogCat(
         "User id is empty. Have du set Sys.getenv(\"ZOTERO_USER\")?
-      Please specify id",
+        Please specify id",
         fatal = TRUE,
         log = zotero$log
       )
@@ -172,7 +185,7 @@ Zotero <- \(collection.names = NULL,
     if (is.null(zotero$id)) {
       zotero$log <- LogCat(
         "Group id is empty. Have du set  Sys.getenv(\"ZOTERO_GROUP\")?
-      Please specify id",
+        Please specify id",
         fatal = TRUE,
         log = zotero$log
       )
@@ -184,14 +197,18 @@ Zotero <- \(collection.names = NULL,
   zotero$prefix <- paste0(user.type, "/", zotero$id)
 
   # Define API key and check if API is missing or needed
-  zotero$api <- if (is.null(api)) Sys.getenv("ZOTERO_API") else api
-  if (is.null(zotero$api)) {
-    zotero$log <- LogCat(
-      "API is missing. Have du set sys.getenv(\"ZOTERO_API\")?
-    Please specify API or set use.api to FALSE",
-      fatal = TRUE,
-      log = zotero$log
-    )
+  if (all(!is.na(api))) {
+    zotero$api <- if (is.null(api)) Sys.getenv("ZOTERO_API") else api
+    if (is.null(zotero$api)) {
+      zotero$log <- LogCat(
+        "API is missing. Have du set sys.getenv(\"ZOTERO_API\")?
+        Please specify API",
+        fatal = TRUE,
+        log = zotero$log
+      )
+    }
+  } else {
+    zotero$api <- NULL
   }
 
   # Define primary zotero url
@@ -270,9 +287,11 @@ Zotero <- \(collection.names = NULL,
     create,
     limit,
     start,
+    get.items,
     item.type,
     all.results,
     max.results,
+    result.type,
     force,
     silent
   )

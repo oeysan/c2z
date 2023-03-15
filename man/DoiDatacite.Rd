@@ -17,3 +17,18 @@ A Zotero-type matrix (tibble)
 \description{
 Query DataCite by DOI and fetch metadata
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # `DoiDatacite` is called from `ZoteroDoi` (if item found)
+    example <- ZoteroDoi("https://doi.org/10.13140/rg.2.2.31532.74885")
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example)$name
+    # Display catalog
+    example$libraryCatalog
+  }
+}
+}

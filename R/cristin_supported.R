@@ -2,6 +2,14 @@
 #' @description Used to filter Cristin categories that are not supported
 #' @param data Zotero-type matrix, Default: NULL
 #' @return Zotero supported items with unsupported categories as NA
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Supported Cristin items
+#'     print(CristinSupported(), n = 32)
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[tibble]{tibble}}
 #' @rdname CristinSupported

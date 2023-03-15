@@ -2,18 +2,18 @@
 #####################################Import#####################################
 ################################################################################
 
-#' @importFrom dplyr filter mutate na_if case_when arrange group_by n row_number
-#' ungroup select distinct bind_rows slice_head one_of transmute coalesce pull
-#' @importFrom httr add_headers RETRY content http_error GET
-#' @importFrom jsonlite fromJSON
-#' @importFrom jsonlite toJSON
-#' @importFrom purrr pmap pmap_chr map
+#' @importFrom dplyr arrange bind_rows case_when coalesce distinct filter
+#' group_by mutate n na_if one_of pull row_number select slice_head transmute
+#' ungroup
+#' @importFrom httr GET RETRY add_headers content http_error
+#' @importFrom jsonlite fromJSON toJSON
+#' @importFrom purrr map pmap pmap_chr
 #' @importFrom rlang syms
-#' @importFrom rvest html_nodes html_attr html_text read_html html_children
-#' html_name html_attrs
+#' @importFrom rvest html_attr html_attrs html_children html_name html_nodes
+#' html_text read_html
 #' @importFrom stats setNames
-#' @importFrom tibble as_tibble add_column remove_rownames tibble
-#' @importFrom utils flush.console write.csv tail head adist
+#' @importFrom tibble add_column as_tibble remove_rownames tibble
+#' @importFrom utils adist flush.console head tail write.csv
 NULL
 #> NULL
 
@@ -42,6 +42,71 @@ NULL
 ################################################################################
 ###############################Internal Functions###############################
 ################################################################################
+
+#' @title FixCreators
+#' @keywords internal
+#' @noRd
+ErrorCode <- \(code) {
+
+  error.codes <- c(
+    "Invalid type/field (unparseable JSON)" = 400,
+    "The target library is locked" = 409,
+    "Precondition Failed (e.g.,
+    the provided Zotero-Write-Token has already been submitted)" = 412,
+    "Request Entity Too Large" = 413,
+    "Forbidden (check API key)" = 403,
+    "Resource not found (key is probably wrong)" = 404
+  )
+
+  # Define creator type according to match in creator types
+  error.code <- as.character(
+    names(error.codes[error.codes %in% code])
+    )
+  # Set as contributor if not found
+  if (!length(error.code)) error.code <- "Unknown error. Sorry."
+
+  # Clean code
+  error.code <- Trim(gsub("\r?\n|\r", " ", error.code))
+
+  return (error.code)
+
+}
+
+#' @title FixCreators
+#' @keywords internal
+#' @noRd
+FixCreators <- \(data) {
+
+
+  if (!all(is.na(GoFish(data)))) {
+    data <- AddMissing(
+      data, c("firstName", "lastName", "name"), na.type = ""
+    ) |>
+      dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
+      dplyr::mutate(
+        lastName = dplyr::case_when(
+          !is.na(name) ~ NA_character_,
+          TRUE ~ lastName
+        ),
+        firstName = dplyr::case_when(
+          !is.na(name) ~ NA_character_,
+          TRUE ~ firstName
+        ),
+        name = dplyr::case_when(
+          is.na(firstName) & !is.na(lastName) ~ lastName,
+          !is.na(lastName) & is.na(lastName) ~ firstName,
+          is.na(firstName) & is.na(lastName) ~ name,
+          TRUE ~ NA_character_
+        )
+      ) |>
+      dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
+      dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
+
+  }
+
+  return (data)
+
+}
 
 #' @title ZoteroCreator
 #' @keywords internal
@@ -155,6 +220,8 @@ ZoteroFormat <- \(data,
 
   # Visible bindings
   zotero.types <- zotero.types
+  creators <- NULL
+
   multiline.items <- c("tags",
                        "extra",
                        "abstractNote",
@@ -220,11 +287,17 @@ ZoteroFormat <- \(data,
     if (is.data.frame(data)) {
       data <- tibble::as_tibble(data) |>
         # Replace empty string with NA
-        dplyr::mutate_if(is.character, list(~na_if(., "")))
-      # Add prefix if prefix is defined
-      if (!is.null(prefix)) {
-        data <- tibble::add_column(data, prefix = prefix)
-      }
+        dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
+        dplyr::mutate(
+          # Add prefix if defined
+          prefix = GoFish(prefix),
+          # Fix creators
+          creators = GoFish(purrr::map(creators, FixCreators))
+        ) |>
+        # Remove empty columns
+        dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
+        # Remove empty rows
+        dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
       # Else convert to string
     } else {
       data <- ToString(data, "\n")
@@ -627,7 +700,7 @@ SaveData <- \(data,
   if (!is.null(save.path)) {
     # Create folder if it does not exist
     dir.create(file.path(save.path), showWarnings = FALSE)
-    file <- paste0(save.path, "/", file)
+    file <- file.path(save.path, file)
   }
 
   # save as csv

@@ -4,7 +4,16 @@
 #' @param type type of query (e.g., white paper, official norwegian reports), Default: "NOU"
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
-#' @details DETAILS
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Search the default entity, Norwegian official reports in regjeringen.no
+#'     example <- ZoteroGov("2001:4")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}
 #'  \code{\link[rvest]{reexports}}
@@ -47,7 +56,7 @@ ZoteroGov <- \(search, type = "NOU", meta = list()) {
 
     search.id <- gov.search |>
       rvest::html_nodes(".results ul li:first-child .title a") |>
-      html_attr('href') |>
+      rvest::html_attr('href') |>
       basename()
 
     # Run if serach id is defined

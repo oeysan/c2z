@@ -68,6 +68,19 @@ Crossref queries if all other fails. Or, hope the best and place your
 misguided faith in the ability of researchers to correctly register their
 own publications.
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Simple `Cristin` search by id with import set as FALSE
+    example <- Cristin(id = "840998", zotero.import = FALSE)
+    # Use `ZoteroIndex` to print `CristinWrangler`
+    ZoteroIndex(CristinWrangler(example$results)$results)$name
+  }
+}
+}
 \seealso{
 \code{\link[tidyr]{unnest}}, {\link[tidyr]{nest}}
  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{across}},

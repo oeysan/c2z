@@ -45,6 +45,17 @@ A list with information on the specified Zotero library (e.g., copied collection
 \description{
 Replace key identifiers with new ones while keeping existing structure and relationship between collections and items
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Copy collections and items from default Zotero group
+    example <- ZoteroCopy(Zotero(user = FALSE, library = TRUE))
+  }
+}
+}
 \seealso{
 \code{\link[httr]{GET}}
  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{case_when}},

@@ -36,6 +36,21 @@ A list with information on the specified Zotero library (e.g., deleted collectio
 \description{
 Cleaning the Zotero library
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Delete everything in a group
+    example <- ZoteroDelete(
+      Zotero(user = FALSE, id = "4988497"),
+      ragnarok = TRUE,
+      force = TRUE
+    )
+  }
+}
+}
 \seealso{
 \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
 }

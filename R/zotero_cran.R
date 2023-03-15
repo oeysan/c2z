@@ -3,6 +3,16 @@
 #' @param id name of R package
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Search cran for package `bfw`
+#'     example <- ZoteroCran("bfw")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}
 #'  \code{\link[rvest]{reexports}}

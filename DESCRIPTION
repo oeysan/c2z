@@ -1,8 +1,8 @@
 Package: c2z
 Type: Package
 Title: A Reference Manager in R
-Version: 0.1.0
-Date: 2023-03-11
+Version: 0.1.1
+Date: 2023-03-15
 Authors@R: person("Øystein Olav","Skaar", role=c("aut","cre","cph"),
     email="oeysan@gmail.com",
     comment = c(ORCID = "0000-0001-5605-3492"))

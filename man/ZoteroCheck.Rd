@@ -34,10 +34,29 @@ id, API key, collections, and items), Default: NULL}
 \item{log}{A list for storing log elements, Default: list()}
 }
 \value{
-Returns non-duplicated data in as Zotero-type matrix (tibble)
+Returns non-duplicated data in a Zotero-type matrix (tibble)
 }
 \description{
 Remove references that are not modified since last added to Zotero
+}
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Simple `ZoteroCheck`
+    example <- ZoteroCheck(
+      Cristin(id = "840998", zotero.import = FALSE)$result,
+      id = "cristin_result_id",
+      id.type = "Cristin",
+      created = "created",
+      last.modified = "last_modified",
+      zotero = Zotero(user = FALSE),
+      silent = TRUE
+    )
+  }
+}
 }
 \seealso{
 \code{\link[dplyr]{arrange}},

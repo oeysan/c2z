@@ -16,9 +16,11 @@ Zotero(
   create = FALSE,
   limit = 100,
   start = 0,
+  get.items = TRUE,
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
+  result.type = NULL,
   add = TRUE,
   items = NULL,
   doi = NULL,
@@ -88,11 +90,15 @@ Zotero(
 
 \item{start}{Starting position of query (0 = first result), Default: 0}
 
+\item{get.items}{Fetch items along with collections, Default: TRUE}
+
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
 \item{all.results}{Find all results in query, Default: TRUE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
+
+\item{result.type}{Pointless linguistics to display result type (default = `result`), Default: NULL}
 
 \item{add}{Use `ZoteroAdd` to add items to Zotero list, Default: TRUE}
 
@@ -140,7 +146,7 @@ Zotero(
 
 \item{copy.id}{New id, Default: NULL}
 
-\item{copy.api}{New API key, Default: NULL}
+\item{copy.api}{New API key. Set API to `NA` if key is not needed, Default: NULL}
 
 \item{post}{Use `ZoteroPost` to post collections and/or items, Default: FALSE}
 
@@ -168,7 +174,7 @@ Zotero(
 
 \item{id}{User or group ID, Default: NULL}
 
-\item{api}{API key to connect with the Zotero library. See \href{https://oeysan.github.io/c2z/}{README}, Default: NULL}
+\item{api}{API key to connect with the Zotero library. Set API to `NA` if key is not needed. See \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API}, Default: NULL}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
@@ -191,6 +197,16 @@ Wrapper to connect with the Zotero API and the main functions of *c2z*
 }
 \details{
 Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Create the default Zotero list
+    example <- Zotero()
+    # Print the list
+    print(example)
+  }
+}
 }
 \seealso{
 \code{\link[httr]{http_error}}, \code{\link[httr]{GET}}

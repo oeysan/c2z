@@ -9,7 +9,23 @@
 #' id, API key, collections, and items), Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
-#' @return Returns non-duplicated data in as Zotero-type matrix (tibble)
+#' @return Returns non-duplicated data in a Zotero-type matrix (tibble)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Simple `ZoteroCheck`
+#'     example <- ZoteroCheck(
+#'       Cristin(id = "840998", zotero.import = FALSE)$result,
+#'       id = "cristin_result_id",
+#'       id.type = "Cristin",
+#'       created = "created",
+#'       last.modified = "last_modified",
+#'       zotero = Zotero(user = FALSE),
+#'       silent = TRUE
+#'     )
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[dplyr]{arrange}},
 #'  \code{\link[dplyr]{coalesce}},
@@ -53,9 +69,9 @@ ZoteroCheck <- \(data,
     zotero <- Zotero(zotero = zotero,
                      library = TRUE,
                      force = TRUE,
-                     silent = TRUE)
+                     silent = silent)
   } else {
-    zotero <- Zotero(library = TRUE, force = TRUE, silent = TRUE)
+    zotero <- Zotero(library = TRUE, force = TRUE, silent = FALSE)
   }
 
   # Fetch ids from zotero extras
@@ -75,7 +91,8 @@ ZoteroCheck <- \(data,
     # Find duplicate items in zotero library
     zotero.duplicates <- zotero$items |>
       dplyr::filter(zotero.ids %in% data.ids) |>
-      dplyr::arrange(match(ZoteroIDS(id.type, extra), data.ids))
+      dplyr::arrange(match(ZoteroIDS(id.type, extra), data.ids)) |>
+      dplyr::distinct(extra, .keep_all = TRUE)
 
     # Find modified date of items
     data.modified <- dplyr::coalesce(

@@ -163,6 +163,19 @@ A list with (exported) items from Cristin
 Use search parameters for the Cristin API and return the results
  as a tibble. See \code{\link{CristinWrangler}}
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Simple `Cristin` search by id
+    example <- Cristin(id = "840998")
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example$export)$name
+  }
+}
+}
 \seealso{
 \code{\link[httr]{http_error}}, \code{\link[httr]{GET}},
  \code{\link[httr]{RETRY}}

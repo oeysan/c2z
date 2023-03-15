@@ -12,9 +12,11 @@ ZoteroLibrary(
   create = FALSE,
   limit = 100,
   start = 0,
+  get.items = TRUE,
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
+  result.type = NULL,
   force = FALSE,
   silent = FALSE
 )
@@ -35,11 +37,15 @@ id, API key, collections, and items)}
 
 \item{start}{Starting position of query (0 = first result), Default: 0}
 
+\item{get.items}{Fetch items along with collections, Default: TRUE}
+
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
 \item{all.results}{Find all results in query, Default: TRUE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
+
+\item{result.type}{Pointless linguistics to display result type (default = `result`), Default: NULL}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
@@ -50,6 +56,19 @@ A list with information on the specified Zotero library (e.g., collections and i
 }
 \description{
 The function uses information stored in the `zotero` list to access specified collections and items in the Zotero library
+}
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Access the default group library
+    example <- ZoteroLibrary(Zotero(user = FALSE))
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example$items)$name
+  }
+}
 }
 \seealso{
 \code{\link[jsonlite]{toJSON, fromJSON}}

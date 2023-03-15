@@ -58,6 +58,16 @@
 #' @param polite Please store you email in `.Renviron` to query Crossref, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A list with (exported) items from Cristin
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Simple `Cristin` search by id
+#'     example <- Cristin(id = "840998")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example$export)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}},
 #'  \code{\link[httr]{RETRY}}
@@ -178,11 +188,6 @@ Cristin <- function (id  = NULL,
   # Remove empty elements from query
   query.list <- (query.list[lengths(query.list) != 0])
 
-  # initial query
-  log <-  LogCat("Conducting initial query",
-                 silent = silent,
-                 log = log)
-
   # API query
   if (is.null(custom.url)) {
     data <- httr::RETRY("GET", base.url, query = query.list, quiet = TRUE)
@@ -195,6 +200,12 @@ Cristin <- function (id  = NULL,
     total.results <- 1
   } else if (data$status_code == "200") {
     total.results <- max(0,as.numeric(data$headers[["x-total-count"]]))
+  } else if (data$status_code != 200) {
+    log <-  LogCat(
+      ErrorCode(data$status_code),
+      silent = silent,
+      log = log
+    )
   }
 
   # Log number of results

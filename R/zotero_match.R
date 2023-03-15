@@ -12,6 +12,21 @@
 #' @param polite Will use an email stored in `.Renviron`, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble) if match is found otherwise NULL
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Conduct an autosearch in CrossRef using title, authors and date
+#'     example <- ZoteroMatch(
+#'       title = "Nonreplicable publications are cited more than replicable ones",
+#'       authors = "Serra-Garcia & Gneezy",
+#'       date = "2021",
+#'       autosearch = TRUE
+#'     )
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{reexports}},
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{coalesce}},
@@ -37,6 +52,11 @@ ZoteroMatch <- \(title,
 
   # Visual bindings
   result <- NULL
+
+  # Set cross.ref.search to TRUE if all matching data is missing
+  if (is.null(haystack) & is.null(cristin.data) & is.null(external.data)) {
+    crossref.search <- TRUE
+  }
 
   # Function to create search parameters
   SearchParameters <- \(title, authors, date) {

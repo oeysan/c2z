@@ -8,12 +8,24 @@
 #' @param create Create missing collections, Default: FALSE
 #' @param limit Number of results per query (max 100), Default: 100
 #' @param start Starting position of query (0 = first result), Default: 0
+#' @param get.items Fetch items along with collections, Default: TRUE
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
+#' @param result.type Pointless linguistics to display result type (default = `result`), Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., collections and items)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Access the default group library
+#'     example <- ZoteroLibrary(Zotero(user = FALSE))
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example$items)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[jsonlite]{toJSON, fromJSON}}
 #'  \code{\link[dplyr]{distinct}}, \code{\link[dplyr]{arrange}}
@@ -27,114 +39,128 @@ ZoteroLibrary <- \(zotero,
                    create = FALSE,
                    limit = 100,
                    start = 0,
+                   get.items = TRUE,
                    item.type = NULL,
                    all.results = TRUE,
                    max.results = NULL,
+                   result.type = NULL,
                    force = FALSE,
                    silent = FALSE) {
 
   # Visible bindings
-  path <- key <- itemType <- NULL
+  path <- key <- itemType <- meta <- item <- NULL
 
   # Run if collection.key is specified
   if (!is.null(zotero$collection.key)) {
 
     # Query all collections in Zotero library
-    zotero <- ZoteroGet(zotero, silent = silent)
+    if (is.null(result.type)) {
+      result.collection <- "subcollection"
+    } else {
+      result.collection <- result.type
+    }
+    zotero <- ZoteroGet(zotero,
+                        silent = silent,
+                        result.type = result.collection)
 
     # Convert json data to data list
-    meta <- jsonlite::fromJSON(
-      ParseUrl(zotero$data.cache, "text")
-    )
+    if (zotero$data.cache$status_code == 200) {
+      meta <- jsonlite::fromJSON(
+        ParseUrl(zotero$data.cache, "text")
+      )
 
-    # Find number of subcollections and items
-    n.collections <- max(0,meta$meta$numCollections)
-    n.items <- max(0,meta$meta$numItems)
+      # Find number of subcollections and items
+      n.collections <- max(0,meta$meta$numCollections)
+      n.items <- max(0,meta$meta$numItems)
 
-    # Add or append collections to zotero list
-    zotero$collections <- AddAppend(zotero$results, zotero$collections) |>
-      dplyr::distinct()
+      # Add or append collections to zotero list
+      zotero$collections <- AddAppend(zotero$results, zotero$collections)
 
-    # Find items if n.items > 0
-    if (n.items > 0) {
+      # Find items if n.items > 0 and get.items = TRUE
+      if (n.items > 0 & get.items) {
 
-      # Query items in collection
-      zotero <- ZoteroGet(zotero,
-                          append.items = TRUE,
-                          item.type = item.type,
-                          limit = limit,
-                          start = start,
-                          all.results = all.results,
-                          max.results = max.results,
-                          force = force,
-                          silent = silent)
+        # Query items in collection
+        zotero <- ZoteroGet(zotero,
+                            append.items = TRUE,
+                            item.type = item.type,
+                            limit = limit,
+                            start = start,
+                            all.results = all.results,
+                            max.results = max.results,
+                            force = force,
+                            silent = silent,
+                            result.type = "item")
 
-      # Add or append items to zotero list
-      zotero$items <- AddAppend(zotero$results, zotero$items) |>
-        dplyr::distinct()
+        # Add or append items to zotero list
+        zotero$items <- AddAppend(zotero$results, zotero$items) |>
+          dplyr::distinct()
 
-    }
-
-    # Just some pointless linguistics
-    collections <- Pluralis(n.collections, "subcollection", "subcollections")
-
-    # More pointless linguistics
-    items <- Pluralis(n.items, "item", "items")
-
-    # Show number of subcollections and item
-    zotero$log <- LogCat(
-      sprintf("Collection %s (%s) contains: %s and %s",
-              meta$data$name,
-              meta$key,
-              collections,
-              items),
-      silent = silent,
-      log = zotero$log
-    )
-
-    # Run if more than zero subcollections and recursive is set to TRUE
-    if (n.collections > 0 & recursive) {
-
-      # Query all collections in Zotero library
-      zotero <- ZoteroGet(zotero,
-                          append.collections = TRUE,
-                          all.results = TRUE,
-                          force = force,
-                          silent = silent)
-
-      # Find keys
-      keys <- zotero$results$key
-
-      # Check if keys are in the collection path
-      if (!is.null(zotero$collection.path)) {
-        keys <- keys[keys %in% zotero$collection.path]
       }
 
-      # Run if keys have length
-      if (length(keys)) {
+      # Just some pointless linguistics
+      collections <- Pluralis(n.collections, "subcollection", "subcollections")
 
-        # Loop through keys extracting data
-        for (i in 1:length(keys)) {
+      # More pointless linguistics
+      items <- Pluralis(n.items, "item", "items")
 
-          zotero$collection.key <- keys[i]
-          zotero <- ZoteroLibrary(zotero, case.insensitive, ancestor, recursive,
-                                  create, limit, start, item.type,
-                                  all.results, max.results, force, silent)
+      # Show number of subcollections and item
+      zotero$log <- LogCat(
+        sprintf("Collection %s (%s) contains: %s and %s",
+                meta$data$name,
+                meta$key,
+                collections,
+                items),
+        silent = silent,
+        log = zotero$log
+      )
+
+      # Run if more than zero subcollections and recursive is set to TRUE
+      if (n.collections > 0 & recursive) {
+
+        # Query all collections in Zotero library
+        zotero <- ZoteroGet(zotero,
+                            append.collections = TRUE,
+                            all.results = TRUE,
+                            force = force,
+                            silent = silent,
+                            result.type = "subcollection")
+
+        # Find keys
+        keys <- zotero$results$key
+
+        # Check if keys are in the collection path
+        if (!is.null(zotero$collection.path)) {
+          keys <- keys[keys %in% zotero$collection.path]
+        }
+
+        # Run if keys have length
+        if (length(keys)) {
+
+          # Loop through keys extracting data
+          for (i in 1:length(keys)) {
+
+            zotero$collection.key <- keys[i]
+            zotero <- ZoteroLibrary(zotero, case.insensitive, ancestor,
+                                    recursive, create, limit, start, get.items,
+                                    item.type, all.results, max.results,
+                                    "nested subcollection", force, silent)
+
+          }
+
+          # Restore initial collection key
+          zotero$collection.key <- zotero$collections$key[1]
 
         }
 
-        # Restore initial collection key
-        zotero$collection.key <- zotero$collections$key[1]
-
       }
 
-    }
+      # Set collection names
+      zotero$collection.names <- zotero$collections$name[1]
+      # Set number of collections and items
+      zotero$n.collections <- max(0,nrow(zotero$collections))
+      zotero$n.items <- max(0,nrow(zotero$items))
 
-    # Set collection names
-    zotero$collection.names <- zotero$collections$name[1]
-    # Set number of collections and items
-    zotero$n.collections <- max(0,nrow(zotero$collections))
-    zotero$n.items <- max(0,nrow(zotero$items))
+    }
 
   } else {
 
@@ -143,7 +169,8 @@ ZoteroLibrary <- \(zotero,
                         append.collections = TRUE,
                         all.results = TRUE,
                         force = force,
-                        silent = silent)
+                        silent = silent,
+                        result.type = "collection")
 
     # If searching for a specific collection name
     if (!is.null(zotero$collection.names)) {
@@ -256,8 +283,9 @@ ZoteroLibrary <- \(zotero,
 
       # Fetch specified data
       zotero <- ZoteroLibrary(zotero, case.insensitive, ancestor, recursive,
-                              create, limit, start, item.type,
-                              all.results, max.results, force, silent)
+                              create, limit, start, get.items, item.type,
+                              all.results, max.results, result.type,
+                              force, silent)
 
       # Else find all collections and items
     } else {
@@ -270,31 +298,51 @@ ZoteroLibrary <- \(zotero,
       # Add collections to zotero list
       zotero$collections <- zotero$results
 
-      # Query all items in Zotero library
-      zotero <- ZoteroGet(zotero,
-                          append.items = TRUE,
-                          item.type = item.type,
-                          limit = limit,
-                          start = start,
-                          all.results = all.results,
-                          max.results = max.results,
-                          force = force,
-                          silent = silent)
+      # Only get items if get.items = TRUE
+      if (get.items) {
+
+        # Query all items in Zotero library
+        zotero <- ZoteroGet(zotero,
+                            append.items = TRUE,
+                            item.type = item.type,
+                            limit = limit,
+                            start = start,
+                            all.results = all.results,
+                            max.results = max.results,
+                            force = force,
+                            silent = silent,
+                            result.type = "item")
+
+        # Add item data to zotero list
+        zotero$items <- zotero$results
+
+      } else {
+
+        # Query all items in Zotero library
+        zotero <- ZoteroGet(zotero,
+                            append.items = TRUE,
+                            item.type = item.type,
+                            limit = 1,
+                            start = start,
+                            all.results = FALSE,
+                            max.results = max.results,
+                            force = force,
+                            silent = TRUE,
+                            result.type = "item")
+
+      }
 
       # Fetch total number of items in Zotero library
       zotero$n.items <- max(0, as.numeric(
         zotero$data.cache$headers$`total-results`)
       )
 
-      # Add item data to zotero list
-      zotero$items <- zotero$results
-
       # Just some pointless linguistics
       collections <- Pluralis(zotero$n.collections,
                               "collection", "collections")
 
       # More pointless linguistics
-      items <- Pluralis(zotero$n.items, "item", "items")
+      items <- Pluralis(max(0, zotero$n.items), "item", "items")
 
       # Print number of collections and items in library
       zotero$log <- LogCat(
@@ -319,7 +367,8 @@ ZoteroLibrary <- \(zotero,
   # Order collections by when they were created
   if (!is.null(zotero$collections)) {
     zotero$collections <- zotero$collections |>
-      dplyr::arrange(version)
+      dplyr::arrange(version) |>
+      dplyr::distinct()
   }
 
   return (zotero)

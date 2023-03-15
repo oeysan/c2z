@@ -9,6 +9,18 @@
 #' @param ragnarok Delete EVERYTHING in the specified library, Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., deleted collections and items)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Delete everything in a group
+#'     example <- ZoteroDelete(
+#'       Zotero(user = FALSE, id = "4988497"),
+#'       ragnarok = TRUE,
+#'       force = TRUE
+#'     )
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
 #' @rdname ZoteroDelete

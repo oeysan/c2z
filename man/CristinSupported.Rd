@@ -15,6 +15,17 @@ Zotero supported items with unsupported categories as NA
 \description{
 Used to filter Cristin categories that are not supported
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Supported Cristin items
+    print(CristinSupported(), n = 32)
+  }
+}
+}
 \seealso{
 \code{\link[tibble]{tibble}}
 }

@@ -15,6 +15,19 @@ A tibble
 \description{
 The function creates a index containing key information about the present Zotero items
 }
+\details{
+Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+}
+\examples{
+\dontrun{
+  if(interactive()){
+    # Access the default group library
+    example <- ZoteroLibrary(Zotero(user = FALSE))
+    # Use `ZoteroIndex` to print
+    ZoteroIndex(example$items)$name
+  }
+}
+}
 \seealso{
 \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}},
  \code{\link[dplyr]{across}}, \code{\link[dplyr]{na_if}},

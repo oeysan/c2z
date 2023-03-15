@@ -3,6 +3,16 @@
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Simple use of `ZoteroDoi`
+#'     example <- ZoteroDoi("10.1126/sciadv.abd1705")
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}},
 #'  \code{\link[httr]{RETRY}}

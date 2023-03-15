@@ -1,7 +1,8 @@
 ---
 title: "Behold c2z!"
-bibliography: references.bib
-csl: style.csl
+bibliography: '`r gsub("\\\\", "/", file.path(tempdir(), file.path("c2z_temp", "references.bib")))`'
+csl: '`r gsub("\\\\", "/", file.path(tempdir(), file.path("c2z_temp", "style.csl")))`'
+lang: "en-US"
 ---
 
 ```{r, include = FALSE}
@@ -149,7 +150,7 @@ library using `Zotero`, where items are uploaded using the `items` argument.
 The `index = TRUE`, creating an index of the items.
 
 Please note that `crossref.search` should normally not be used (see the 
-[README](https://oeysan.github.io/c2z/).
+[README](https://oeysan.github.io/c2z/)). 
 
 Rather than finicking over h-indexes and impact factors, Norwegians have a 
 weird obsession with NVI (Norwegian Science Index), which is a two-level
@@ -161,7 +162,9 @@ The specified `filter` arguments try to filter out categories that usually
 contain publications that are worthy of the NVI (see all the Cristin 
 [categories](https://api.cristin.no/v2/results/categories?lang=en)).
 
-Let's post the results to the collection "fox".
+Let's post the results to the collection "fox", while using the argument 
+`get.items = FALSE` as not to add any items in the collection to the Zotero 
+list. 
 
 ```{r cristin, eval = TRUE}
 # Filter items
@@ -186,7 +189,7 @@ cristin <- Cristin(
   use.identifiers = TRUE,
   crossref.search = TRUE,
   autosearch = TRUE,
-  silent = TRUE
+  silent = FALSE
 )
 
 # Get the fox key
@@ -203,7 +206,8 @@ post.cristin <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = TRUE
+  silent = FALSE,
+  get.items = FALSE
 )
 
 # What do we got?
@@ -211,7 +215,7 @@ print(post.cristin$index$name)
 ```
 
 In this second example we have decided that 2019 was an even better year for 
-cheese and change the `published_since` argument to 2019. The reason why we're 
+cheese and change the `published_since` argument to 2019. The reason why we
 are doing this is to demonstrate the duplicate function in `CristinWrangler`, 
 which will identify any Cristin references imported into Zotero if 
 `zotero.check = TRUE`. 
@@ -266,7 +270,8 @@ identifiers <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = TRUE
+  silent = TRUE,
+  get.items = FALSE
 )
 
 # What do we got?
@@ -298,7 +303,8 @@ the.man <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = TRUE
+  silent = TRUE,
+  get.items = FALSE
 )
 
 # What do we got?
@@ -353,7 +359,8 @@ cran <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = TRUE
+  silent = TRUE,
+  get.items = FALSE
 )
 
 # What do we got?
@@ -369,7 +376,7 @@ library to your own or share your collections with a research group.
 The `Zotero` function contains a (somewhat convoluted) method of copying 
 collections and items from a group library to a user library (and vice versa).
 However, in this example we're appending the group collections to our long line
-of nested collections, making the process somewhat messy Therefore, we split
+of nested collections, making the process somewhat messy. Therefore, we split
 up the process using the `ZoteroCopy` and `ZoteroPost` functions. The 
 `change.library` argument will query `Zotero` and alter the location according
 to specified coordinates (the default location is the user library as defined in 
@@ -383,14 +390,14 @@ id and API keys.
 group.library <- Zotero(
   user = FALSE,
   library = TRUE,
-  silent = TRUE
+  silent = FALSE
 )
 
 # Copy the library creating new keys 
 copy.library <- ZoteroCopy(
   zotero = group.library,
   change.library = TRUE,
-  silent = TRUE
+  silent = FALSE
 )
 
 # Find key for dog
@@ -433,7 +440,7 @@ also `csl.type` to access a
 to create a Citation Style Language (CSL) file according to 
 [APA7](https://apastyle.apa.org/).
 
-```{r bibliography, eval = TRUE}
+```{r bibliography, eval = TRUE, cache = FALSE}
 # Create references.bib in biblatex format with style.csl according to APA7
 bibliography <- Zotero(
   collection.names = "The",
@@ -442,8 +449,9 @@ bibliography <- Zotero(
   export = TRUE,
   format = "biblatex",
   save.data = TRUE,
+  save.path = file.path(tempdir(), "c2z_temp"),
   bib.name = "references",
-  csl.type = "apa",
+  csl.type = "apa-single-spaced",
   csl.name = "style",
   silent = TRUE
 )

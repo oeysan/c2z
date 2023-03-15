@@ -12,6 +12,14 @@
 #' @param copy.api New API key, Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., copied collections and items)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Copy collections and items from default Zotero group
+#'     example <- ZoteroCopy(Zotero(user = FALSE, library = TRUE))
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{GET}}
 #'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{case_when}},
@@ -214,6 +222,8 @@ ZoteroCopy <- \(zotero,
 
     # Create a copy destination if change.library is set to TRUE
     if (change.library) {
+      # Remove user
+      zotero$user <- NULL
       zotero <- Zotero(user = copy.user,
                        id = copy.id,
                        api = copy.api,

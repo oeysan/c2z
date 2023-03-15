@@ -21,9 +21,23 @@
 #' @param locale Desired language format of bibliography, Default: 'en-US'
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
+#' @param result.type Pointless linguistics to display result type (default = `result`), Default: NULL
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., collections and items)
+#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @examples
+#' \dontrun{
+#'   if(interactive()){
+#'     # Query default group Zotero libray for 1 item
+#'     example <- ZoteroGet(
+#'       Zotero(user = FALSE),
+#'       max.results = 1
+#'     )
+#'     # Use `ZoteroIndex` to print
+#'     ZoteroIndex(example$result)$name
+#'   }
+#' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}
 #' @rdname ZoteroGet
@@ -48,11 +62,12 @@ ZoteroGet <- \(zotero,
                locale = "en-US",
                all.results = TRUE,
                max.results = NULL,
+               result.type = NULL,
                force = FALSE,
                silent = FALSE) {
 
   # Visible bindings
-  citation <- bibliography <- meta <- NULL
+  citation <- bibliography <- meta <- json.data <- NULL
 
   # Set definitions if include is defined
   if (!is.null(include)) {
@@ -105,13 +120,9 @@ ZoteroGet <- \(zotero,
     )
   }
 
+
   # Remove empty elements from query
   query.list <- (query.list[lengths(query.list) != 0])
-
-  # initial query
-  zotero$log <-  LogCat("Conducting initial query",
-                 silent = silent,
-                 log = zotero$log)
 
   # API query
   if (is.null(custom.url)) {
@@ -123,9 +134,13 @@ ZoteroGet <- \(zotero,
   # Number of results
   total.results <- max(0,as.numeric(json.get$headers[["total-results"]]))
 
+  # Pointless linguistics
+  if (is.null(result.type)) result.type <- "result"
+  result.types <- paste0(result.type,"s")
+
   # Log number of results
   zotero$log <-  LogCat(sprintf("Found %s" ,
-                         Pluralis(total.results, "result", "results")),
+                         Pluralis(total.results, result.type, result.types)),
                  silent = silent,
                  log = zotero$log)
 
@@ -143,20 +158,31 @@ ZoteroGet <- \(zotero,
 
   # Log number of remaining results if max.results < total.results
   if (max.results < total.results | total.results > limit & !all.results) {
-    zotero$log <-  LogCat(sprintf("The provided query is limited to %s" ,
-                           Pluralis(max.results,
-                                    "result", "results")),
-                   silent = silent,
-                   log = zotero$log)
+    zotero$log <-  LogCat(
+      sprintf(
+        "The provided query is limited to %s",
+        Pluralis(max.results,
+                 "result",
+                 "results")
+      ),
+      silent = silent,
+      log = zotero$log
+    )
   }
 
   # Parse data if defined
-  if (!is.null(format)) {
+  if (!is.null(format) & json.get$status_code == 200) {
     json.data <- ParseUrl(json.get, format)
     # Convert to zotero friendly tibble if JSON data
     if (format == "json" & !is.null(json.data)) {
       json.data <- jsonlite::fromJSON(json.data)$data
     }
+  } else if (json.get$status_code != 200) {
+    zotero$log <-  LogCat(
+      ErrorCode(json.get$status_code),
+      silent = silent,
+      log = zotero$log
+    )
   }
   # Format
   results <- ZoteroFormat(json.data, format, zotero$prefix)
@@ -221,7 +247,8 @@ ZoteroGet <- \(zotero,
 
       # Append data to list
       results <- AddAppend(
-        ZoteroFormat(json.data, format, zotero$prefix), results
+        ZoteroFormat(json.data, format, zotero$prefix), results,
+        sep = "\n"
       )
 
       # Set bibliography if include is defined

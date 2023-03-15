@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="../articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="../articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -61,6 +62,23 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="c2z-011">c2z 0.1.1<a class="anchor" aria-label="anchor" href="#c2z-011"></a></h2>
+<div class="section level5">
+<h5 id="critical-0-1-1">Critical<a class="anchor" aria-label="anchor" href="#critical-0-1-1"></a></h5>
+<ul><li><p>Added an internal function <code>FixCreators</code> to correct Zotero items where the creators is list by lastName but with an empty firstName rather than using name only. The error caused an crash in <code>ZoteroIndex</code>.</p></li>
+<li><p>Fixed <code>Zotero</code>not being able to use an empty API key to access public libraries</p></li>
+</ul></div>
+<div class="section level5">
+<h5 id="minor-0-1-1">Minor<a class="anchor" aria-label="anchor" href="#minor-0-1-1"></a></h5>
+<ul><li><p>Added examples and a vignette prior to CRAN submission.</p></li>
+<li><p>Made it optional to include items from <code>ZoteroLibrary</code>.</p></li>
+<li><p>Added an internal function <code>ErrorCode</code> to provide information on JSON response codes.</p></li>
+<li><p>Made some adjustments to <code>ZoteroGet</code> with an option to define results name (e.g., as collections or items).</p></li>
+<li><p>Made some adjustments to the noise levels of the <code>silent</code> argument, being somewhat inconsistent between the different functions. Still not happy with the amount of feedback for recursive operations.</p></li>
+<li><p>Fixed about a million typos.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="c2z-010">c2z 0.1.0<a class="anchor" aria-label="anchor" href="#c2z-010"></a></h2>
 <ul><li>Initial launch with the following features:
 <ul><li>Add, edit, copy, and delete (nested) Zotero collections.</li>
@@ -84,7 +102,8 @@
 <li>Added a <code>CONDUCT.md</code> because people should be nice.</li>
 <li>Added a <code>badge.webp</code> just because</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

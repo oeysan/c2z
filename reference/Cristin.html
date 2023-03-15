@@ -12,7 +12,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="../articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="../articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="nav-item">
@@ -323,6 +324,10 @@ false, Default: 'book'</p></dd>
 <p>A list with (exported) items from Cristin</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Please see <a href="https://oeysan.github.io/c2z/">https://oeysan.github.io/c2z/</a></p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://httr.r-lib.org/reference/http_error.html" class="external-link">http_error</a></code>, <code><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></code>,
  <code><a href="https://httr.r-lib.org/reference/RETRY.html" class="external-link">RETRY</a></code>
@@ -330,6 +335,18 @@ false, Default: 'book'</p></dd>
  <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="co"># Simple `Cristin` search by id</span></span></span>
+<span class="r-in"><span>    <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">Cristin</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"840998"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># Use `ZoteroIndex` to print</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">export</span><span class="op">)</span><span class="op">$</span><span class="va">name</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

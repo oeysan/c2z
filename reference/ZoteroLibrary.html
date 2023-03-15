@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="../articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="../articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="nav-item">
@@ -75,9 +76,11 @@
 <span>  create <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  get.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  item.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  all.results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max.results <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  result.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -114,6 +117,10 @@ id, API key, collections, and items)</p></dd>
 <dd><p>Starting position of query (0 = first result), Default: 0</p></dd>
 
 
+<dt>get.items</dt>
+<dd><p>Fetch items along with collections, Default: TRUE</p></dd>
+
+
 <dt>item.type</dt>
 <dd><p>Items to search for (NULL = everything), Default: NULL</p></dd>
 
@@ -124,6 +131,10 @@ id, API key, collections, and items)</p></dd>
 
 <dt>max.results</dt>
 <dd><p>Do you need a limit?, Default: NULL</p></dd>
+
+
+<dt>result.type</dt>
+<dd><p>Pointless linguistics to display result type (default = `result`), Default: NULL</p></dd>
 
 
 <dt>force</dt>
@@ -141,12 +152,28 @@ id, API key, collections, and items)</p></dd>
 <p>A list with information on the specified Zotero library (e.g., collections and items)</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Please see <a href="https://oeysan.github.io/c2z/">https://oeysan.github.io/c2z/</a></p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON, fromJSON</a></code>
  <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></code>
  <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="co"># Access the default group library</span></span></span>
+<span class="r-in"><span>    <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroLibrary</span><span class="op">(</span><span class="fu"><a href="Zotero.html">Zotero</a></span><span class="op">(</span>user <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># Use `ZoteroIndex` to print</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span><span class="op">$</span><span class="va">name</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -38,7 +38,7 @@
     
     <a class="navbar-brand me-2" href="index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="nav-item">
@@ -97,7 +98,7 @@
 <a href="https://oeysan.github.io/c2z/reference/figures/badge.webp" id="logo" title="Logo"> <img src="reference/figures/badge.webp" width="250px" alt="Logo"></a>
 </p>
 <p align="center">
-<a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News"> <img src="https://img.shields.io/badge/News-2023.03.11%20@%2023:36:31-purple.svg" alt="News"></a><br><a href="#" id="cran" title="CRAN Version"> <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version"></a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version" class="external-link"> <img src="https://img.shields.io/badge/GitHub-0.1.0-red.svg?style=flat-square" alt="GitHub Version"></a><br><a href="inst/extdata/LICENSE.html" id="license" title="License"> <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License"></a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" title="Build Status" class="external-link"> <img src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" alt="Build Status"></a>
+<a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News"> <img src="https://img.shields.io/badge/News-2023.03.15%20@%2011:39:48-purple.svg" alt="News"></a><br><a href="#" id="cran" title="CRAN Version"> <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version"></a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version" class="external-link"> <img src="https://img.shields.io/badge/GitHub-0.1.1-red.svg?style=flat-square" alt="GitHub Version"></a><br><a href="inst/extdata/LICENSE.html" id="license" title="License"> <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License"></a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" title="Build Status" class="external-link"> <img src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" alt="Build Status"></a>
 </p>
 </div>
 <div class="section level1">
@@ -185,8 +186,7 @@
 <span>  delete.collections <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  delete.items <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 0 results </span></span>
+<span><span class="co">#&gt; Found 0 collections </span></span>
 <span><span class="co">#&gt; Creating a new collection named c2z-example </span></span>
 <span><span class="co">#&gt; Adding 1 collection to library using 1 POST request </span></span>
 <span><span class="co">#&gt; -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------</span></span>
@@ -194,7 +194,7 @@
 <span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   &lt;fct&gt;   &lt;chr&gt;   </span></span>
-<span><span class="co">#&gt; 1 success KRD9VJ2W</span></span>
+<span><span class="co">#&gt; 1 success 9J6YRHPK</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.collections</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -202,19 +202,18 @@
 <span><span class="co">#&gt;         1         0         0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 0 results </span></span>
-<span><span class="co">#&gt; Collection c2z-example (KRD9VJ2W) contains: 0 subcollections and 0 items </span></span>
+<span><span class="co">#&gt; Found 0 subcollections </span></span>
+<span><span class="co">#&gt; Collection c2z-example (9J6YRHPK) contains: 0 subcollections and 0 items </span></span>
 <span><span class="co">#&gt; Searching 2 items using ISBN </span></span>
 <span><span class="co">#&gt; Adding 2 formated items to Zotero list </span></span>
 <span><span class="co">#&gt; Adding 2 items to library using 1 POST request </span></span>
-<span><span class="co">#&gt; -----------------Process: 100.00% (1/1). Elapsed time: 00:00:01-----------------</span></span>
+<span><span class="co">#&gt; -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------</span></span>
 <span><span class="co">#&gt; $post.status.items</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   &lt;fct&gt;   &lt;chr&gt;   </span></span>
-<span><span class="co">#&gt; 1 success UQTJKZT4</span></span>
-<span><span class="co">#&gt; 2 success K3577XYM</span></span>
+<span><span class="co">#&gt; 1 success UFMUWH5B</span></span>
+<span><span class="co">#&gt; 2 success XB86PTAZ</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.items</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -223,7 +222,9 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Exporting 2 items </span></span>
-<span><span class="co">#&gt; Items exported as biblatex </span></span>
+<span><span class="co">#&gt; Found 2 export items </span></span>
+<span><span class="co">#&gt; Found 2 bibliography items </span></span>
+<span><span class="co">#&gt; 2 items exported as biblatex </span></span>
 <span><span class="co">#&gt; Deleting 1 collection using 1 DELETE request </span></span>
 <span><span class="co">#&gt; -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------</span></span>
 <span><span class="co">#&gt; Deleting 2 items using 1 DELETE request </span></span>

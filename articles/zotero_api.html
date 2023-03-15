@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="../articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="../articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="nav-item">
@@ -93,7 +94,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/oeysan/c2z/" class="external-link">c2z</a></span><span class="op">)</span></span></code></pre></div>
 <p>Also, please see the <a href="articles/c2z_vignette.html">magnificent
-vignette</a> and other <a href="https://oeysan.github.io/c2z/">documentation</a>,</p>
+vignette</a> and other <a href="https://oeysan.github.io/c2z/">documentation</a>.</p>
 <div class="section level2">
 <h2 id="step-1-locate-zotero-settings">Step 1: Locate Zotero settings<a class="anchor" aria-label="anchor" href="#step-1-locate-zotero-settings"></a>
 </h2>
@@ -140,10 +141,8 @@ content.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Access default zotero library</span></span>
 <span><span class="va">user.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 0 results </span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 0 results </span></span>
+<span><span class="co">#&gt; Found 0 collections </span></span>
+<span><span class="co">#&gt; Found 0 items </span></span>
 <span><span class="co">#&gt; The zotero library contains: 0 collections and 0 items</span></span>
 <span><span class="co"># Print type of library and id</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">user.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>
@@ -151,10 +150,8 @@ content.</p>
 <span></span>
 <span><span class="co"># Access the group zotero library</span></span>
 <span><span class="va">group.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>user <span class="op">=</span> <span class="cn">FALSE</span>, library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 2 results </span></span>
-<span><span class="co">#&gt; Conducting initial query </span></span>
-<span><span class="co">#&gt; Found 3 results </span></span>
+<span><span class="co">#&gt; Found 2 collections </span></span>
+<span><span class="co">#&gt; Found 3 items </span></span>
 <span><span class="co">#&gt; The zotero library contains: 2 collections and 3 items</span></span>
 <span><span class="co"># Print type of library and id</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">group.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>

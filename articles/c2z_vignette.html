@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/c2z_vignette.html">Behold c2z!</a>
     <a class="dropdown-item" href="../articles/zotero_api.html">Create a Zotero API key</a>
+    <a class="dropdown-item" href="../articles/c2z_public.html">Public library</a>
   </div>
 </li>
 <li class="nav-item">
@@ -143,7 +144,7 @@ last element in the vector (i.e., “dog”).</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 5NYB5MBP dog   7BU5WY5K</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> UX9WUMW7 dog   IVVP9Y2K</span></span></code></pre></div>
 <p>However, we often want access all, or some, nested collections. We
 can achieve this using two different approaches. 1) using
 <code>recursive = TRUE</code> to access the given element and then
@@ -175,15 +176,15 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 4MLMXWL9 The   FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> YHXQRVXN quick 4MLMXWL9        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> CXU5MQTQ brown YHXQRVXN        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 8IEI42YB fox   CXU5MQTQ        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> TNE7ZJRW jumps 8IEI42YB        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 74FECN4W over  TNE7ZJRW        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> P8GPZPSW the   74FECN4W        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> 7BU5WY5K lazy  P8GPZPSW        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> 5NYB5MBP dog   7BU5WY5K</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> HUQHPEDA The   FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 5PCCR6EE quick HUQHPEDA        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> XHDV6DNM brown 5PCCR6EE        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> UX43VGZN fox   XHDV6DNM        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> XHLAZTN5 jumps UX43VGZN        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 8TFTA65Y over  XHLAZTN5        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> K7Q6VXYR the   8TFTA65Y        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> IVVP9Y2K lazy  K7Q6VXYR        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> UX9WUMW7 dog   IVVP9Y2K</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="recursive-path">Recursive path<a class="anchor" aria-label="anchor" href="#recursive-path"></a>
@@ -263,7 +264,7 @@ using <code>Zotero</code>, where items are uploaded using the
 <code>items</code> argument. The <code>index = TRUE</code>, creating an
 index of the items.</p>
 <p>Please note that <code>crossref.search</code> should normally not be
-used (see the <a href="https://oeysan.github.io/c2z/">README</a>.</p>
+used (see the <a href="https://oeysan.github.io/c2z/">README</a>).</p>
 <p>Rather than finicking over h-indexes and impact factors, Norwegians
 have a weird obsession with NVI (Norwegian Science Index), which is a
 two-level index where level one publications are ordinary and level two
@@ -273,66 +274,110 @@ levels.</p>
 <p>The specified <code>filter</code> arguments try to filter out
 categories that usually contain publications that are worthy of the NVI
 (see all the Cristin <a href="https://api.cristin.no/v2/results/categories?lang=en" class="external-link">categories</a>).</p>
-<p>Let’s post the results to the collection “fox”.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Filter items</span></span>
-<span><span class="va">cristin.filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"ACADEMICREVIEW"</span>,</span>
-<span>  <span class="st">"ARTICLEJOURNAL"</span>,</span>
-<span>  <span class="st">"ARTICLE"</span>, </span>
-<span>  <span class="st">"ANTHOLOGYACA"</span>, </span>
-<span>  <span class="st">"CHAPTER"</span>, </span>
-<span>  <span class="st">"CHAPTERACADEMIC"</span>,</span>
-<span>  <span class="st">"CHAPTERARTICLE"</span>,</span>
-<span>  <span class="st">"COMMENTARYACA"</span>,</span>
-<span>  <span class="st">"MONOGRAPHACA"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Query Cristin</span></span>
-<span><span class="va">cristin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Cristin.html">Cristin</a></span><span class="op">(</span></span>
-<span>  title <span class="op">=</span> <span class="st">"cheese"</span>,</span>
-<span>  published_since <span class="op">=</span> <span class="fl">2020</span>,</span>
-<span>  filter <span class="op">=</span> <span class="va">cristin.filter</span>,</span>
-<span>  zotero.import <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  use.identifiers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  crossref.search <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  autosearch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get the fox key</span></span>
-<span><span class="va">fox</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"fox"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="st">"key"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Post the items to the collection called fox</span></span>
-<span><span class="va">post.cristin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span></span>
-<span>  collection.key <span class="op">=</span> <span class="va">fox</span>,</span>
-<span>  items <span class="op">=</span> <span class="va">cristin</span><span class="op">$</span><span class="va">export</span>,</span>
-<span>  library <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  index <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># What do we got?</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">post.cristin</span><span class="op">$</span><span class="va">index</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Vasiliauskaite et al. (2022) Application of Edible Coating Based on Liquid Acid Whey Protein Concentrate with Indigenous Lactobacillus helveticus for Acid-Curd Cheese Quality Improvement"                           </span></span>
-<span><span class="co">#&gt; [2] "Lundberg et al. (2021) Determination of maintenance Jarlsberg® cheese dose to keep the obtained serum osteocalcin level; a response surface pathway designed de-escalation dose study with individual starting values"</span></span>
-<span><span class="co">#&gt; [3] "Lundberg et al. (2022) Effect on bone anabolic markers of daily cheese intake with and without vitamin K2: a randomised clinical trial"                                                                               </span></span>
-<span><span class="co">#&gt; [4] "Olsen et al. (2021) Feeding concentrates with different protein sources to high-yielding, mid-lactation Norwegian Red cows: Effect on cheese ripening"                                                                </span></span>
-<span><span class="co">#&gt; [5] "Lundberg et al. (2020) Increased serum osteocalcin levels and vitamin K status by daily cheese intake"                                                                                                                </span></span>
-<span><span class="co">#&gt; [6] "Henriquez Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World"                                                                                                                                           </span></span>
-<span><span class="co">#&gt; [7] "Gaber et al. (2021) Manufacture and characterization of acid-coagulated fresh cheese made from casein concentrates obtained by acid diafiltration"                                                                    </span></span>
-<span><span class="co">#&gt; [8] "Veflen et al. (2022) Signalling taste through packaging: The effects of shape and colour on consumers’ perceptions of cheeses"                                                                                        </span></span>
-<span><span class="co">#&gt; [9] "Wolka et al. (2021) Soil organic carbon and associated soil properties in Enset (Ensete ventricosum Welw. Cheesman)-based homegardens in Ethiopia"</span></span></code></pre></div>
+<p>Let’s post the results to the collection “fox”, while using the
+argument <code>get.items = FALSE</code> as not to add any items in the
+collection to the Zotero list.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter items</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cristin.filter <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ACADEMICREVIEW"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ARTICLEJOURNAL"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ARTICLE"</span>, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ANTHOLOGYACA"</span>, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"CHAPTER"</span>, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"CHAPTERACADEMIC"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"CHAPTERARTICLE"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"COMMENTARYACA"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MONOGRAPHACA"</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Query Cristin</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>cristin <span class="ot">&lt;-</span> <span class="fu">Cristin</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"cheese"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">published_since =</span> <span class="dv">2020</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">filter =</span> cristin.filter,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">zotero.import =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">use.identifiers =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">crossref.search =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">autosearch =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">silent =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 20 results </span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Filtered out 11 references </span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking whether references are supported (See `CristinSupported()`). </span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Looking for missing data. </span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Converting 9 references from Cristin to Zotero format </span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1879488.</span> Progress<span class="sc">:</span> <span class="fl">11.11</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">57</span><span class="sc">:</span><span class="dv">26</span><span class="sc">------</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">2096054.</span> Progress<span class="sc">:</span> <span class="fl">22.22</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">57</span><span class="sc">------</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1919520.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">46</span><span class="sc">------</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1912219.</span> Progress<span class="sc">:</span> <span class="fl">44.44</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">41</span><span class="sc">------</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">2085980.</span> Progress<span class="sc">:</span> <span class="fl">55.56</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">2069847.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">36</span><span class="sc">------</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1961743.</span> Progress<span class="sc">:</span> <span class="fl">77.78</span>% (<span class="dv">7</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">34</span><span class="sc">------</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1920677.</span> Progress<span class="sc">:</span> <span class="fl">88.89</span>% (<span class="dv">8</span><span class="sc">/</span><span class="dv">9</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">33</span><span class="sc">------</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="sc">-----------------</span>Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">9</span><span class="sc">/</span><span class="dv">9</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span><span class="dv">16</span><span class="sc">-----------------</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the fox key</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>fox <span class="ot">&lt;-</span> collections<span class="sc">$</span>collections <span class="sc">|&gt;</span> </span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"fox"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(<span class="st">"key"</span>)</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Post the items to the collection called fox</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>post.cristin <span class="ot">&lt;-</span> <span class="fu">Zotero</span>(</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">collection.key =</span> fox,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">items =</span> cristin<span class="sc">$</span>export,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">library =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">index =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">post =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">post.collections =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">post.items =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">silent =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">get.items =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 0 subcollections </span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Collection fox (UX43VGZN) contains: 1 subcollection and 0 items </span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Adding 9 formated items to Zotero list </span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Adding 9 items to library using 1 POST request </span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="sc">-----------------</span>Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">1</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">-----------------</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $post.status.items</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;246m# A tibble: 9 × 2 [39m</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   status  key     </span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    [3m [38;5;246m&lt;fct&gt; [39m [23m    [3m [38;5;246m&lt;chr&gt; [39m [23m   </span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m1 [39m success 4TW7XZH8</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m2 [39m success PBCPA84Q</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m3 [39m success PKGQ7KFY</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m4 [39m success N6ZLZX6H</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m5 [39m success D5DL4VCZ</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m6 [39m success 7DQ8ZHFA</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m7 [39m success Z7LHUN8W</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m8 [39m success DNFUVZPM</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m9 [39m success NMSTX7YA</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $post.summary.items</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   success unchanged    failed </span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         9         0         0 </span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Creating index for items</span></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="co"># What do we got?</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(post.cristin<span class="sc">$</span>index<span class="sc">$</span>name)</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Vasiliauskaite et al. (2022) Application of Edible Coating Based on Liquid Acid Whey Protein Concentrate with Indigenous Lactobacillus helveticus for Acid-Curd Cheese Quality Improvement"                           </span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "Lundberg et al. (2021) Determination of maintenance Jarlsberg® cheese dose to keep the obtained serum osteocalcin level; a response surface pathway designed de-escalation dose study with individual starting values"</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Lundberg et al. (2022) Effect on bone anabolic markers of daily cheese intake with and without vitamin K2: a randomised clinical trial"                                                                               </span></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "Olsen et al. (2021) Feeding concentrates with different protein sources to high-yielding, mid-lactation Norwegian Red cows: Effect on cheese ripening"                                                                </span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Lundberg et al. (2020) Increased serum osteocalcin levels and vitamin K status by daily cheese intake"                                                                                                                </span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] "Henriquez Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World"                                                                                                                                           </span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] "Gaber et al. (2021) Manufacture and characterization of acid-coagulated fresh cheese made from casein concentrates obtained by acid diafiltration"                                                                    </span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [8] "Veflen et al. (2022) Signalling taste through packaging: The effects of shape and colour on consumers’ perceptions of cheeses"                                                                                        </span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [9] "Wolka et al. (2021) Soil organic carbon and associated soil properties in Enset (Ensete ventricosum Welw. Cheesman)-based homegardens in Ethiopia"</span></span></code></pre></div>
 <p>In this second example we have decided that 2019 was an even better
 year for cheese and change the <code>published_since</code> argument to
-2019. The reason why we’re are doing this is to demonstrate the
-duplicate function in <code>CristinWrangler</code>, which will identify
-any Cristin references imported into Zotero if
+2019. The reason why we are doing this is to demonstrate the duplicate
+function in <code>CristinWrangler</code>, which will identify any
+Cristin references imported into Zotero if
 <code>zotero.check = TRUE</code>.</p>
 <p>The function will try to use the <code>zotero</code> argument to
 search the specified collection(s), if the argument is empty, it will
@@ -351,33 +396,35 @@ create an index over the collected items.</p>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">zotero.check =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">zotero =</span> post.cristin</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Conducting initial query </span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 26 results </span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Filtered out 11 references </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking whether references are supported (See `CristinSupported()`). </span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Looking for missing data. </span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking whether references exist in library </span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Removed 9 duplicates </span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1721342.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">12</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">05</span><span class="sc">:</span><span class="dv">19</span><span class="sc">:</span><span class="dv">10</span><span class="sc">------</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1678430.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">12</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">05</span><span class="sc">:</span><span class="dv">19</span><span class="sc">:</span><span class="dv">10</span><span class="sc">------</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1709922.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">12</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">05</span><span class="sc">:</span><span class="dv">19</span><span class="sc">:</span><span class="dv">10</span><span class="sc">------</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1668352.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">12</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">05</span><span class="sc">:</span><span class="dv">19</span><span class="sc">:</span><span class="dv">10</span><span class="sc">------</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1715026.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">12</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">05</span><span class="sc">:</span><span class="dv">19</span><span class="sc">:</span><span class="dv">10</span><span class="sc">------</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="sc">-----------------</span>Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">6</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span><span class="dv">01</span><span class="sc">-----------------</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an index</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">ZoteroIndex</span>(cristin2<span class="sc">$</span>export)</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># What do we got?</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(items<span class="sc">$</span>name)</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Soltani &amp; Årethun (2019) Cultural and touristic aspects of gamalost, a local cheese from the fjord of Norway"                                      </span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "Eskildsen et al. (2019) Estimating dry matter and fat content in Blocks of Swiss cheese during production using on-line near infrared spectroscopy"</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Kure &amp; Skaar (2019) Fungal problem in cheese industry, The"                                                                                        </span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "Borgund Barnung et al. (2019) High lactose whey cheese consumption and risk of colorectal cancer - The Norwegian Women and Cancer Study"           </span></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Hrkovic-Porobija et al. (2019) NITROGEN MATTER AS PARAMETERS OF THE QUALITY OF THE LIVNO AND TRAVNIK CHEESE"                                       </span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] "Mozuraityte et al. (2019) Sodium reduction in processed cheese spreads and the effect on physicochemical properties"</span></span></code></pre></div>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 26 results </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Filtered out 11 references </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking whether references are supported (See `CristinSupported()`). </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Looking for missing data. </span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Checking whether references exist in library </span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 9 collections </span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 9 items </span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The zotero library contains: 9 collections and 9 items </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Removed 9 duplicates </span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1721342.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1678430.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1709922.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1668352.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="sc">------</span>Next ID<span class="sc">:</span> <span class="fl">1715026.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">03.2023</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">56</span><span class="sc">:</span><span class="dv">38</span><span class="sc">------</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="sc">-----------------</span>Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">6</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span><span class="dv">01</span><span class="sc">-----------------</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an index</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">ZoteroIndex</span>(cristin2<span class="sc">$</span>export)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># What do we got?</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(items<span class="sc">$</span>name)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Soltani &amp; Årethun (2019) Cultural and touristic aspects of gamalost, a local cheese from the fjord of Norway"                                      </span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] "Eskildsen et al. (2019) Estimating dry matter and fat content in Blocks of Swiss cheese during production using on-line near infrared spectroscopy"</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "Kure &amp; Skaar (2019) Fungal problem in cheese industry, The"                                                                                        </span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "Borgund Barnung et al. (2019) High lactose whey cheese consumption and risk of colorectal cancer - The Norwegian Women and Cancer Study"           </span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] "Hrkovic-Porobija et al. (2019) NITROGEN MATTER AS PARAMETERS OF THE QUALITY OF THE LIVNO AND TRAVNIK CHEESE"                                       </span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [6] "Mozuraityte et al. (2019) Sodium reduction in processed cheese spreads and the effect on physicochemical properties"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-identifiers">Adding items from identifiers<a class="anchor" aria-label="anchor" href="#adding-items-from-identifiers"></a>
@@ -404,7 +451,8 @@ collection “quick”.</p>
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># What do we got?</span></span>
@@ -440,15 +488,16 @@ official reports using <code>ZoteroGov</code>.</p>
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># What do we got?</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">the.man</span><span class="op">$</span><span class="va">index</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "St.meld. nr. 26 (2001-2002) (2002) Bedre kollektivtransport"                                                                  </span></span>
-<span><span class="co">#&gt; [2] "NOU 2014: 4 (2014) Enklere regler – bedre anskaffelser — Forenkling av det norske anskaffelsesregelverket"                    </span></span>
-<span><span class="co">#&gt; [3] "NOU 2018: 2 (2018) Fremtidige kompetansebehov I — Kunnskapsgrunnlaget"                                                        </span></span>
-<span><span class="co">#&gt; [4] "Meld. St. 31 (2014–2015) (2015) Garden som ressurs – marknaden som mål — Vekst og gründerskap innan landbruksbaserte næringar"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "St.meld. nr. 26 (2001-2002) Bedre kollektivtransport"                                                                  </span></span>
+<span><span class="co">#&gt; [2] "NOU 2014: 4 (2014) Enklere regler – bedre anskaffelser — Forenkling av det norske anskaffelsesregelverket"             </span></span>
+<span><span class="co">#&gt; [3] "NOU 2018: 2 (2018) Fremtidige kompetansebehov I — Kunnskapsgrunnlaget"                                                 </span></span>
+<span><span class="co">#&gt; [4] "Meld. St. 31 (2014–2015) Garden som ressurs – marknaden som mål — Vekst og gründerskap innan landbruksbaserte næringar"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-cran">Adding items from CRAN<a class="anchor" aria-label="anchor" href="#adding-items-from-cran"></a>
@@ -462,7 +511,7 @@ metadata from The Comprehensive R Archive Network (CRAN). The
 <code class="sourceCode R"><span><span class="va">lazy</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"lazy"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="st">"key"</span><span class="op">)</span></span></code></pre></div>
-<p>The key is “7BU5WY5K” and the argument <code>recursive = TRUE</code>,
+<p>The key is “IVVP9Y2K” and the argument <code>recursive = TRUE</code>,
 thus the function is looking for the specified collection (i.e., “lazy”)
 and all its children (i.e., “dog”).</p>
 <p>It is often useful to link items to several (nested) collections. For
@@ -494,20 +543,21 @@ choose to access all items under “project”, including those in
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># What do we got?</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cran</span><span class="op">$</span><span class="va">index</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Wickham et al. (2023a) dplyr: A Grammar of Data Manipulation"                               </span></span>
-<span><span class="co">#&gt; [2] "Wickham (2023) httr: Tools for Working with URLs and HTTP"                                  </span></span>
-<span><span class="co">#&gt; [3] "Ooms (2022) jsonlite: A Simple and Robust JSON Parser and Generator for R"                  </span></span>
-<span><span class="co">#&gt; [4] "Wickham &amp; Henry (2023) purrr: Functional Programming Tools"                                 </span></span>
-<span><span class="co">#&gt; [5] "Henry &amp; Wickham (2022a) rlang: Functions for Base Types and Core R and 'Tidyverse' Features"</span></span>
-<span><span class="co">#&gt; [6] "Wickham (2022) rvest: Easily Harvest (Scrape) Web Pages"                                    </span></span>
-<span><span class="co">#&gt; [7] "Müller &amp; Wickham (2023) tibble: Simple Data Frames"                                         </span></span>
-<span><span class="co">#&gt; [8] "Wickham et al. (2023b) tidyr: Tidy Messy Data"                                              </span></span>
-<span><span class="co">#&gt; [9] "Henry &amp; Wickham (2022b) tidyselect: Select from a Set of Strings"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "Wickham et al. (2023a) dplyr: A Grammar of Data Manipulation"                              </span></span>
+<span><span class="co">#&gt; [2] "Wickham (2023) httr: Tools for Working with URLs and HTTP"                                 </span></span>
+<span><span class="co">#&gt; [3] "Ooms (2022) jsonlite: A Simple and Robust JSON Parser and Generator for R"                 </span></span>
+<span><span class="co">#&gt; [4] "Wickham &amp; Henry (2023) purrr: Functional Programming Tools"                                </span></span>
+<span><span class="co">#&gt; [5] "Henry &amp; Wickham (2023) rlang: Functions for Base Types and Core R and 'Tidyverse' Features"</span></span>
+<span><span class="co">#&gt; [6] "Wickham (2022) rvest: Easily Harvest (Scrape) Web Pages"                                   </span></span>
+<span><span class="co">#&gt; [7] "Müller &amp; Wickham (2023) tibble: Simple Data Frames"                                        </span></span>
+<span><span class="co">#&gt; [8] "Wickham et al. (2023b) tidyr: Tidy Messy Data"                                             </span></span>
+<span><span class="co">#&gt; [9] "Henry &amp; Wickham (2022) tidyselect: Select from a Set of Strings"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -521,7 +571,7 @@ group.</p>
 method of copying collections and items from a group library to a user
 library (and vice versa). However, in this example we’re appending the
 group collections to our long line of nested collections, making the
-process somewhat messy Therefore, we split up the process using the
+process somewhat messy. Therefore, we split up the process using the
 <code>ZoteroCopy</code> and <code>ZoteroPost</code> functions. The
 <code>change.library</code> argument will query <code>Zotero</code> and
 alter the location according to specified coordinates (the default
@@ -533,15 +583,20 @@ to set up user/group id and API keys.</p>
 <span><span class="va">group.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span></span>
 <span>  user <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  library <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Found 2 collections </span></span>
+<span><span class="co">#&gt; Found 3 items </span></span>
+<span><span class="co">#&gt; The zotero library contains: 2 collections and 3 items</span></span>
 <span></span>
 <span><span class="co"># Copy the library creating new keys </span></span>
 <span><span class="va">copy.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ZoteroCopy.html">ZoteroCopy</a></span><span class="op">(</span></span>
 <span>  zotero <span class="op">=</span> <span class="va">group.library</span>,</span>
 <span>  change.library <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Copying collections </span></span>
+<span><span class="co">#&gt; Copying items</span></span>
 <span></span>
 <span><span class="co"># Find key for dog</span></span>
 <span><span class="va">dog</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
@@ -592,8 +647,9 @@ according to <a href="https://apastyle.apa.org/" class="external-link">APA7</a>.
 <span>  export <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  format <span class="op">=</span> <span class="st">"biblatex"</span>,</span>
 <span>  save.data <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  save.path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"c2z_temp"</span><span class="op">)</span>,</span>
 <span>  bib.name <span class="op">=</span> <span class="st">"references"</span>,</span>
-<span>  csl.type <span class="op">=</span> <span class="st">"apa"</span>,</span>
+<span>  csl.type <span class="op">=</span> <span class="st">"apa-single-spaced"</span>,</span>
 <span>  csl.name <span class="op">=</span> <span class="st">"style"</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
@@ -631,7 +687,7 @@ library.</p>
 </h2>
 <p>We can now display the references that we have collected and created
 using <em><code>c2z</code></em>.</p>
-<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-field_how_2003" class="csl-entry">
 Field, A. P., &amp; Hole, G. (2003). <em>How to design and report
 experiments</em>. Sage publications Ltd.
@@ -659,13 +715,13 @@ selling cheese in a tube to the world. In M. Chavan &amp; L. Taksa
 (Eds.), <em>Intercultural management in practice: Learning to lead
 diverse global organizations</em> (p. 27). Emerald Publishing. <a href="https://doi.org/10.1108/978-1-83982-826-320211004" class="external-link">https://doi.org/10.1108/978-1-83982-826-320211004</a>
 </div>
-<div id="ref-henry_rlang_2022" class="csl-entry">
-Henry, L., &amp; Wickham, H. (2022a). <em>Rlang: Functions for base
-types and core r and ’tidyverse’ features</em> (Version 1.0.6) [Computer
+<div id="ref-henry_rlang_2023" class="csl-entry">
+Henry, L., &amp; Wickham, H. (2023). <em>Rlang: Functions for base types
+and core r and ’tidyverse’ features</em> (Version 1.1.0) [Computer
 software]. <a href="https://cran.r-project.org/package=rlang" class="external-link">https://cran.r-project.org/package=rlang</a>
 </div>
 <div id="ref-henry_tidyselect_2022" class="csl-entry">
-Henry, L., &amp; Wickham, H. (2022b). <em>Tidyselect: Select from a set
+Henry, L., &amp; Wickham, H. (2022). <em>Tidyselect: Select from a set
 of strings</em> (Version 1.2.0) [Computer software]. <a href="https://cran.r-project.org/package=tidyselect" class="external-link">https://cran.r-project.org/package=tidyselect</a>
 </div>
 <div id="ref-lundberg_effect_2022" class="csl-entry">

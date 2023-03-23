@@ -1,25 +1,30 @@
 #' @title Delete collections and items from a Zotero library
 #' @description Cleaning the Zotero library
 #' @param zotero A list with information on the specified Zotero library (e.g.,
-#' id, API key, collections, and items)
+#'   id, API key, collections, and items)
 #' @param delete.collections Try to delete specified collections, Default: TRUE
 #' @param delete.items Try to delete specified items?, Default: TRUE
-#' @param delete.limit Number of collections/items to delete per request (max 50), Default: 50
+#' @param delete.limit Number of collections/items to delete per request (max
+#'   50), Default: 50
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param ragnarok Delete EVERYTHING in the specified library, Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
-#' @return A list with information on the specified Zotero library (e.g., deleted collections and items)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @return A list with information on the specified Zotero library (e.g.,
+#'   deleted collections and items)
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Delete everything in a group
-#'     example <- ZoteroDelete(
-#'       Zotero(user = FALSE, id = "4988497"),
-#'       ragnarok = TRUE,
-#'       force = TRUE
-#'     )
-#'   }
+#' \donttest{
+#'   # Delete everything in a group
+#'   example <- ZoteroDelete(
+#'     Zotero(
+#'       user = FALSE,
+#'       id = "4988497",
+#'       api = "RqlAmlH5l1KPghfCseAq1sQ1"
+#'     ),
+#'     ragnarok = TRUE,
+#'     force = TRUE
+#'   )
 #' }
 #' @seealso
 #'  \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
@@ -87,7 +92,7 @@ ZoteroDelete <- \(zotero,
     # Start time for query
     query.start <- Sys.time()
     # Cycle through metadata
-    for (i in 1:length(metadata)) {
+    for (i in seq_along(metadata)) {
 
       # Define either collections or items
       if (append.collections) {
@@ -160,8 +165,11 @@ ZoteroDelete <- \(zotero,
 
     # Send error message if force is FALSE
     if (!force) {
-      zotero$log <- LogCat("To delete the entire library set force to TRUE",
-                           fatal = TRUE, silent = silent, log = zotero$log
+      zotero$log <- LogCat(
+        "To delete the entire library set force to TRUE",
+        fatal = TRUE,
+        silent = silent,
+        log = zotero$log
       )
     }
 

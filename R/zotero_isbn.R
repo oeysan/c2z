@@ -14,15 +14,17 @@
 #'  \code{\link[stats]{setNames}}
 #'  \code{\link[jsonlite]{toJSON, fromJSON}}
 #' @rdname ZoteroIsbn
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#' \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Search libraries for ISBN metadata
-#'     example <- ZoteroIsbn("978-1529797138")
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example)$name
-#'   }
+#' \donttest{
+#'   # Search libraries for ISBN metadata
+#'   example <- ZoteroIsbn("978-1529797138")
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @export
 ZoteroIsbn <- \(key, meta = list()) {
@@ -266,8 +268,8 @@ ZoteroIsbn <- \(key, meta = list()) {
 
     # Create zotero-type creator matrix if creators exists
     if (!is.null(creators)) {
-      creators <- lapply(1:nrow(creators), \(i) {
-        FormatCreator(creators[i,])
+      creators <- lapply(seq_len(nrow(creators)), \(i) {
+        FormatCreator(creators[i, ])
       })
     }
 
@@ -351,7 +353,7 @@ ZoteroIsbn <- \(key, meta = list()) {
     if (is.null(meta$seriesNumber)) meta$seriesNumber <- MARC(marc, "440", "v")
 
     # Fetch tags
-    tags = GoFish(unique(as.character(unlist(
+    tags <- GoFish(unique(as.character(unlist(
       c(MARC(marc, 650, "a"), MARC(marc, 653, "a"))
     ))))
     if (any(!is.na(tags))) meta$tags <- tibble::tibble(tag = tags)

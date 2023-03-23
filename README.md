@@ -11,13 +11,13 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News">
-<img src="https://img.shields.io/badge/News-2023.03.15 @ 11:39:48-purple.svg" alt="News"/>
+<img src="https://img.shields.io/badge/News-2023.03.18 @ 22:20:11-purple.svg" alt="News"/>
 </a><br/><a href="#" id="cran" 
 title="CRAN Version">
 <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version" />
 </a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version">
-<img src="https://img.shields.io/badge/GitHub-0.1.1-red.svg?style=flat-square" alt="GitHub Version" />
-</a><br/><a href="inst/extdata/LICENSE.md" id="license" title="License">
+<img src="https://img.shields.io/badge/GitHub-0.1.4-red.svg?style=flat-square" alt="GitHub Version" />
+</a><br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License" />
 </a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" 
 title="Build Status">
@@ -98,8 +98,10 @@ your publications is registered on Cristin.
     chapters, journal articles, presentations (e.g., lectures), and
     opinions pieces.
 - Batch import references from ISBN and DOI.
-  - Currently supported formats: books, book chapters, conference
-    papers, journal articles.
+  - Currently supported formats (CrossRef\`): books, book chapters,
+    conference papers, journal articles.
+  - DataCite references are treated as preprints and stores reference
+    type (.e.g, dataset) as Genre.
 - Batch import Norwegian white papers and official Norwegian reports.
 - Batch import *R* packages from CRAN.
 - Search CrossRef, automatically and manually, by author(s), title, and
@@ -123,8 +125,9 @@ dependencies are automatically upgraded.
 ## Installing
 
 You probably want to access a restricted Zotero library. Please see [the
-short tutorial](articles/zotero_api.html) on how to create a Zotero API
-key and how to define it in your `.Renviron`.
+short tutorial](https://oeysan.github.io/c2z/articles/zotero_api.html)
+on how to create a Zotero API key and how to define it in your
+`.Renviron`.
 
 You can install *`c2z`* from GitHub. If you already have a previous
 version of *`c2z`* installed, using the command below will update to the
@@ -138,8 +141,9 @@ devtools::install_github("oeysan/c2z")
 
 ## Example
 
-Also, please see the [magnificent vignette](articles/c2z_vignette.html)
-and other [documentation](https://oeysan.github.io/c2z/),
+Also, please see the [magnificent
+vignette](https://oeysan.github.io/c2z/articles/c2z_vignette.html) and
+other [documentation](https://oeysan.github.io/c2z/).
 
 I work as an associate professor at a department of teacher education in
 Norway. Doing so, one of my responsibilities is surprisingly enough
@@ -170,59 +174,48 @@ example <- Zotero(
   collection.names = "c2z-example",
   library = TRUE,
   create = TRUE,
-  isbn = c("9788215040561","9788279354048"),
+  isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
   export = TRUE,
-  include = "bib",
+  include.bib = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,
-  delete.items = TRUE
+  delete.items = TRUE,
+  index = TRUE
 )
-#> Found 0 collections 
-#> Creating a new collection named c2z-example 
-#> Adding 1 collection to library using 1 POST request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
-#> $post.status.collections
-#> # A tibble: 1 × 2
-#>   status  key     
-#>   <fct>   <chr>   
-#> 1 success 9J6YRHPK
-#> 
-#> $post.summary.collections
-#> 
-#>   success unchanged    failed 
-#>         1         0         0 
-#> 
-#> 
-#> Found 0 subcollections 
-#> Collection c2z-example (9J6YRHPK) contains: 0 subcollections and 0 items 
 #> Searching 2 items using ISBN 
 #> Adding 2 formated items to Zotero list 
 #> Adding 2 items to library using 1 POST request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
+#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:01-----------------
 #> $post.status.items
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success UFMUWH5B
-#> 2 success XB86PTAZ
+#> 1 success PBIK974P
+#> 2 success TMIC9FQ9
 #> 
 #> $post.summary.items
+#> # A tibble: 1 × 2
+#>   status  summary
+#>   <fct>     <int>
+#> 1 success       2
 #> 
-#>   success unchanged    failed 
-#>         2         0         0 
 #> 
-#> 
-#> Exporting 2 items 
-#> Found 2 export items 
-#> Found 2 bibliography items 
-#> 2 items exported as biblatex 
+#> Found 0 subcollections 
+#> Found 2 items 
+#> Collection c2z-example (XIPCDDZ6) contains: 0 subcollections and 2 items 
+#> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
 #> Deleting 2 items using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
+#> Creating index for items
+
+# Order the bibliography by creators (alphabetically) and date (descending)
+bibliography <- example$index |>
+  dplyr::arrange(citation, desc(date))
 ```
 
 The example will yield the following HTML output:
@@ -323,7 +316,7 @@ What’s your thought on this breach of tradition?
 – [“Thank you, but I prefer it my
 way.”](https://www.youtube.com/watch?v=EsXjzkXVuFc)
 
-## Code of Conduct
+## Code of conduct
 
 Don’t be evil. Please read the [Code of
 Conduct](https://oeysan.github.io/c2z/CONDUCT.html)

@@ -3,15 +3,16 @@
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#' \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Simple use of `ZoteroDoi`
-#'     example <- ZoteroDoi("10.1126/sciadv.abd1705")
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example)$name
-#'   }
+#' \donttest{
+#'   # Simple use of `ZoteroDoi`
+#'   example <- ZoteroDoi("10.1126/sciadv.abd1705")
+#'
+#'   ZoteroIndex(example) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}},
@@ -39,6 +40,8 @@ ZoteroDoi <- \(doi, meta = list()) {
 
       # Remove any https part
       doi <- Trim(gsub("^.*(10\\..*)", "\\1", doi, perl = TRUE))
+      # Remove any excess white space
+      doi <- gsub("\\s", "", doi)
 
       # Try DOI key
       doi.works <- httr::RETRY(
@@ -131,12 +134,15 @@ ZoteroDoi <- \(doi, meta = list()) {
               )$data$embeds$users$data$attributes
 
               # Create Zotero-type matrix
-              meta$creators <- ZoteroCreator(lapply(1:nrow(osf.json), \(i) {
-                list(
-                  type = "author",
-                  name = c(osf.json[i,]$family_name, osf.json[i,]$given_name)
-                )
-              }))
+              meta$creators <- ZoteroCreator(
+                lapply(seq_len(nrow(osf.json)), \(i) {
+                  list(
+                    type = "author",
+                    name = c(osf.json[i,]$family_name,
+                             osf.json[i,]$given_name)
+                  )
+                })
+              )
 
               # Else find creators from datacite data
             } else {
@@ -163,7 +169,7 @@ ZoteroDoi <- \(doi, meta = list()) {
             # Append any contributors to creators
             if (any(!is.na(contributors))) {
               meta$creators <- AddAppend(ZoteroCreator(
-                lapply(1:length(contributors), \(i) {
+                lapply(seq_along(contributors), \(i) {
                   c(type = contributor.type[i],
                     name = strsplit(contributors[i], ", "))
                 })

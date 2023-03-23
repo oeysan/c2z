@@ -14,7 +14,8 @@ id, API key, collections, and items)}
 
 \item{doi}{Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL}
 
-\item{isbn}{Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default: NULL}
+\item{isbn}{Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default:
+NULL}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
@@ -25,15 +26,22 @@ Will add data to the Zotero list
 Use identifiers or predefined data to add to the Zotero list
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Add items from `ZoteroIsbn` to the default Zotero list
-    example <- ZoteroAdd(Zotero(), isbn = "978-1529797138")
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example$items)$name
-  }
+\donttest{
+  # Add items from `ZoteroIsbn` to the default Zotero list
+  example <- ZoteroAdd(
+    Zotero(
+      id = "9913421",
+      api = "RqlAmlH5l1KPghfCseAq1sQ1"
+    ),
+    isbn = "978-1529797138"
+  )
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example$items) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }

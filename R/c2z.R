@@ -3,8 +3,8 @@
 ################################################################################
 
 #' @importFrom dplyr arrange bind_rows case_when coalesce distinct filter
-#' group_by mutate n na_if one_of pull row_number select slice_head transmute
-#' ungroup
+#' group_by mutate na_if one_of pull row_number select slice_head transmute
+#' ungroup full_join join_by
 #' @importFrom httr GET RETRY add_headers content http_error
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom purrr map pmap pmap_chr
@@ -12,7 +12,7 @@
 #' @importFrom rvest html_attr html_attrs html_children html_name html_nodes
 #' html_text read_html
 #' @importFrom stats setNames
-#' @importFrom tibble add_column as_tibble remove_rownames tibble
+#' @importFrom tibble add_column as_tibble remove_rownames tibble is_tibble
 #' @importFrom utils adist flush.console head tail write.csv
 NULL
 #> NULL
@@ -46,7 +46,7 @@ NULL
 #' @title FixCreators
 #' @keywords internal
 #' @noRd
-ErrorCode <- \(code) {
+ErrorCode <- \(code, reference = NULL) {
 
   error.codes <- c(
     "Invalid type/field (unparseable JSON)" = 400,
@@ -55,18 +55,26 @@ ErrorCode <- \(code) {
     the provided Zotero-Write-Token has already been submitted)" = 412,
     "Request Entity Too Large" = 413,
     "Forbidden (check API key)" = 403,
-    "Resource not found (key is probably wrong)" = 404
+    "Resource not found" = 404
   )
 
   # Define creator type according to match in creator types
-  error.code <- as.character(
+  error.code <- sprintf(
+    "Error %s: %s.",
+    code,
     names(error.codes[error.codes %in% code])
-    )
+  )
+
   # Set as contributor if not found
   if (!length(error.code)) error.code <- "Unknown error. Sorry."
 
   # Clean code
   error.code <- Trim(gsub("\r?\n|\r", " ", error.code))
+
+  # Add reference if exists
+  if (!is.null(reference)) error.code <- sprintf(
+    "%s See: %s.", error.code, reference
+  )
 
   return (error.code)
 
@@ -75,34 +83,35 @@ ErrorCode <- \(code) {
 #' @title FixCreators
 #' @keywords internal
 #' @noRd
-FixCreators <- \(data) {
+FixCreators <- \(data = NULL) {
 
 
-  if (!all(is.na(GoFish(data)))) {
-    data <- AddMissing(
-      data, c("firstName", "lastName", "name"), na.type = ""
-    ) |>
-      dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
-      dplyr::mutate(
-        lastName = dplyr::case_when(
-          !is.na(name) ~ NA_character_,
-          TRUE ~ lastName
-        ),
-        firstName = dplyr::case_when(
-          !is.na(name) ~ NA_character_,
-          TRUE ~ firstName
-        ),
-        name = dplyr::case_when(
-          is.na(firstName) & !is.na(lastName) ~ lastName,
-          !is.na(lastName) & is.na(lastName) ~ firstName,
-          is.na(firstName) & is.na(lastName) ~ name,
-          TRUE ~ NA_character_
-        )
-      ) |>
-      dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
-      dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
-
+  if (all(is.na(GoFish(data)))) {
+    return (NULL)
   }
+
+  data <- AddMissing(
+    data, c("firstName", "lastName", "name"), na.type = ""
+  ) |>
+    dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
+    dplyr::mutate(
+      lastName = dplyr::case_when(
+        !is.na(name) ~ NA_character_,
+        TRUE ~ lastName
+      ),
+      firstName = dplyr::case_when(
+        !is.na(name) ~ NA_character_,
+        TRUE ~ firstName
+      ),
+      name = dplyr::case_when(
+        is.na(firstName) & !is.na(lastName) ~ lastName,
+        !is.na(lastName) & is.na(lastName) ~ firstName,
+        is.na(firstName) & is.na(lastName) ~ name,
+        TRUE ~ NA_character_
+      )
+    ) |>
+    dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
+    dplyr::filter(!dplyr::if_all(dplyr::everything(), is.na))
 
   return (data)
 
@@ -111,95 +120,73 @@ FixCreators <- \(data) {
 #' @title ZoteroCreator
 #' @keywords internal
 #' @noRd
-ZoteroCreator <- \(data) {
+ZoteroCreator <- \(data = NULL) {
 
   # Visible bindings
   creators <- NULL
 
   # Run if not empty
-  if (!all(is.na(GoFish(data)))) {
-
-    # Check that first element of data is a list
-    if (!is.list(data[[1]])) data <- list(data)
-
-    # Define creator types
-    types <- c(
-      author = "author",
-      editor = "editor",
-      translator = "translator",
-      aut = "author",
-      edt = "editor",
-      red = "editor",
-      trl = "translator",
-      editorialboard = "editor",
-      programmer = "programmer",
-      curator = "author",
-      serieseditor = "seriesEditor"
-    )
-
-    # Create zotero-type matrix
-    creators <- dplyr::bind_rows(
-      lapply(data, \(x) {
-
-
-        # Remove commas and dots from names
-        name <- Trim(gsub("\\.|\\,", " ", x$name))
-
-        # Set as Cher if only one name is given
-        if (length(name) == 1) {
-          name <- c(name = name)
-        } else {
-          name <- c(lastName = name[1], firstName = name[2])
-        }
-
-        # Define creator type according to match in creator types
-        type <- as.character(types[names(types) %in% tolower(x$type)])
-        # Set as contributor if not found
-        if (!length(type)) type <- "contributor"
-
-        # Combine creatorType and names
-        lapply(type, \(type) c(creatorType = type, name))
-
-      })
-    )
-
+  if (all(is.na(GoFish(data)))) {
+    return (NULL)
   }
+
+  # Check that first element of data is a list
+  if (!is.list(data[[1]])) data <- list(data)
+
+  # Define creator types
+  types <- c(
+    author = "author",
+    editor = "editor",
+    translator = "translator",
+    aut = "author",
+    edt = "editor",
+    red = "editor",
+    trl = "translator",
+    editorialboard = "editor",
+    programmer = "programmer",
+    curator = "author",
+    serieseditor = "seriesEditor"
+  )
+
+  # Create zotero-type matrix
+  creators <- dplyr::bind_rows(
+    lapply(data, \(x) {
+
+      # Remove commas and dots from names
+      name <- Trim(gsub("\\.|\\,", " ", x$name))
+
+      # Set as Cher if only one name is given
+      if (length(name) == 1) {
+        name <- c(name = name)
+      } else {
+        name <- c(lastName = name[1], firstName = name[2])
+      }
+
+      # Define creator type according to match in creator types
+      type <- as.character(types[names(types) %in% tolower(x$type)])
+      # Set as contributor if not found
+      if (!length(type)) type <- "contributor"
+
+      # Combine creatorType and names
+      lapply(type, \(type) c(creatorType = type, name))
+
+    })
+  )
 
   return (creators)
-
-}
-
-#' @title ZoteroKey
-#' @keywords internal
-#' @noRd
-ZoteroKey <- \(token = FALSE) {
-
-  # Create JSON token if token is set to TRUE
-  if (token) {
-    # Key can contain all numeric values and (capital) letters
-    key <- c(0:9, letters, LETTERS)
-    # With a length of 32 characters
-    length <- 32
-    # Else create a zotero key
-  } else {
-    # Allowed valyes
-    key <- strsplit("23456789ABCDEFGHIJKLMNPQRSTUVWXYZ", "")[[1]]
-    # With a length of 8 characters
-    length <- 8
-
-  }
-
-  # Collapse to single string
-  key <- ToString(sample(key, length, replace = TRUE), "")
-
-  return(key)
 
 }
 
 #' @title ZoteroToJson
 #' @keywords internal
 #' @noRd
-ZoteroToJson <- \(data) {
+ZoteroToJson <- \(data = NULL) {
+
+  # Run if not empty
+  if (all(is.na(GoFish(data)))) {
+    return (NULL)
+  }
+
   # Convert data to JSON
   data <- jsonlite::toJSON(data)
   # Convert character FALSE to logical false
@@ -214,9 +201,14 @@ ZoteroToJson <- \(data) {
 #' @title ZoteroFormat
 #' @keywords internal
 #' @noRd
-ZoteroFormat <- \(data,
+ZoteroFormat <- \(data = NULL,
                   format = NULL,
                   prefix = NULL) {
+
+  # Run if not empty
+  if (all(is.na(GoFish(data)))) {
+    return (NULL)
+  }
 
   # Visible bindings
   zotero.types <- zotero.types
@@ -231,78 +223,75 @@ ZoteroFormat <- \(data,
   double.items <- c("version", "mtime")
   list.items <- c("collections", "relations", "tags")
 
-  # Run if data is not empty
-  if (!is.null(data)) {
+  # Check if metadata and not in a data frame
+  if (!is.data.frame(data) &
+      (any(format == "json", is.null(format)))) {
 
-    # Check if metadata and not in a data frame
-    if (!is.data.frame(data) &
-        (any(format == "json", is.null(format)))) {
-      # Check all element in the meta list
-      data.list <- lapply(1:length(data), \(i) {
+    # Check that first element of data is a list
+    if (is.list(data[[1]])) data <-  unlist(data, recursive = FALSE)
 
-        # Define data
-        names <- names(data[i])
-        x <- data[[i]]
+    # Check all element in the meta list
+    data.list <- lapply(seq_along(data), \(i) {
 
-        # Make certain fields not in multiline are strings
-        if (!names %in% multiline.items) x <- ToString(x)
+      # Define data
+      x <- data[[i]]
+      names <- names(data[i])
 
-        # Add to list if element is a data frame
-        ## Make certain list.items is in a list
-        if (is.data.frame(x) | names %in% list.items) {
-          if (!all(is.na(x))) x <- list(x)
-          # Make certain double.items are double
-        } else if (names %in% double.items) {
-          x <- as.double(x)
-          # Else make certain remaining items are character
-        } else {
-          x <- as.character(x)
-        }
+      # Make certain fields not in multiline are strings
+      if (!names %in% multiline.items) x <- ToString(x)
 
-        return (x)
-
-      })
-      # Name elements
-      names(data.list) <- names(data)
-      # Keep number of columns fixed for simple conversion to tibble/JSON
-      ## Replace empty elements with NA
-      data.list[lengths(data.list) == 0] <- NA
-      # Set key and initial version is missing
-      if (!"key" %in% names(data.list)) {
-        data.list <- c(key = ZoteroKey(), version = 0, data.list)
-      }
-      # Remove elements not in category if item
-      if (!"parentCollection" %in% names(data.list)) {
-        data.list[!names(data.list) %in%
-                    c(names(zotero.types[[data.list$itemType]]),
-                      "key", "version")] <- NULL
+      # Add to list if element is a data frame
+      ## Make certain list.items is in a list
+      if (is.data.frame(x) | names %in% list.items) {
+        if (!all(is.na(x))) x <- list(x)
+        # Make certain double.items are double
+      } else if (names %in% double.items) {
+        x <- as.double(x)
+        # Else make certain remaining items are character
+      } else {
+        x <- as.character(x)
       }
 
-      # Format as tibble and remove empty elements
-      data <- tibble::as_tibble(data.list[lengths(data.list) != 0])
+      return (x)
 
+    })
+    # Name elements
+    names(data.list) <- names(data)
+    # Keep number of columns fixed for simple conversion to tibble/JSON
+    ## Replace empty elements with NA
+    data.list[lengths(data.list) == 0] <- NA
+    # Set key and initial version is missing
+    if (!"key" %in% names(data.list)) {
+      data.list <- c(key = ZoteroKey(), version = 0, data.list)
+    }
+    # Remove elements not in category if item
+    if (!"parentCollection" %in% names(data.list)) {
+      data.list[!names(data.list) %in%
+                  c(names(zotero.types[[data.list$itemType]]),
+                    "key", "version")] <- NULL
     }
 
-    # Set data as tibble if data frame
-    if (is.data.frame(data)) {
-      data <- tibble::as_tibble(data) |>
-        # Replace empty string with NA
-        dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
-        dplyr::mutate(
-          # Add prefix if defined
-          prefix = GoFish(prefix),
-          # Fix creators
-          creators = GoFish(purrr::map(creators, FixCreators))
-        ) |>
-        # Remove empty columns
-        dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
-        # Remove empty rows
-        dplyr::filter(dplyr::if_any(dplyr::everything(), ~ !is.na(.)))
-      # Else convert to string
-    } else {
-      data <- ToString(data, "\n")
-    }
+    # Format as tibble and remove empty elements
+    data <- tibble::as_tibble(data.list[lengths(data.list) != 0])
 
+  }
+
+  # Set data as tibble if data frame
+  if (is.data.frame(data)) {
+    data <- tibble::as_tibble(data) |>
+      # Replace empty string with NA
+      dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
+      dplyr::mutate(
+        # Add prefix if defined
+        prefix = GoFish(prefix),
+        # Fix creators
+        creators = GoFish(purrr::map(creators, FixCreators))
+      ) |>
+      # Remove empty columns
+      dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0))
+    # Else convert to string
+  } else {
+    data <- ToString(data, "\n")
   }
 
   return (data)
@@ -334,7 +323,7 @@ ZoteroUrl <- \(url,
     use.key <- TRUE
     # Else add collection key if defined
   } else if (!is.null(collection.key) & use.collection) {
-    url <- paste0(url,"collections/",collection.key,"/")
+    url <- paste0(url, "collections/", collection.key, "/")
     use.key <- TRUE
     # Else set append.items to TRUE if no keys
   } else if (!append.collections) {
@@ -454,7 +443,7 @@ SplitData <- \(data, limit) {
     data <- split(
       data,
       rep(
-        1:ceiling(nrow(data)/limit),
+        seq_len(ceiling(nrow(data)/limit)),
         each=limit,
         length.out=nrow(data)
       )
@@ -501,10 +490,17 @@ ComputerFriendly <- \(x, sep = "_", remove.after = FALSE) {
 #' @noRd
 JsonToTibble <- \(data) {
 
+  # Parse url
+  data.parsed <-ParseUrl(data, "text")
+
+  # Return NULL if data.pased is empty
+  if (is.null(data.parsed)) {
+    return(NULL)
+  }
+
   # Parse raw data as JSON
-  data <- jsonlite::fromJSON(
-    ParseUrl(data, "text")
-  )
+  data <- jsonlite::fromJSON(data.parsed)
+
   # Convert nested elements in list as data.frame
   if (!is.data.frame(data)) {
     data <- lapply(data, \(x) {

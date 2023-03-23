@@ -22,7 +22,8 @@ id, API key, collections, and items)}
 
 \item{delete.items}{Try to delete specified items?, Default: TRUE}
 
-\item{delete.limit}{Number of collections/items to delete per request (max 50), Default: 50}
+\item{delete.limit}{Number of collections/items to delete per request (max
+50), Default: 50}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
@@ -31,24 +32,28 @@ id, API key, collections, and items)}
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., deleted collections and items)
+A list with information on the specified Zotero library (e.g.,
+  deleted collections and items)
 }
 \description{
 Cleaning the Zotero library
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Delete everything in a group
-    example <- ZoteroDelete(
-      Zotero(user = FALSE, id = "4988497"),
-      ragnarok = TRUE,
-      force = TRUE
-    )
-  }
+\donttest{
+  # Delete everything in a group
+  example <- ZoteroDelete(
+    Zotero(
+      user = FALSE,
+      id = "4988497",
+      api = "RqlAmlH5l1KPghfCseAq1sQ1"
+    ),
+    ragnarok = TRUE,
+    force = TRUE
+  )
 }
 }
 \seealso{

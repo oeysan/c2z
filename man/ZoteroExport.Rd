@@ -11,18 +11,17 @@ ZoteroExport(
   locale = "en-US",
   format = "biblatex",
   bib.name = "references",
-  append = FALSE,
-  include = NULL,
-  style = "apa",
   save.data = FALSE,
   save.path = NULL,
   silent = FALSE
 )
 }
 \arguments{
-\item{zotero}{A list with information on the specified Zotero library (e.g., id, API key, collections, and items)}
+\item{zotero}{A list with information on the specified Zotero library (e.g.,
+id, API key, collections, and items)}
 
-\item{csl.type}{Specify a CSL type to Official repository for Citation Style Language (CSL), Default: NULL}
+\item{csl.type}{Specify a CSL type to Official repository for Citation Style
+Language (CSL), Default: NULL}
 
 \item{csl.name}{Name of saved CSL file, Default: 'style'}
 
@@ -32,12 +31,6 @@ ZoteroExport(
 
 \item{bib.name}{Name of exported bibliography, Default: 'references'}
 
-\item{append}{Append extra metadata to Zotero query, Default: FALSE}
-
-\item{include}{Include bibliography (i.e., `bib`) and/or citation (i.e., `citation`), Default: NULL}
-
-\item{style}{Citation style to use for appended bibliography and/or citations, Default: apa}
-
 \item{save.data}{Save data (e.g., bibliography) to disk, Default: FALSE}
 
 \item{save.path}{Location to store data on disk, Default: NULL}
@@ -45,27 +38,35 @@ ZoteroExport(
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., exported items, bibliography and citations)
+A list with information on the specified Zotero library (e.g.,
+  exported items, bibliography and citations)
 }
 \description{
-Export Zotero items to a specified format (e.g., BibLaTeX) using a CSL format (e.g., APA7)
+Export Zotero items to a specified format (e.g., BibLaTeX) using
+  a CSL format (e.g., APA7)
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Export 1 items from the default group
-    example <- ZoteroExport(
-      Zotero(user = FALSE,
-             library = TRUE,
-             max.results = 1,
-             item.type = "-attachment || note")
-    )
-    # Display exported
-    cat(example$export)
-  }
+\donttest{
+  # Define Zotero list according to default group
+  zotero = Zotero(
+    user = FALSE,
+    id = "4827927",
+    api = "RqlAmlH5l1KPghfCseAq1sQ1",
+    item.type = "-attachment || note",
+    max.result = 1,
+    library = TRUE
+  )
+
+  # Export 1 items from the default group
+  example <- ZoteroExport(
+    zotero
+  )
+  # Display exported
+  cat(example$export, fill = 80)
 }
 }
 \seealso{

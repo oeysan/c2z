@@ -18,16 +18,18 @@ A Zotero-type matrix (tibble)
 Query CRAN by name and fetch metadata
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see 
+\href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Search cran for package `bfw`
-    example <- ZoteroCran("bfw")
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example)$name
-  }
+\donttest{
+  # Search cran for package `dplyr`
+  example <- ZoteroCran(c("dplyr", "jsonlite", "httr"))
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

@@ -25,17 +25,21 @@ ZoteroMatch(
 
 \item{date}{publication date of the reference}
 
-\item{haystack}{Potential matches for search term (i.e., needle), Default: NULL}
+\item{haystack}{Potential matches for search term (i.e., needle), Default:
+NULL}
 
 \item{haystack.size}{Number of items in the haystack, Default: 3}
 
-\item{crossref.search}{Search CrossRef if needle not found in haystack, Default: FALSE}
+\item{crossref.search}{Search CrossRef if needle not found in haystack,
+Default: FALSE}
 
-\item{autosearch}{Match automatically or compare needle with haystack, Default: FALSE}
+\item{autosearch}{Match automatically or compare needle with haystack,
+Default: FALSE}
 
 \item{cristin.data}{Metadata from Cristin, Default: NULL}
 
-\item{external.data}{Metadata from external source (e.g., CrossRef), Default: NULL}
+\item{external.data}{Metadata from external source (e.g., CrossRef), Default:
+NULL}
 
 \item{polite}{Will use an email stored in `.Renviron`, Default: TRUE}
 
@@ -45,24 +49,27 @@ ZoteroMatch(
 A Zotero-type matrix (tibble) if match is found otherwise NULL
 }
 \description{
-Use the CrossRef API to match data (e.g., Cristin metdata with Crossref metadata) or search by title, authors and date
+Use the CrossRef API to match data (e.g., Cristin metadata with
+  Crossref metadata) or search by title, authors and date
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Conduct an autosearch in CrossRef using title, authors and date
-    example <- ZoteroMatch(
-      title = "Nonreplicable publications are cited more than replicable ones",
-      authors = "Serra-Garcia & Gneezy",
-      date = "2021",
-      autosearch = TRUE
-    )
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example)$name
-  }
+\donttest{
+  # Conduct an autosearch in CrossRef using title, authors and date
+  example <- ZoteroMatch(
+    title = "Nonreplicable publications",
+    authors = "Serra-Garcia & Gneezy",
+    date = "2021",
+    autosearch = TRUE
+  )
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

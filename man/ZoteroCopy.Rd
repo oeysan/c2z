@@ -25,13 +25,16 @@ id, API key, collections, and items)}
 
 \item{copy.items}{Try to copy specified items?, Default: TRUE}
 
-\item{copy.extras}{Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE}
+\item{copy.extras}{Try to copy specified extras (i.e., attachments and
+notes)?, Default: TRUE}
 
 \item{remove.missing}{Deleted missing extras, Default: TRUE}
 
-\item{change.library}{Stage changing of library (e.g., from a group to a personal library), Default: FALSE}
+\item{change.library}{Stage changing of library (e.g., from a group to a
+personal library), Default: FALSE}
 
-\item{copy.user}{Nre user type (The functions will use `group` as prefix if FALSE), Default: TRUE}
+\item{copy.user}{New user type (The functions will use `group` as prefix if
+FALSE), Default: TRUE}
 
 \item{copy.id}{New id, Default: NULL}
 
@@ -40,20 +43,45 @@ id, API key, collections, and items)}
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., copied collections and items)
+A list with information on the specified Zotero library (e.g., copied
+  collections and items)
 }
 \description{
-Replace key identifiers with new ones while keeping existing structure and relationship between collections and items
+Replace key identifiers with new ones while keeping existing
+  structure and relationship between collections and items
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Copy collections and items from default Zotero group
-    example <- ZoteroCopy(Zotero(user = FALSE, library = TRUE))
-  }
+\donttest{
+  # Fetching collections and items from default group
+  zotero = Zotero(
+    user = FALSE,
+    id = "4827927",
+    api = "RqlAmlH5l1KPghfCseAq1sQ1",
+    library = TRUE
+  )
+
+  # Display collections
+  print(zotero$collections, width = 80)
+
+  # Display items
+  print(zotero$items, width = 80)
+
+  # Copy items
+  example <- ZoteroCopy(
+    zotero,
+  )
+
+  # Display new keys and version for collections
+  example$collections |>
+    dplyr::select(key, version, parentCollection)
+
+  # Display new keys and version for items
+  example$items |>
+    dplyr::select(key, version)
 }
 }
 \seealso{

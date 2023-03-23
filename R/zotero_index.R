@@ -1,16 +1,24 @@
 #' @title Create an index of Zotero items
-#' @description The function creates a index containing key information about the present Zotero items
+#' @description The function creates a index containing key information about
+#'   the present Zotero items
 #' @param data Tibble containing Zotero-type metadata (e.g., from Cristin)
 #' @return A tibble
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Access the default group library
-#'     example <- ZoteroLibrary(Zotero(user = FALSE))
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example$items)$name
-#'   }
+#' \donttest{
+#'   # Access the default group library
+#'   example = Zotero(
+#'     user = FALSE,
+#'     id = "4827927",
+#'     api = "RqlAmlH5l1KPghfCseAq1sQ1",
+#'     library = TRUE
+#'   )
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example$items) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}},
@@ -199,7 +207,7 @@ ZoteroIndex <- \(data) {
         # Edit date field
         date = dplyr::case_when(
           is.na(date) ~ "n.d.",
-          # Append a,b,c etc. to date for publications by authors with same year
+          # Append a, b, c etc. to date for publications by authors with same year
           dplyr::n() > 1 ~ paste0(date, letters[dplyr::row_number()]),
           # Do not change date if no duplicates are found
           TRUE ~ date

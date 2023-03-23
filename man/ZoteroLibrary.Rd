@@ -17,6 +17,8 @@ ZoteroLibrary(
   all.results = TRUE,
   max.results = NULL,
   result.type = NULL,
+  include.bib = FALSE,
+  style = "apa",
   force = FALSE,
   silent = FALSE
 )
@@ -25,9 +27,11 @@ ZoteroLibrary(
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items)}
 
-\item{case.insensitive}{Disregard letter casing when searching for collections, Default: TRUE}
+\item{case.insensitive}{Disregard letter casing when searching for
+collections, Default: TRUE}
 
-\item{ancestor}{Trace the lineage of a collection (i.e., find the top-level collection), Default: FALSE}
+\item{ancestor}{Trace the lineage of a collection (i.e., find the top-level
+collection), Default: FALSE}
 
 \item{recursive}{Find all nested collections, Default: FALSE}
 
@@ -45,29 +49,46 @@ id, API key, collections, and items)}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
 
-\item{result.type}{Pointless linguistics to display result type (default = `result`), Default: NULL}
+\item{result.type}{Pointless linguistics to display result type (default =
+`result`), Default: NULL}
+
+\item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
+FALSE}
+
+\item{style}{Citation style to use for appended bibliography and/or
+citations, Default: apa}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., collections and items)
+A list with information on the specified Zotero library (e.g.,
+  collections and items)
 }
 \description{
-The function uses information stored in the `zotero` list to access specified collections and items in the Zotero library
+The function uses information stored in the `zotero` list to
+  access specified collections and items in the Zotero library
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Access the default group library
-    example <- ZoteroLibrary(Zotero(user = FALSE))
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example$items)$name
-  }
+\donttest{
+  # Access the default group library
+  example <- ZoteroLibrary(
+    Zotero(
+      user = FALSE,
+      id = "4827927",
+      api = "RqlAmlH5l1KPghfCseAq1sQ1"
+    )
+  )
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example$items) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

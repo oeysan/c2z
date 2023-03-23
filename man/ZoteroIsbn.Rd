@@ -18,16 +18,18 @@ A Zotero-type matrix (tibble)
 Query libraries using ISBN (or MMS ID) and fetch metadata
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+\href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Search libraries for ISBN metadata
-    example <- ZoteroIsbn("978-1529797138")
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example)$name
-  }
+\donttest{
+  # Search libraries for ISBN metadata
+  example <- ZoteroIsbn("978-1529797138")
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

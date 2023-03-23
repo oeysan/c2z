@@ -1,7 +1,7 @@
 ---
 title: "Behold c2z!"
-bibliography: '`r gsub("\\\\", "/", file.path(tempdir(), file.path("c2z_temp", "references.bib")))`'
-csl: '`r gsub("\\\\", "/", file.path(tempdir(), file.path("c2z_temp", "style.csl")))`'
+bibliography: '`r gsub("\\\\", "/", file.path(tempdir(), "references.bib"))`'
+csl: '`r gsub("\\\\", "/", file.path(tempdir(), "style.csl"))`'
 lang: "en-US"
 ---
 
@@ -189,7 +189,7 @@ cristin <- Cristin(
   use.identifiers = TRUE,
   crossref.search = TRUE,
   autosearch = TRUE,
-  silent = FALSE
+  silent = TRUE
 )
 
 # Get the fox key
@@ -200,30 +200,30 @@ fox <- collections$collections |>
 # Post the items to the collection called fox
 post.cristin <- Zotero(
   collection.key = fox,
-  items = cristin$export,
+  items = cristin$results,
   library = TRUE,
   index = TRUE,
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = FALSE,
-  get.items = FALSE
+  silent = TRUE
 )
 
-# What do we got?
-print(post.cristin$index$name)
+# Select only names in index and print
+post.cristin$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
 ```
 
 In this second example we have decided that 2019 was an even better year for 
 cheese and change the `published_since` argument to 2019. The reason why we
-are doing this is to demonstrate the duplicate function in `CristinWrangler`, 
+are doing this is to demonstrate the duplicate function in `Cristin`, 
 which will identify any Cristin references imported into Zotero if 
 `zotero.check = TRUE`. 
 
 The function will try to use the `zotero` argument to search the specified 
 collection(s), if the argument is empty, it will search the entire Zotero 
-library. We will not bother to post the remaining results, however, let's use
-the `ZoteroIndex` to create an index over the collected items. 
+library. We will not bother to post the remaining results.
 
 ```{r cristin.check, eval = TRUE}
 # Query Cristin (again)
@@ -232,18 +232,9 @@ cristin2 <- Cristin(
   published_since = 2019,
   filter = cristin.filter,
   zotero.import = TRUE,
-  use.identifiers = FALSE,
-  crossref.search = FALSE,
-  autosearch = FALSE,
   zotero.check = TRUE,
   zotero = post.cristin
 )
-
-# Create an index
-items <- ZoteroIndex(cristin2$export)
-
-# What do we got?
-print(items$name)
 ```
 
 ## Adding items from identifiers
@@ -274,8 +265,10 @@ identifiers <- Zotero(
   get.items = FALSE
 )
 
-# What do we got?
-print(identifiers$index$name)
+# Select only names in index and print
+identifiers$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
 ```
 
 ## Adding items from the Man
@@ -307,8 +300,10 @@ the.man <- Zotero(
   get.items = FALSE
 )
 
-# What do we got?
-print(the.man$index$name)
+# Select only names in index and print
+the.man$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
 ```
 
 ## Adding items from CRAN
@@ -364,7 +359,10 @@ cran <- Zotero(
 )
 
 # What do we got?
-print(cran$index$name)
+# Select only names in index and print
+index <- cran$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
 ```
 
 # Copying
@@ -420,10 +418,10 @@ post.copy <- ZoteroPost(
   silent = TRUE
 )
 
-items <- ZoteroIndex(post.copy$items)
-
-# What do we got?
-print(items$name)
+# Select only names in index and print
+ZoteroIndex(post.copy$items) |>
+  dplyr::select(name) |>
+  print(width = 80)
 ```
 
 # Bibliography
@@ -449,7 +447,7 @@ bibliography <- Zotero(
   export = TRUE,
   format = "biblatex",
   save.data = TRUE,
-  save.path = file.path(tempdir(), "c2z_temp"),
+  save.path = tempdir(),
   bib.name = "references",
   csl.type = "apa-single-spaced",
   csl.name = "style",
@@ -458,9 +456,10 @@ bibliography <- Zotero(
 
 # What do we got?
 sprintf(
-  "We now have %s collections and %s items",
+  "We now have %s collections, %s references, and %s attachments",
   bibliography$n.collections,
-  bibliography$n.items
+  bibliography$n.items,
+  bibliography$n.attachments
 )
 ```
 

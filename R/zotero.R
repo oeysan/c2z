@@ -1,12 +1,17 @@
 #' @title Connect to Zotero API
-#' @description Wrapper to connect with the Zotero API and the main functions of *c2z*
-#' @param collection.names Vector of collection names to create or search for, Default: NULL
+#' @description Wrapper to connect with the Zotero API and the main functions of
+#'   *c2z*
+#' @param collection.names Vector of collection names to create or search for,
+#'   Default: NULL
 #' @param collection.key A specified collection key, Default: NULL
 #' @param collection.path Vector of nested collection keys, Default: NULL
 #' @param item.key A specified item key, Default: NULL
-#' @param library Use `ZoteroLibrary` to fetch collections and items, Default: FALSE
-#' @param case.insensitive Disregard letter casing when searching for collections, Default: TRUE
-#' @param ancestor Trace the lineage of a collection (i.e., find the top-level collection), Default: FALSE
+#' @param library Use `ZoteroLibrary` to fetch collections and items, Default:
+#'   FALSE
+#' @param case.insensitive Disregard letter casing when searching for
+#'   collections, Default: TRUE
+#' @param ancestor Trace the lineage of a collection (i.e., find the top-level
+#'   collection), Default: FALSE
 #' @param recursive Find all nested collections, Default: FALSE
 #' @param create Create missing collections, Default: FALSE
 #' @param limit Number of results per query (max 100), Default: 100
@@ -15,65 +20,79 @@
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
-#' @param result.type Pointless linguistics to display result type (default = `result`), Default: NULL
-#' @param add Use `ZoteroAdd` to add items to Zotero list, Default: TRUE
+#' @param result.type Pointless linguistics to display result type (default =
+#'   `result`), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param items Predefined metadata (as tibble), Default: NULL
 #' @param doi Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL
-#' @param isbn Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default: NULL
+#' @param isbn Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default:
+#'   NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param export Use `ZoteroExport` to export items, Default: FALSE
-#' @param csl.type Specify a CSL type to Official repository for Citation Style Language (CSL), Default: NULL
+#' @param csl.type Specify a CSL type to Official repository for Citation Style
+#'   Language (CSL), Default: NULL
 #' @param csl.name Name of saved CSL file, Default: 'style'
 #' @param format Export format of Zotero items, Default: 'biblatex'
 #' @param save.data Save data (e.g., bibliography) to disk, Default: FALSE
 #' @param save.path Location to store data on disk, Default: NULL
 #' @param bib.name Name of exported bibliography, Default: 'references'
-#' @param append Append extra metadata to Zotero query, Default: FALSE
-#' @param include Include bibliography (i.e., `bib`) and/or citation (i.e., `citation`), Default: NULL
-#' @param style Citation style to use for appended bibliography and/or citations, Default: apa
+#' @param include.bib Include HTML-formatted bibliography from Zotero, Default:
+#'   FALSE
+#' @param style Citation style to use for appended bibliography and/or
+#'   citations, Default: apa
 #' @param locale Desired language format of bibliography, Default: 'en-US'
-#' @param copy Use `ZoteroCopy` to delete collections and/or items, Default: FALSE
+#' @param copy Use `ZoteroCopy` to delete collections and/or items, Default:
+#'   FALSE
 #' @param copy.collections Try to copy specified collections, Default: TRUE
 #' @param copy.items Try to copy specified items?, Default: TRUE
-#' @param copy.extras Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE
+#' @param copy.extras Try to copy specified extras (i.e., attachments and
+#'   notes)?, Default: TRUE
 #' @param remove.missing Deleted missing extras, Default: TRUE
-#' @param change.library Stage changing of library (e.g., from a group to a personal library), Default: FALSE
-#' @param copy.user Nre user type (The functions will use `group` as prefix if FALSE), Default: TRUE
+#' @param change.library Stage changing of library (e.g., from a group to a
+#'   personal library), Default: FALSE
+#' @param copy.user New user type (The functions will use `group` as prefix if
+#'   FALSE), Default: TRUE
 #' @param copy.id New id, Default: NULL
-#' @param copy.api New API key. Set API to `NA` if key is not needed, Default: NULL
+#' @param copy.api New API key. Set API to `NA` if key is not needed, Default:
+#'   NULL
 #' @param post Use `ZoteroPost` to post collections and/or items, Default: FALSE
 #' @param post.collections Try to copy specified collections, Default: TRUE
 #' @param post.items Try to copy specified items?, Default: TRUE
-#' @param post.attachments Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE
-#' @param post.limit Number of collections/items to post per request (max 50), Default: 50
-#' @param delete Use `ZoteroDelete` to delete collections and/or items, Default: FALSE
+#' @param post.attachments Try to copy specified extras (i.e., attachments and
+#'   notes)?, Default: TRUE
+#' @param post.limit Number of collections/items to post per request (max 50),
+#'   Default: 50
+#' @param delete Use `ZoteroDelete` to delete collections and/or items, Default:
+#'   FALSE
 #' @param delete.collections Try to delete specified collections, Default: TRUE
 #' @param delete.items Try to delete specified items?, Default: TRUE
-#' @param delete.limit Number of collections/items to delete per request (max 50), Default: 50
+#' @param delete.limit Number of collections/items to delete per request (max
+#'   50), Default: 50
 #' @param ragnarok Delete EVERYTHING in the specified library, Default: FALSE
-#' @param user User type (The functions will use `group` as prefix if FALSE), Default: TRUE
+#' @param user User type (The functions will use `group` as prefix if FALSE),
+#'   Default: TRUE
 #' @param index Create an index of items, Default: FALSE
 #' @param id User or group ID, Default: NULL
-#' @param api API key to connect with the Zotero library. Set API to `NA` if key is not needed. See \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API}, Default: NULL
+#' @param api API key to connect with the Zotero library. Set API to `NA` if key
+#'   is not needed. See
+#'   \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API},
+#'   Default: NULL
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param base.url Base url of the Zotero API, Default: 'https://api.zotero.org'
 #' @param debug Let you test the Zotero API for errors, Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param zotero A list with information on the specified Zotero library (e.g.,
-#' id, API key, collections, and items), Default: NULL
+#'   id, API key, collections, and items), Default: NULL
 #' @param log A list for storing log elements, Default: list()
-#' @return A list with information on the specified Zotero library (e.g., id, API key, collections, and items)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @return A list with information on the specified Zotero library (e.g., id,
+#'   API key, collections, and items)
+#' @details Please see
+#' \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Create the default Zotero list
-#'     example <- Zotero()
-#'     # Print the list
-#'     print(example)
-#'   }
-#' }
+#' # Create the default Zotero list
+#' example <- Zotero(id = "9913421", api = "RqlAmlH5l1KPghfCseAq1sQ1")
+#' # Print the interesting pars of an otherwise empty list
+#' print(tail(example,5))
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}}
 #' @rdname Zotero
@@ -94,7 +113,6 @@ Zotero <- \(collection.names = NULL,
             all.results = TRUE,
             max.results = NULL,
             result.type = NULL,
-            add = TRUE,
             items = NULL,
             doi = NULL,
             isbn = NULL,
@@ -105,8 +123,7 @@ Zotero <- \(collection.names = NULL,
             save.data = FALSE,
             save.path = NULL,
             bib.name = "references",
-            append = FALSE,
-            include = NULL,
+            include.bib = FALSE,
             style = "apa",
             locale = "en-US",
             copy = FALSE,
@@ -139,6 +156,9 @@ Zotero <- \(collection.names = NULL,
             zotero = NULL,
             log = list()) {
 
+  # Visible bindings
+  key <- NULL
+
   # Create work list if zotero is not defined
   if (is.null(zotero)) {
     zotero <- list(
@@ -148,6 +168,7 @@ Zotero <- \(collection.names = NULL,
       item.key = item.key,
       n.collections = 0,
       n.items = 0,
+      n.attachments = 0,
       data.cache = NULL,
       results = NULL,
       collections = NULL,
@@ -155,7 +176,6 @@ Zotero <- \(collection.names = NULL,
       attachments = NULL,
       export = NULL,
       bibliography = NULL,
-      citation = NULL,
       locale = locale,
       index = NULL,
       log = log
@@ -278,23 +298,19 @@ Zotero <- \(collection.names = NULL,
 
   }
 
-  # Fetch data if library is set to TRUE
-  if (library) zotero <- ZoteroLibrary(
-    zotero,
-    case.insensitive,
-    ancestor,
-    recursive,
-    create,
-    limit,
-    start,
-    get.items,
-    item.type,
-    all.results,
-    max.results,
-    result.type,
-    force,
-    silent
-  )
+  # Fetch collections if library is set to TRUE
+  if (library) {
+    zotero <- ZoteroLibrary(
+      zotero,
+      case.insensitive,
+      ancestor,
+      recursive,
+      create,
+      get.items = FALSE,
+      force = force,
+      silent = any(include.bib, get.items, silent)
+    )
+  }
   # Copy data if library is set to TRUE
   if (copy) zotero <- ZoteroCopy(
     zotero,
@@ -309,23 +325,52 @@ Zotero <- \(collection.names = NULL,
     silent
   )
   # Add data if add is set to TRUE
-  if (add) zotero <- ZoteroAdd(
-    zotero,
-    items,
-    doi,
-    isbn,
-    silent
-  )
+  if (!is.null(items) | !is.null(doi) | !is.null(isbn)) {
+    zotero <- ZoteroAdd(
+      zotero,
+      items,
+      doi,
+      isbn,
+      silent
+    )
+  }
   # Post data if post is set to TRUE
-  if (post) zotero <- ZoteroPost(
-    zotero,
-    post.collections,
-    post.items,
-    post.attachments,
-    post.limit,
-    force,
-    silent
-  )
+  if (post) {
+    zotero <- ZoteroPost(
+      zotero,
+      post.collections,
+      post.items,
+      post.attachments,
+      post.limit,
+      force,
+      silent
+    )
+    # Remove items and collections
+    if (library & any(include.bib, get.items)) {
+      zotero$collections <- zotero$items <- NULL
+    }
+  }
+  # Fetch items / bibliography if get.items / include.bib is set to TRUE
+  if (library & any(include.bib, get.items)) {
+    zotero <- ZoteroLibrary(
+      zotero,
+      case.insensitive,
+      ancestor,
+      recursive,
+      create,
+      limit,
+      start,
+      get.items,
+      item.type,
+      all.results,
+      max.results,
+      result.type,
+      include.bib,
+      style,
+      force,
+      silent
+    )
+  }
   # Export data if export is set to TRUE
   if (export) zotero <- ZoteroExport(
     zotero,
@@ -334,9 +379,6 @@ Zotero <- \(collection.names = NULL,
     locale,
     format,
     bib.name,
-    append,
-    include,
-    style,
     save.data,
     save.path,
     silent
@@ -361,7 +403,18 @@ Zotero <- \(collection.names = NULL,
       log = zotero$log
     )
     zotero$index <- ZoteroIndex(zotero$items)
+
+    # Add bibliography to index if defined
+    if (!is.null(zotero$bibliography)) {
+      zotero$index <- zotero$index |>
+        dplyr::full_join(zotero$bibliography,
+                         by = dplyr::join_by(key))
+    }
+
   }
+
+  # Clean up log somewhat...
+  log = log[!duplicated(log)]
 
   # Return Zotero list
   return (zotero)

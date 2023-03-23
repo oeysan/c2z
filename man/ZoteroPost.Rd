@@ -22,32 +22,69 @@ id, API key, collections, and items)}
 
 \item{post.items}{Try to copy specified items?, Default: TRUE}
 
-\item{post.attachments}{Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE}
+\item{post.attachments}{Try to copy specified extras (i.e., attachments and
+notes)?, Default: TRUE}
 
-\item{post.limit}{Number of collections/items to post per request (max 50), Default: 50}
+\item{post.limit}{Number of collections/items to post per request (max 50),
+Default: 50}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., posted collections and items)
+A list with information on the specified Zotero library (e.g., posted
+  collections and items)
 }
 \description{
 Create or update collections and items in a specified library
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Delete everything in a group
-    example <- ZoteroPost(
-      Zotero(user = FALSE, id = "4988497", doi = "10.1126/sciadv.abd1705"),
-      post.collections = FALSE,
-    )
-  }
+\donttest{
+  # Connect to the public group "c2z_delete"
+  # NB! This process can be done using only `Zotero` (see README)
+  zotero <- Zotero(
+    user = FALSE,
+    id = "4988497",
+    api = "RqlAmlH5l1KPghfCseAq1sQ1"
+  )
+
+  # Create a new collection for POST
+  zotero$collections <- tibble::tibble(
+    key = ZoteroKey(),
+    version = 0,
+    name = "Post-test",
+    parentCollection = "FALSE"
+  )
+
+  # Add item to post using `ZoteroAdd` (and `ZoteroDoi`)
+  zotero <- ZoteroAdd(
+    zotero,
+    doi = "10.1126/sciadv.abd1705"
+  )
+
+  # Post a DOI to the public group "c2z_delete"
+  example <- ZoteroPost(
+    zotero,
+    post.collections = TRUE,
+    post.items = TRUE
+  )
+
+  # Delete collections and items using `ZoteroDelete`
+  delete.example <- ZoteroDelete(
+    zotero,
+    delete.collections = TRUE,
+    delete.items = TRUE
+  )
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example$items) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

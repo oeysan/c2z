@@ -3,15 +3,17 @@
 #' @param id name of R package
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see 
+#' \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Search cran for package `bfw`
-#'     example <- ZoteroCran("bfw")
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example)$name
-#'   }
+#' \donttest{
+#'   # Search cran for package `dplyr`
+#'   example <- ZoteroCran(c("dplyr", "jsonlite", "httr"))
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}
@@ -64,7 +66,7 @@ ZoteroCran <- \(id, meta = list()) {
     )
     # Fetch creator(s)
     n.creators <- sum(grepl("citation_author", data))
-    meta$creators <- ZoteroCreator(lapply(1:n.creators, \(i) {
+    meta$creators <- ZoteroCreator(lapply(seq_along(n.creators), \(i) {
       if (n.creators == 1) i <- ""
       path <- sprintf("//meta[@name='citation_author%s']", i)
       name <- unlist(strsplit(ReadAttr(
@@ -73,7 +75,7 @@ ZoteroCran <- \(id, meta = list()) {
       list(
         type = "author",
         name = c(tail(name,1),
-                 paste(name[1:(length(name)-1)], collapse = " "))
+                 paste(name[seq_along(length(name)-1)], collapse = " "))
       )
     }))
     # Fetch rights

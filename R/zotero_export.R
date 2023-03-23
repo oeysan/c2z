@@ -1,32 +1,40 @@
 #' @title Export Zotero items to bibliography
-#' @description Export Zotero items to a specified format (e.g., BibLaTeX) using a CSL format (e.g., APA7)
-#' @param zotero A list with information on the specified Zotero library (e.g., id, API key, collections, and items)
-#' @param csl.type Specify a CSL type to Official repository for Citation Style Language (CSL), Default: NULL
+#' @description Export Zotero items to a specified format (e.g., BibLaTeX) using
+#'   a CSL format (e.g., APA7)
+#' @param zotero A list with information on the specified Zotero library (e.g.,
+#'   id, API key, collections, and items)
+#' @param csl.type Specify a CSL type to Official repository for Citation Style
+#'   Language (CSL), Default: NULL
 #' @param csl.name Name of saved CSL file, Default: 'style'
 #' @param locale Desired language format of bibliography, Default: 'en-US'
 #' @param format Export format of Zotero items, Default: 'biblatex'
 #' @param bib.name Name of exported bibliography, Default: 'references'
-#' @param append Append extra metadata to Zotero query, Default: FALSE
-#' @param include Include bibliography (i.e., `bib`) and/or citation (i.e., `citation`), Default: NULL
-#' @param style Citation style to use for appended bibliography and/or citations, Default: apa
+
 #' @param save.data Save data (e.g., bibliography) to disk, Default: FALSE
 #' @param save.path Location to store data on disk, Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
-#' @return A list with information on the specified Zotero library (e.g., exported items, bibliography and citations)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @return A list with information on the specified Zotero library (e.g.,
+#'   exported items, bibliography and citations)
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Export 1 items from the default group
-#'     example <- ZoteroExport(
-#'       Zotero(user = FALSE,
-#'              library = TRUE,
-#'              max.results = 1,
-#'              item.type = "-attachment || note")
-#'     )
-#'     # Display exported
-#'     cat(example$export)
-#'   }
+#' \donttest{
+#'   # Define Zotero list according to default group
+#'   zotero = Zotero(
+#'     user = FALSE,
+#'     id = "4827927",
+#'     api = "RqlAmlH5l1KPghfCseAq1sQ1",
+#'     item.type = "-attachment || note",
+#'     max.result = 1,
+#'     library = TRUE
+#'   )
+#'
+#'   # Export 1 items from the default group
+#'   example <- ZoteroExport(
+#'     zotero
+#'   )
+#'   # Display exported
+#'   cat(example$export, fill = 80)
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}
@@ -39,140 +47,127 @@ ZoteroExport <- \(zotero,
                   locale = "en-US",
                   format = "biblatex",
                   bib.name = "references",
-                  append = FALSE,
-                  include = NULL,
-                  style = "apa",
                   save.data = FALSE,
                   save.path = NULL,
                   silent = FALSE) {
 
+  # Return Zotero list if items are not defined
+  if (is.null(zotero$items)) {
+    # Add to log
+    zotero$log <- LogCat(
+      "The items list is empty",
+      silent = silent,
+      log = zotero$log
+    )
+    return (zotero)
+  }
+
   # Visible bindings
   itemType <- key <- NULL
 
-  # Run if items exists and
-  if (!is.null(zotero$items)) {
+  # Get CSL if csl.type is defined
+  if (!is.null(csl.type)) {
 
-    # Get CSL if csl.type is defined
-    if (!is.null(csl.type)) {
+    # Fetch csl
+    get.csl <- GoFish(
+      httr::RETRY(
+        "GET",
+        sprintf(
+          "%s/citation-style-language/styles/master/%s.csl",
+          "https://raw.githubusercontent.com",
+          csl.type
+        ),
+        quiet = TRUE),
+      stats::setNames(list(404), "status_code")
+    )
 
-      # Define CSL
-      # Select base url
-      base.url <- "https://raw.githubusercontent.com"
-      # Add csl
-      csl.url <- sprintf("%s/citation-style-language/styles/master/%s.csl",
-                         base.url,
-                         csl.type)
-      # Query for csl
-      get.csl <- httr::RETRY("GET", csl.url)
-      # Format csl
-      csl.style <- rawToChar(get.csl$content)
-
-      # Save data if save.data is TRUE
-      if (save.data) {
-        saved.file <- SaveData(csl.style, csl.name, "csl", save.path)
-
-        # Add to log
-        zotero$log <- LogCat(sprintf("CSL saved as %s format in %s",
-                              csl.type,
-                              saved.file),
-                      silent = silent,
-                      log = zotero$log)
-
-      }
-
+    # Return Zotero-list upon error
+    if (get.csl$status_code != 200) {
+      zotero$log <-  LogCat(
+        ErrorCode(get.csl$status_code),
+        silent = silent,
+        log = zotero$log
+      )
+      return (zotero)
     }
 
-    # Get keys from items that is not attachments or notes
-    export.keys <- zotero$items |>
-      dplyr::filter(!grepl("attachment|note", itemType)) |>
-      dplyr::pull(key)
-
-    # JUST SOME MORE.....
-    n.exported <- Pluralis(length(export.keys), "item", "items")
-
-    # Saving data
-    zotero$log <- LogCat(paste("Exporting", n.exported),
-                         silent = silent,
-                         log = zotero$log)
-
-    # Fetch data in requested format
-    export.data <- ZoteroGet(Zotero(user = zotero$user,
-                                    id = zotero$id,
-                                    api = zotero$api),
-                             append.items = TRUE,
-                             item.keys = paste(export.keys,
-                                               collapse=","),
-                             format = format,
-                             force = TRUE,
-                             silent = silent,
-                             result.type = "export item")
-
-    # Add export data
-    zotero$export <- export.data$results
-
-    # Remove excess columns if export format is a tibble
-    if (is.data.frame(zotero$export)) {
-      zotero$export <- zotero$export |>
-        dplyr::select(tidyselect::where(~all(!is.na(.))))
-    }
-
-    # Fetch additional data if include is defined
-    if (!is.null(include)) {
-      bib.data <- ZoteroGet(Zotero(user = zotero$user,
-                                   id = zotero$id,
-                                   api = zotero$api),
-                            append.items = TRUE,
-                            item.keys = paste(export.keys,
-                                              collapse=","),
-                            include = include,
-                            style = style,
-                            force = TRUE,
-                            silent = FALSE,
-                            result.type = "bibliography item")
-
-      zotero$bibliography <- bib.data$bibliography
-      zotero$citation <- bib.data$citation
-    }
-
-    # Message log
-    zotero$log <- LogCat(
-      sprintf(
-        "%s exported as %s",
-        Pluralis(nrow(zotero$items), "item", "items"),
-        format
-      ),
+    zotero$log <-  LogCat(
+      sprintf("Found CLS in `%s` format", csl.type),
       silent = silent,
       log = zotero$log
     )
 
-    # Do if save data is TRUE
+    # Format csl
+    csl.style <- rawToChar(get.csl$content)
+
+    # Save data if save.data is TRUE
     if (save.data) {
-
-      # Define export
-      ## if JSON use items in JSON format
-      if (format == "json") {
-        zotero$export <- ZoteroToJson(zotero$items)
-        extension <- "json"
-        # Else use format in export
-      } else {
-        extension <- Mime(
-          export.data$data.cache$headers$`content-type`
-        )
-      }
-
-      # Save as single file is save is set to TRUE
-      saved.file <- SaveData(zotero$export,
-                             bib.name,
-                             extension,
-                             save.path,
-                             append)
+      saved.file <- SaveData(csl.style, csl.name, "csl", save.path)
 
       # Add to log
-      zotero$log <- LogCat(paste("Items saved in", saved.file),
-                           silent = silent,
-                           log = zotero$log)
-
+      zotero$log <- LogCat(
+        sprintf("CSL saved in %s", saved.file),
+        silent = silent,
+        log = zotero$log
+      )
     }
+
+  }
+
+  # Get keys from items that is not attachments or notes
+  export.keys <- zotero$items |>
+    dplyr::filter(!grepl("attachment|note", itemType)) |>
+    dplyr::select(key)
+
+  # Fetch data in requested format
+  zotero <- ZoteroGet(
+    zotero,
+    use.collection = FALSE,
+    item.keys = export.keys,
+    format = format,
+    force = TRUE,
+    silent = silent,
+    result.type = sprintf("`%s` reference", format)
+  )
+
+  # Set export
+  zotero$export <- zotero$results
+  # Set export extension
+  export.extension <- zotero$data.cache$headers$`content-type`
+
+  # Remove excess columns if export format is a tibble
+  if (is.data.frame(zotero$export)) {
+    zotero$export <- zotero$export |>
+      dplyr::select(tidyselect::where(~all(!is.na(.))))
+  }
+
+  # Do if save data is TRUE
+  if (save.data) {
+
+    # Define export
+    ## if JSON use items in JSON format
+    if (format == "json") {
+      zotero$export <- ZoteroToJson(zotero$export)
+      extension <- "json"
+      # Else use format in export
+    } else {
+      extension <- Mime(export.extension)
+    }
+
+    # Save as single file is save is set to TRUE
+    saved.file <- SaveData(
+      zotero$export,
+      bib.name,
+      extension,
+      save.path
+    )
+
+    # Add to log
+    zotero$log <- LogCat(
+      paste("Bibliography saved in", saved.file),
+      silent = silent,
+      log = zotero$log
+    )
 
   }
 

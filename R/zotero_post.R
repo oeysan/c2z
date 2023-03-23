@@ -1,24 +1,61 @@
 #' @title Post collections and items to a Zotero library
 #' @description Create or update collections and items in a specified library
 #' @param zotero A list with information on the specified Zotero library (e.g.,
-#' id, API key, collections, and items)
+#'   id, API key, collections, and items)
 #' @param post.collections Try to copy specified collections, Default: TRUE
 #' @param post.items Try to copy specified items?, Default: TRUE
-#' @param post.attachments Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE
-#' @param post.limit Number of collections/items to post per request (max 50), Default: 50
+#' @param post.attachments Try to copy specified extras (i.e., attachments and
+#'   notes)?, Default: TRUE
+#' @param post.limit Number of collections/items to post per request (max 50),
+#'   Default: 50
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
-#' @return A list with information on the specified Zotero library (e.g., posted collections and items)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @return A list with information on the specified Zotero library (e.g., posted
+#'   collections and items)
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Delete everything in a group
-#'     example <- ZoteroPost(
-#'       Zotero(user = FALSE, id = "4988497", doi = "10.1126/sciadv.abd1705"),
-#'       post.collections = FALSE,
-#'     )
-#'   }
+#' \donttest{
+#'   # Connect to the public group "c2z_delete"
+#'   # NB! This process can be done using only `Zotero` (see README)
+#'   zotero <- Zotero(
+#'     user = FALSE,
+#'     id = "4988497",
+#'     api = "RqlAmlH5l1KPghfCseAq1sQ1"
+#'   )
+#'
+#'   # Create a new collection for POST
+#'   zotero$collections <- tibble::tibble(
+#'     key = ZoteroKey(),
+#'     version = 0,
+#'     name = "Post-test",
+#'     parentCollection = "FALSE"
+#'   )
+#'
+#'   # Add item to post using `ZoteroAdd` (and `ZoteroDoi`)
+#'   zotero <- ZoteroAdd(
+#'     zotero,
+#'     doi = "10.1126/sciadv.abd1705"
+#'   )
+#'
+#'   # Post a DOI to the public group "c2z_delete"
+#'   example <- ZoteroPost(
+#'     zotero,
+#'     post.collections = TRUE,
+#'     post.items = TRUE
+#'   )
+#'
+#'   # Delete collections and items using `ZoteroDelete`
+#'   delete.example <- ZoteroDelete(
+#'     zotero,
+#'     delete.collections = TRUE,
+#'     delete.items = TRUE
+#'   )
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example$items) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{bind}},
@@ -47,7 +84,7 @@ ZoteroPost <- \(zotero,
               silent) {
 
     # Visible bindings
-    prefix <-  desc <- ind <- status <- values <- NULL
+    prefix <-  desc <- ind <- status <- values <- summary.list <- NULL
 
     # Define data as collection if append.collection is set to TRUE
     if (post.collections) {
@@ -113,12 +150,12 @@ ZoteroPost <- \(zotero,
     # Start time for query
     query.start <- Sys.time()
     # Cycle through metadata
-    for (i in 1:length(metadata)) {
+    for (i in seq_along(metadata)) {
 
       # Create header for JSON with token
       json.header <- httr::add_headers(
         "Content-Type" = "application/json",
-        "Zotero-Write-Token" = ZoteroKey(token = TRUE)
+        "Zotero-Write-Token" = ZoteroKey(TRUE)
       )
 
       # Convert to JSON
@@ -135,6 +172,17 @@ ZoteroPost <- \(zotero,
         body = json.body,
         quiet = TRUE
       )
+
+      # Return Zotero list on errror
+      if (json.post$status_code != 200) {
+        log.eta <-  LogCat(
+          ErrorCode(json.post$status_code),
+          silent = silent,
+          log = log,
+          append.log = FALSE
+        )
+        next
+      }
 
       # Convert results to list
       json.data <- jsonlite::fromJSON(
@@ -175,7 +223,7 @@ ZoteroPost <- \(zotero,
       # Set error message for failed uploads
       if (length(json.data$failed)) {
         failed.message <- dplyr::bind_rows(
-          lapply(1:length(json.data$failed), \(j) {
+          lapply(seq_along(json.data$failed), \(j) {
             x <- json.data$failed[[j]]
             key <- as.numeric(names(json.data$failed[j]))+1
             data.frame(
@@ -225,10 +273,17 @@ ZoteroPost <- \(zotero,
     }
 
     # Summary list
-    summary.list  <- stats::setNames(
-      list(summary, table(summary$status)),
-      paste0(c("post.status.", "post.summary."), summary.names)
-    )
+    if (nrow(summary)) {
+      summary.list  <- stats::setNames(
+        list(
+          summary,
+          summary |>
+            dplyr::group_by(status) |>
+            dplyr::summarize(summary = dplyr::n())
+        ),
+        paste0(c("post.status.", "post.summary."), summary.names)
+      )
+    }
 
     # Add summary to log
     zotero$log <- LogCat(
@@ -271,7 +326,7 @@ ZoteroPost <- \(zotero,
     # Start time for query
     query.start <- Sys.time()
     # Cycle through attachments
-    for (i in 1:nrow(zotero$attachments)) {
+    for (i in seq_len(nrow(zotero$attachments))) {
 
       # Select attachment
       x <- zotero$attachments[i,]

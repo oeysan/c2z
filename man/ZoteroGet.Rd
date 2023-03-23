@@ -20,7 +20,7 @@ ZoteroGet(
   item.keys = NULL,
   collection.keys = NULL,
   item.type = NULL,
-  include = NULL,
+  include.bib = FALSE,
   style = "apa",
   locale = "en-US",
   all.results = TRUE,
@@ -34,11 +34,13 @@ ZoteroGet(
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items)}
 
-\item{use.collection}{Use collection key if present in Zotero list, Default: TRUE}
+\item{use.collection}{Use collection key if present in Zotero list, Default:
+TRUE}
 
 \item{use.item}{Use item key if present in Zotero list, Default: FALSE}
 
-\item{append.collections}{Append `/collections/` to Zotero API url, Default: FALSE}
+\item{append.collections}{Append `/collections/` to Zotero API url, Default:
+FALSE}
 
 \item{append.items}{Append `/items/` to Zotero API url, Default: FALSE}
 
@@ -46,7 +48,7 @@ id, API key, collections, and items)}
 
 \item{append.file}{Append `/file/` to Zotero API url, Default: FALSE}
 
-\item{custom.url}{Use a custrom Zotero API url, Default: NULL}
+\item{custom.url}{Use a custom Zotero API url, Default: NULL}
 
 \item{open.query}{Use your own query, Default: NULL}
 
@@ -54,7 +56,7 @@ id, API key, collections, and items)}
 
 \item{start}{Starting position of query (0 = first result), Default: 0}
 
-\item{format}{Format of reponse from the Zotero API, Default: 'json'}
+\item{format}{Format of response from the Zotero API, Default: 'json'}
 
 \item{item.keys}{Specified vector of items keys, Default: NULL}
 
@@ -62,9 +64,11 @@ id, API key, collections, and items)}
 
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
-\item{include}{Include bibliography (i.e., `bib`) and/or citation (i.e., `citation`), Default: NULL}
+\item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
+FALSE}
 
-\item{style}{Citation style to use for appended bibliography and/or citations, Default: apa}
+\item{style}{Citation style to use for appended bibliography and/or
+citations, Default: apa}
 
 \item{locale}{Desired language format of bibliography, Default: 'en-US'}
 
@@ -72,32 +76,43 @@ id, API key, collections, and items)}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
 
-\item{result.type}{Pointless linguistics to display result type (default = `result`), Default: NULL}
+\item{result.type}{Pointless linguistics to display result type (default =
+`result`), Default: NULL}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 }
 \value{
-A list with information on the specified Zotero library (e.g., collections and items)
+A list with information on the specified Zotero library (e.g.,
+  collections and items)
 }
 \description{
 Get
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Query default group Zotero libray for 1 item
-    example <- ZoteroGet(
-      Zotero(user = FALSE),
-      max.results = 1
-    )
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example$result)$name
-  }
+\donttest{
+  # Define Zotero list according to default setings
+  zotero = Zotero(
+    user = FALSE,
+    id = "4827927",
+    api = "RqlAmlH5l1KPghfCseAq1sQ1"
+  )
+
+  # Query default group Zotero library for 1 item
+  example <- ZoteroGet(
+    zotero,
+    max.results = 1
+  )
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example$results) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

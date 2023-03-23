@@ -6,14 +6,9 @@
 \usage{
 CristinWrangler(
   data,
-  zotero.check = TRUE,
-  zotero = NULL,
   use.identifiers = TRUE,
   crossref.search = FALSE,
   autosearch = TRUE,
-  remove.na = TRUE,
-  replace.na = "book",
-  force.type = NULL,
   override = FALSE,
   silent = FALSE,
   polite = TRUE,
@@ -23,32 +18,16 @@ CristinWrangler(
 \arguments{
 \item{data}{Tibble containing metadata from Cristin}
 
-\item{zotero.check}{Should the function look for duplicates?, Default: TRUE}
-
-\item{zotero}{List with Zotero information used to check for duplicates,
-Default: NULL}
-
 \item{use.identifiers}{Use if ISBN/DOI identifiers if enabled, Default: TRUE}
 
-\item{crossref.search}{Query Crossref database based on title, authors,
-and date if enabled, Default: FALSE}
+\item{crossref.search}{Query Crossref database based on title, authors, and
+date if enabled, Default: FALSE}
 
 \item{autosearch}{Results could be automatically evaluated (based on some
 logic) or you could inspect them manually if set to FALSE, Default: TRUE}
 
-\item{remove.na}{Cristin contains many, more or less, obscure categories,
-and not all are (yet) supported. By default these are removed, however, if
-this option is set to FALSE unsupported categories are treated according to
-replace.na, Default: TRUE}
-
-\item{replace.na}{May the odds be in your favor and replace unsupported
-categories with a predefined itemType if remove.na is set to
-false, Default: 'book'}
-
-\item{force.type}{Force all items to a predefined itemType, Default: NULL}
-
-\item{override}{Put your faith in the algorithms and the identifiers
-(i.e., DOI/ISNB) and override what is reported in Cristin, Default: FALSE}
+\item{override}{Put your faith in the algorithms and the identifiers (i.e.,
+DOI/ISBN) and override what is reported in Cristin, Default: FALSE}
 
 \item{silent}{Running silent, running deep, Default: FALSE}
 
@@ -62,23 +41,26 @@ A Zotero-type matrix (tibble)
 }
 \description{
 The little engine that could, at least try, to wrangle metadata
-from Cristin into a Zotero-type matrix. References can be augmented, or
-replaced with metadata gathered through ISBN or DOI identifiers, and through
-Crossref queries if all other fails. Or, hope the best and place your
-misguided faith in the ability of researchers to correctly register their
-own publications.
+  from Cristin into a Zotero-type matrix. References can be augmented, or
+  replaced with metadata gathered through ISBN or DOI identifiers, and
+  through Crossref queries if all other fails. Or, hope the best and place
+  your misguided faith in the ability of researchers to correctly register
+  their own publications.
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Simple `Cristin` search by id with import set as FALSE
-    example <- Cristin(id = "840998", zotero.import = FALSE)
-    # Use `ZoteroIndex` to print `CristinWrangler`
-    ZoteroIndex(CristinWrangler(example$results)$results)$name
-  }
+\donttest{
+  # Simple `Cristin` search by id with import set as FALSE
+  example <- Cristin(id = "840998", zotero.import = FALSE)
+  # Check if results i supported using `CristinSupported`
+  example.supported <- CristinSupported(example$results)
+  # Use `ZoteroIndex` to print `CristinWrangler`
+  ZoteroIndex(CristinWrangler(example.supported$data)$results) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

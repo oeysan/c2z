@@ -1,18 +1,21 @@
 #' @title Wrangle regjeringen.no metadata into Zotero-type format
 #' @description Query regjeringen by search word and type and fetch metadata
 #' @param search Search term (e.g., 2018: 2)
-#' @param type type of query (e.g., white paper, official norwegian reports), Default: "NOU"
+#' @param type type of query (e.g., white paper, official norwegian reports),
+#'   Default: "NOU"
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @return A Zotero-type matrix (tibble)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Search the default entity, Norwegian official reports in regjeringen.no
-#'     example <- ZoteroGov("2001:4")
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example)$name
-#'   }
+#' \donttest{
+#'   # Search the default entity, Norwegian official reports in regjeringen.no
+#'   example <- ZoteroGov("2001:4")
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}

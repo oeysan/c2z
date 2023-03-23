@@ -1,30 +1,44 @@
 #' @title Check Zotero library for duplicates
-#' @description Remove references that are not modified since last added to Zotero
+#' @description Remove references that are not modified since last added to
+#'   Zotero
 #' @param data Tibble containing metadata (from Cristin)
 #' @param id column containing identifier (e.g., cristin_result_id)
-#' @param id.type Type of metadata as found in the Zotero extra field ("e.g., Cristin)
-#' @param created column containing creation date in UNIX timestamp format (e.g., created)
-#' @param last.modified column containing modifcation date in UNIX timestamp format (e.g., last_modified)
+#' @param id.type Type of metadata as found in the Zotero extra field ("e.g.,
+#'   Cristin)
+#' @param created column containing creation date in UNIX timestamp format
+#'   (e.g., created)
+#' @param last.modified column containing modification date in UNIX timestamp
+#'   format (e.g., last_modified)
 #' @param zotero A list with information on the specified Zotero library (e.g.,
-#' id, API key, collections, and items), Default: NULL
+#'   id, API key, collections, and items), Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return Returns non-duplicated data in a Zotero-type matrix (tibble)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Simple `ZoteroCheck`
-#'     example <- ZoteroCheck(
-#'       Cristin(id = "840998", zotero.import = FALSE)$result,
-#'       id = "cristin_result_id",
-#'       id.type = "Cristin",
-#'       created = "created",
-#'       last.modified = "last_modified",
-#'       zotero = Zotero(user = FALSE),
+#' \donttest{
+#'   # Simple `Cristin` search by id
+#'   cristin.data <- Cristin(
+#'     id = "840998",
+#'     zotero.import = FALSE
+#'   )
+#'
+#'   # Simple `ZoteroCheck`
+#'   example <- ZoteroCheck(
+#'     data = cristin.data$result,
+#'     id = "cristin_result_id",
+#'     id.type = "Cristin",
+#'     created = "created",
+#'     last.modified = "last_modified",
+#'     zotero = Zotero(
+#'       user = FALSE,
+#'       id = "4827927",
+#'       api = "RqlAmlH5l1KPghfCseAq1sQ1",
+#'       library = TRUE,
 #'       silent = TRUE
 #'     )
-#'   }
+#'   )
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{arrange}},
@@ -57,20 +71,17 @@ ZoteroCheck <- \(data,
   }
 
   # Checking references message
-  log <-  LogCat("Checking whether references exist in library",
-                 silent = silent,
-                 log = log)
+  log <-  LogCat(
+    "Checking whether references exist in library",
+    silent = silent,
+    log = log
+  )
 
   # Find result ids
   data.ids <- data[, id][[1]]
 
   # Query zotero library
-  if (!is.null(zotero)) {
-    zotero <- Zotero(zotero = zotero,
-                     library = TRUE,
-                     force = TRUE,
-                     silent = silent)
-  } else {
+  if (is.null(zotero)) {
     zotero <- Zotero(library = TRUE, force = TRUE, silent = FALSE)
   }
 

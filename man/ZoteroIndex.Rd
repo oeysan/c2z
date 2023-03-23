@@ -13,19 +13,27 @@ ZoteroIndex(data)
 A tibble
 }
 \description{
-The function creates a index containing key information about the present Zotero items
+The function creates a index containing key information about
+  the present Zotero items
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Access the default group library
-    example <- ZoteroLibrary(Zotero(user = FALSE))
-    # Use `ZoteroIndex` to print
-    ZoteroIndex(example$items)$name
-  }
+\donttest{
+  # Access the default group library
+  example = Zotero(
+    user = FALSE,
+    id = "4827927",
+    api = "RqlAmlH5l1KPghfCseAq1sQ1",
+    library = TRUE
+  )
+
+  # Print index using `ZoteroIndex`
+  ZoteroIndex(example$items) |>
+    dplyr::select(name) |>
+    print(width = 80)
 }
 }
 \seealso{

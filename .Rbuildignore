@@ -25,3 +25,4 @@
 ^paper.Rmd$
 ^paper.pdf$
 .Renviron
+^codecov\.yml$

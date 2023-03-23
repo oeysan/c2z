@@ -1,24 +1,52 @@
 #' @title Copy collections and items from a Zotero library
-#' @description Replace key identifiers with new ones while keeping existing structure and relationship between collections and items
+#' @description Replace key identifiers with new ones while keeping existing
+#'   structure and relationship between collections and items
 #' @param zotero A list with information on the specified Zotero library (e.g.,
-#' id, API key, collections, and items)
+#'   id, API key, collections, and items)
 #' @param copy.collections Try to copy specified collections, Default: TRUE
 #' @param copy.items Try to copy specified items?, Default: TRUE
-#' @param copy.extras Try to copy specified extras (i.e., attachments and notes)?, Default: TRUE
+#' @param copy.extras Try to copy specified extras (i.e., attachments and
+#'   notes)?, Default: TRUE
 #' @param remove.missing Deleted missing extras, Default: TRUE
-#' @param change.library Stage changing of library (e.g., from a group to a personal library), Default: FALSE
-#' @param copy.user Nre user type (The functions will use `group` as prefix if FALSE), Default: TRUE
+#' @param change.library Stage changing of library (e.g., from a group to a
+#'   personal library), Default: FALSE
+#' @param copy.user New user type (The functions will use `group` as prefix if
+#'   FALSE), Default: TRUE
 #' @param copy.id New id, Default: NULL
 #' @param copy.api New API key, Default: NULL
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
-#' @return A list with information on the specified Zotero library (e.g., copied collections and items)
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @return A list with information on the specified Zotero library (e.g., copied
+#'   collections and items)
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Copy collections and items from default Zotero group
-#'     example <- ZoteroCopy(Zotero(user = FALSE, library = TRUE))
-#'   }
+#' \donttest{
+#'   # Fetching collections and items from default group
+#'   zotero = Zotero(
+#'     user = FALSE,
+#'     id = "4827927",
+#'     api = "RqlAmlH5l1KPghfCseAq1sQ1",
+#'     library = TRUE
+#'   )
+#'
+#'   # Display collections
+#'   print(zotero$collections, width = 80)
+#'
+#'   # Display items
+#'   print(zotero$items, width = 80)
+#'
+#'   # Copy items
+#'   example <- ZoteroCopy(
+#'     zotero,
+#'   )
+#'
+#'   # Display new keys and version for collections
+#'   example$collections |>
+#'     dplyr::select(key, version, parentCollection)
+#'
+#'   # Display new keys and version for items
+#'   example$items |>
+#'     dplyr::select(key, version)
 #' }
 #' @seealso
 #'  \code{\link[httr]{GET}}
@@ -170,6 +198,11 @@ ZoteroCopy <- \(zotero,
 
     # Remove missing attachments if remove.missing is set to TRUE
     if (remove.missing & !is.null(zotero$attachments)) {
+
+      # Add to log
+      zotero$log <- LogCat("Checking for missing attachments",
+                           silent = silent,
+                           log = zotero$log)
 
       # Find missing attachments / attachments with missing parents
       missing.attachments <- is.na(zotero$attachments$file)

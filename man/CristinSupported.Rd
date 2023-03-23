@@ -4,10 +4,39 @@
 \alias{CristinSupported}
 \title{Check for supported export formats from Cristin to Zotero}
 \usage{
-CristinSupported(data = NULL)
+CristinSupported(
+  data = NULL,
+  zotero.check = TRUE,
+  zotero = NULL,
+  remove.na = TRUE,
+  replace.na = "book",
+  force.type = NULL,
+  silent = FALSE,
+  log = list()
+)
 }
 \arguments{
 \item{data}{Zotero-type matrix, Default: NULL}
+
+\item{zotero.check}{Should the function look for duplicates?, Default: TRUE}
+
+\item{zotero}{List with Zotero information used to check for duplicates,
+Default: NULL}
+
+\item{remove.na}{Cristin contains many, more or less, obscure categories, and
+not all are (yet) supported. By default these are removed, however, if this
+option is set to FALSE unsupported categories are treated according to
+replace.na, Default: TRUE}
+
+\item{replace.na}{May the odds be in your favor and replace unsupported
+categories with a predefined itemType if remove.na is set to false,
+Default: 'book'}
+
+\item{force.type}{Force all items to a predefined itemType, Default: NULL}
+
+\item{silent}{Running silent, running deep, Default: FALSE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 Zotero supported items with unsupported categories as NA
@@ -16,15 +45,12 @@ Zotero supported items with unsupported categories as NA
 Used to filter Cristin categories that are not supported
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Supported Cristin items
-    print(CristinSupported(), n = 32)
-  }
-}
+# Supported Cristin items
+print(CristinSupported(), n = 32)
 }
 \seealso{
 \code{\link[tibble]{tibble}}

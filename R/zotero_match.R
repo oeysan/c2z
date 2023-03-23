@@ -1,31 +1,38 @@
 #' @title Search or match items using CrossRef
-#' @description Use the CrossRef API to match data (e.g., Cristin metdata with Crossref metadata) or search by title, authors and date
+#' @description Use the CrossRef API to match data (e.g., Cristin metadata with
+#'   Crossref metadata) or search by title, authors and date
 #' @param title Title of reference
 #' @param authors creators of the reference
 #' @param date publication date of the reference
-#' @param haystack Potential matches for search term (i.e., needle), Default: NULL
+#' @param haystack Potential matches for search term (i.e., needle), Default:
+#'   NULL
 #' @param haystack.size Number of items in the haystack, Default: 3
-#' @param crossref.search Search CrossRef if needle not found in haystack, Default: FALSE
-#' @param autosearch Match automatically or compare needle with haystack, Default: FALSE
+#' @param crossref.search Search CrossRef if needle not found in haystack,
+#'   Default: FALSE
+#' @param autosearch Match automatically or compare needle with haystack,
+#'   Default: FALSE
 #' @param cristin.data Metadata from Cristin, Default: NULL
-#' @param external.data Metadata from external source (e.g., CrossRef), Default: NULL
+#' @param external.data Metadata from external source (e.g., CrossRef), Default:
+#'   NULL
 #' @param polite Will use an email stored in `.Renviron`, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble) if match is found otherwise NULL
-#' @details Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @details Please see
+#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
-#' \dontrun{
-#'   if(interactive()){
-#'     # Conduct an autosearch in CrossRef using title, authors and date
-#'     example <- ZoteroMatch(
-#'       title = "Nonreplicable publications are cited more than replicable ones",
-#'       authors = "Serra-Garcia & Gneezy",
-#'       date = "2021",
-#'       autosearch = TRUE
-#'     )
-#'     # Use `ZoteroIndex` to print
-#'     ZoteroIndex(example)$name
-#'   }
+#' \donttest{
+#'   # Conduct an autosearch in CrossRef using title, authors and date
+#'   example <- ZoteroMatch(
+#'     title = "Nonreplicable publications",
+#'     authors = "Serra-Garcia & Gneezy",
+#'     date = "2021",
+#'     autosearch = TRUE
+#'   )
+#'
+#'   # Print index using `ZoteroIndex`
+#'   ZoteroIndex(example) |>
+#'     dplyr::select(name) |>
+#'     print(width = 80)
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{reexports}},
@@ -96,7 +103,7 @@ ZoteroMatch <- \(title,
       # Single computer friendly author string
       string.authors <- ToString(clean.authors, "_")
       # Extract year (4 digits) from date
-      date = gsub('.*(\\d{4}).*', '\\1', ToString(date, "_"))
+      date <- gsub('.*(\\d{4}).*', '\\1', ToString(date, "_"))
 
       meta <- list(
         title = title,
@@ -162,7 +169,7 @@ ZoteroMatch <- \(title,
   }
 
   # Create search parameters
-  haystack <- lapply(1:lengths(haystack)[1], \(i) {
+  haystack <- lapply(seq_along(lengths(haystack)[1]), \(i) {
     SearchParameters(
       title = haystack$title[[i]],
       authors = haystack$authors[[i]],
@@ -180,7 +187,7 @@ ZoteroMatch <- \(title,
   haystack <- haystack[lengths(haystack) != 0]
 
   # Number of elements in haystack
-  haystack.seq <- seq(length(haystack))
+  haystack.seq <- seq_len(length(haystack))
 
   # Run if haystack has length
   if (length(haystack)) {
@@ -294,7 +301,7 @@ ZoteroMatch <- \(title,
       )
 
       # Set search results
-      haystack.search <- lapply(1:length(haystack), \(i) {
+      haystack.search <- lapply(seq_along(haystack), \(i) {
         sprintf(
           "\n\n%s) Crossref title: %s\nAuthors: %s \nYear: %s", i,
           haystack[[i]]$title,

@@ -43,7 +43,7 @@ title="CRAN Version">
 <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version" />
 </a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version">
 <img src="`r github.version`" alt="GitHub Version" />
-</a><br/><a href="inst/extdata/LICENSE.md" id="license" title="License">
+</a><br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License" />
 </a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" 
 title="Build Status"> 
@@ -117,8 +117,10 @@ publications is registered on Cristin.
     + Currently supported formats: books (e.g., anthologies), book chapters, 
     journal articles, presentations (e.g., lectures), and opinions pieces.
 * Batch import references from ISBN and DOI.
-    + Currently supported formats: books, book chapters, conference papers, 
+    + Currently supported formats (CrossRef`): books, book chapters, conference papers, 
     journal articles.
+    + DataCite references are treated as preprints and stores reference type 
+    (.e.g, dataset) as Genre.
 * Batch import Norwegian white papers and official Norwegian reports.
 * Batch import *R* packages from CRAN.
 * Search CrossRef, automatically and manually, by author(s), title, and year.
@@ -140,8 +142,8 @@ dependencies are automatically upgraded.
 ## Installing
 
 You probably want to access a restricted Zotero library. Please see 
-[the short tutorial](articles/zotero_api.html) on how to create a Zotero API 
-key and how to define it in your `.Renviron`.
+[the short tutorial](https://oeysan.github.io/c2z/articles/zotero_api.html) on 
+how to create a Zotero API key and how to define it in your `.Renviron`.
 
 You can install *`c2z`* from GitHub. If you already have a previous version of
 *`c2z`* installed, using the command below will update to the latest development
@@ -154,8 +156,9 @@ devtools::install_github("oeysan/c2z")
 
 ## Example
 
-Also, please see the [magnificent vignette](articles/c2z_vignette.html) and 
-other [documentation](https://oeysan.github.io/c2z/),
+Also, please see the 
+[magnificent vignette](https://oeysan.github.io/c2z/articles/c2z_vignette.html) 
+and other [documentation](https://oeysan.github.io/c2z/).
 
 I work as an associate professor at a department of teacher education in Norway.
 Doing so, one of my responsibilities is surprisingly enough teaching. Even more
@@ -184,23 +187,28 @@ example <- Zotero(
   collection.names = "c2z-example",
   library = TRUE,
   create = TRUE,
-  isbn = c("9788215040561","9788279354048"),
+  isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
   export = TRUE,
-  include = "bib",
+  include.bib = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,
-  delete.items = TRUE
+  delete.items = TRUE,
+  index = TRUE
 )
+
+# Order the bibliography by creators (alphabetically) and date (descending)
+bibliography <- example$index |>
+  dplyr::arrange(citation, desc(date))
 ```
                   
 The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-`r paste0(example$bibliography, collapse = "")`
+`r c2z:::ToString(bibliography$bib, "\n")`
 </div>
 
 Johannessen et al. (2021) is an interesting (well, perhaps not interesting to 
@@ -262,7 +270,7 @@ What's your thought on this breach of tradition?
 
 – ["Thank you, but I prefer it my way."](https://www.youtube.com/watch?v=EsXjzkXVuFc)
 
-## Code of Conduct
+## Code of conduct
 
 Don't be evil. Please read the 
 [Code of Conduct](https://oeysan.github.io/c2z/CONDUCT.html)

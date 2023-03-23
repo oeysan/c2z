@@ -20,11 +20,14 @@ ZoteroCheck(
 
 \item{id}{column containing identifier (e.g., cristin_result_id)}
 
-\item{id.type}{Type of metadata as found in the Zotero extra field ("e.g., Cristin)}
+\item{id.type}{Type of metadata as found in the Zotero extra field ("e.g.,
+Cristin)}
 
-\item{created}{column containing creation date in UNIX timestamp format (e.g., created)}
+\item{created}{column containing creation date in UNIX timestamp format
+(e.g., created)}
 
-\item{last.modified}{column containing modifcation date in UNIX timestamp format (e.g., last_modified)}
+\item{last.modified}{column containing modification date in UNIX timestamp
+format (e.g., last_modified)}
 
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items), Default: NULL}
@@ -37,25 +40,36 @@ id, API key, collections, and items), Default: NULL}
 Returns non-duplicated data in a Zotero-type matrix (tibble)
 }
 \description{
-Remove references that are not modified since last added to Zotero
+Remove references that are not modified since last added to
+  Zotero
 }
 \details{
-Please see \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+Please see
+  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
-\dontrun{
-  if(interactive()){
-    # Simple `ZoteroCheck`
-    example <- ZoteroCheck(
-      Cristin(id = "840998", zotero.import = FALSE)$result,
-      id = "cristin_result_id",
-      id.type = "Cristin",
-      created = "created",
-      last.modified = "last_modified",
-      zotero = Zotero(user = FALSE),
+\donttest{
+  # Simple `Cristin` search by id
+  cristin.data <- Cristin(
+    id = "840998",
+    zotero.import = FALSE
+  )
+
+  # Simple `ZoteroCheck`
+  example <- ZoteroCheck(
+    data = cristin.data$result,
+    id = "cristin_result_id",
+    id.type = "Cristin",
+    created = "created",
+    last.modified = "last_modified",
+    zotero = Zotero(
+      user = FALSE,
+      id = "4827927",
+      api = "RqlAmlH5l1KPghfCseAq1sQ1",
+      library = TRUE,
       silent = TRUE
     )
-  }
+  )
 }
 }
 \seealso{

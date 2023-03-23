@@ -257,13 +257,24 @@ CristinWrangler <- \(data,
 
       # Change itemType if book metadata is not NULL
       if (!is.null(external.data)) {
+
+        # Change creator-type of external.data
+        external.data$creators[[1]] <- external.data$creators[[1]] |>
+          dplyr::mutate(
+            creatorType = dplyr::case_when(
+              creatorType == "author" ~ "editor",
+              TRUE ~ creatorType
+            )
+          )
+
         # Set metadata as bookChapter
         meta$itemType <- "bookSection"
         # Append creators of book to zotero type creator matrix
         meta$creators <- AddAppend(
           meta$creators,
           external.data$creators[[1]]
-        )
+        ) |>
+          dplyr::distinct()
         # Set book title
         meta$bookTitle <- GoFish(external.data$title)
         # Fetch ISBN

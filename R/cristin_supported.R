@@ -88,8 +88,11 @@ CristinSupported <- \(data = NULL,
 
   }
 
-  # Define cristin category type
+  # Define Cristin category type
   data$type <- GoFish(data$category$name$en)
+
+  # Define Cristin category code
+  data$code <-  GoFish(data$category$code)
 
   # Checking references message
   log <-  LogCat(

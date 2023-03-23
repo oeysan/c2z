@@ -1,3 +1,10 @@
+# c2z (development version)
+
+#### Minor
+
+* Fixed an issue in `CristinWrangler` where `creatorType` of parent items are
+listed as authors when they are (most probably) editors.
+
 # c2z 0.1.4
 
 * Resubmission to CRAN: Part Deux

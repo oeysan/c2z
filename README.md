@@ -11,13 +11,14 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News">
-<img src="https://img.shields.io/badge/News-2023.03.18 @ 22:20:11-purple.svg" alt="News"/>
-</a><br/><a href="#" id="cran" 
-title="CRAN Version">
+<img src="https://img.shields.io/badge/News-2023.03.23 @ 21:45:43-purple.svg" alt="News"/>
+</a><br/>
+<a href="https://cran.r-project.org/package=c2z" id="cran" title="CRAN Version">
 <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version" />
 </a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version">
-<img src="https://img.shields.io/badge/GitHub-0.1.4-red.svg?style=flat-square" alt="GitHub Version" />
-</a><br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" title="License">
+<img src="https://img.shields.io/badge/GitHub-0.1.4.9000-red.svg?style=flat-square" alt="GitHub Version" />
+</a><br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
+title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License" />
 </a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" 
 title="Build Status">
@@ -193,8 +194,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success PBIK974P
-#> 2 success TMIC9FQ9
+#> 1 success 5YIRUNSC
+#> 2 success PP5JS6SG
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -205,7 +206,7 @@ example <- Zotero(
 #> 
 #> Found 0 subcollections 
 #> Found 2 items 
-#> Collection c2z-example (XIPCDDZ6) contains: 0 subcollections and 2 items 
+#> Collection c2z-example (6HHCBD68) contains: 0 subcollections and 2 items 
 #> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------

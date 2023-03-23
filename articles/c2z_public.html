@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,19 +91,21 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/oeysan/c2z/" class="external-link">c2z</a></span><span class="op">)</span></span></code></pre></div>
 <p>“I think the health of our civilization, the depth of our awareness
 about the underpinnings of our culture and our concern for the future
 can all be tested by how well we support our libraries” (Sagan, 1980,
 p. 282).</p>
-<p>I love libraries. I also love meta-libraries. There currently exists
+<p>I love libraries. I also love meta-libraries. Currently, there exists
 no adequate way to browse public Zotero libraries, however, you may
 search groups at the Zotero <a href="https://www.zotero.org/search/type/group" class="external-link">website</a>.</p>
-<p>In the following example we will harvest the items stored in such a
-public Zotero group. Also, please see the <a href="articles/c2z_vignette.html">magnificent vignette</a> and other <a href="https://oeysan.github.io/c2z/">documentation</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Query public library</span></span>
+<p>In the following example, we will harvest the items stored in such a
+public Zotero group. Also, please see the <a href="https://oeysan.github.io/c2z/articles/c2z_vignette.html">magnificent
+vignette</a> and other <a href="https://oeysan.github.io/c2z/">documentation</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Setup</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/oeysan/c2z/" class="external-link">c2z</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Query public library</span></span>
 <span><span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span></span>
 <span>  user <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>  id <span class="op">=</span> <span class="st">"4986462"</span>,</span>
@@ -113,13 +115,19 @@ public Zotero group. Also, please see the <a href="articles/c2z_vignette.html">m
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found 0 collections </span></span>
 <span><span class="co">#&gt; Found 3 items </span></span>
-<span><span class="co">#&gt; The zotero library contains: 0 collections and 3 items </span></span>
+<span><span class="co">#&gt; The zotero library contains: 3 collections and 3 items </span></span>
 <span><span class="co">#&gt; Creating index for items</span></span>
-<span><span class="co"># Print index</span></span>
-<span><span class="va">example</span><span class="op">$</span><span class="va">index</span><span class="op">$</span><span class="va">name</span></span>
-<span><span class="co">#&gt; [1] "Forrest (2008) Alien Abduction: A Medical Hypothesis"                                                </span></span>
-<span><span class="co">#&gt; [2] "United States (1995) Roswell Report: Fact versus Fiction in the New Mexico Desert, The"              </span></span>
-<span><span class="co">#&gt; [3] "Brown (2007) They Know Us Better Than We Know Ourselves: the History and Politics of Alien Abduction"</span></span></code></pre></div>
+<span></span>
+<span><span class="co"># Select only names in index and print</span></span>
+<span><span class="va">example</span><span class="op">$</span><span class="va">index</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span></span>
+<span><span class="co">#&gt;   name                                                                          </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Forrest (2008) Alien Abduction: A Medical Hypothesis                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> United States (1995) Roswell Report: Fact versus Fiction in the New Mexico De…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Brown (2007) They Know Us Better Than We Know Ourselves: the History and Poli…</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>

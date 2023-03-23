@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,8 +142,8 @@ content.</p>
 <code class="sourceCode R"><span><span class="co"># Access default zotero library</span></span>
 <span><span class="va">user.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found 0 collections </span></span>
-<span><span class="co">#&gt; Found 0 items </span></span>
-<span><span class="co">#&gt; The zotero library contains: 0 collections and 0 items</span></span>
+<span><span class="co">#&gt; Found 2 items </span></span>
+<span><span class="co">#&gt; The zotero library contains: 2 collections and 2 items</span></span>
 <span><span class="co"># Print type of library and id</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">user.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The library has the prefix: users/9913421"</span></span>
@@ -151,8 +151,8 @@ content.</p>
 <span><span class="co"># Access the group zotero library</span></span>
 <span><span class="va">group.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>user <span class="op">=</span> <span class="cn">FALSE</span>, library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found 2 collections </span></span>
-<span><span class="co">#&gt; Found 3 items </span></span>
-<span><span class="co">#&gt; The zotero library contains: 2 collections and 3 items</span></span>
+<span><span class="co">#&gt; Found 4 items </span></span>
+<span><span class="co">#&gt; The zotero library contains: 4 collections and 4 items</span></span>
 <span><span class="co"># Print type of library and id</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">group.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The library has the prefix: groups/4827927"</span></span>

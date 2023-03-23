@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,10 +62,48 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.4" id="c2z-014">c2z 0.1.4<a class="anchor" aria-label="anchor" href="#c2z-014"></a></h2><p class="text-muted">CRAN release: 2023-03-23</p>
+<ul><li>Resubmission to CRAN: Part Deux</li>
+</ul><div class="section level5">
+<h5 id="moderate-0-1-4">Moderate<a class="anchor" aria-label="anchor" href="#moderate-0-1-4"></a></h5>
+<ul><li>Moved <code>CristinSupported</code> from <code>CristinWrangler</code> to <code>Cristin</code> to better manage filtering of items, and to reduce the number of lines (666) in <code>CristinWrangler</code> to a more manageable function (522).</li>
+</ul></div>
+<div class="section level5">
+<h5 id="minor-0-1-4">Minor<a class="anchor" aria-label="anchor" href="#minor-0-1-4"></a></h5>
+<ul><li><p>Moved option to include HTML bibliography from <code>ZoteroExport</code> to <code>ZoteroLibrary</code> to avoid any redundant API calls.</p></li>
+<li><p>Omitted the redundant “in R” at the end of title in <code>DESCRIPTION</code>.</p></li>
+<li><p>Made examples in exported functions executable. All functions, except <code>Zotero</code> and <code>CristinSupported</code>, are set within <code>\donttest</code>, as the functions, either directly or indirectly calls various API’s, and may violate CRAN’s 5 second limit.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.3" id="c2z-013">c2z 0.1.3<a class="anchor" aria-label="anchor" href="#c2z-013"></a></h2>
+<ul><li>Resubmission to CRAN</li>
+</ul><div class="section level5">
+<h5 id="critical-0-1-3">Critical<a class="anchor" aria-label="anchor" href="#critical-0-1-3"></a></h5>
+<ul><li>Fixed an error in <code>ZoteroDoi</code> that did not account for spaces within the DOI itself (e.g., <code>10.3390/ foods12061167</code>)</li>
+</ul></div>
+<div class="section level5">
+<h5 id="moderate-0-1-3">Moderate<a class="anchor" aria-label="anchor" href="#moderate-0-1-3"></a></h5>
+<ul><li><p>Made <code>ZoteroGet</code> split up <code>itemKey</code> and <code>collectionKey</code> in lists of keys based on the <code>limit</code> argument, as Zotero API does not limit using multiple keys in the same fashion as ordinary query (i.e., based on <code>start</code> and <code>limit</code> intervals).</p></li>
+<li><p>Made retrieving bibliography and citation fields from Zotero more elegant.</p></li>
+</ul></div>
+<div class="section level5">
+<h5 id="minor-0-1-3">Minor<a class="anchor" aria-label="anchor" href="#minor-0-1-3"></a></h5>
+<ul><li><p>Fixed broken URLs.</p></li>
+<li><p>Added single quotes to (software) names in the <code>Description</code> field in <code>DESCRIPTION</code>.</p></li>
+<li><p>Separated counting items (<code>n.items</code>) and attachments (<code>n.attachments</code>).</p></li>
+<li><p>Fixed another million typos.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="c2z-012">c2z 0.1.2<a class="anchor" aria-label="anchor" href="#c2z-012"></a></h2>
+<ul><li>Submission to CRAN</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="c2z-011">c2z 0.1.1<a class="anchor" aria-label="anchor" href="#c2z-011"></a></h2>
 <div class="section level5">
 <h5 id="critical-0-1-1">Critical<a class="anchor" aria-label="anchor" href="#critical-0-1-1"></a></h5>
-<ul><li><p>Added an internal function <code>FixCreators</code> to correct Zotero items where the creators is list by lastName but with an empty firstName rather than using name only. The error caused an crash in <code>ZoteroIndex</code>.</p></li>
+<ul><li><p>Added an internal function <code>FixCreators</code> to correct Zotero items where the creators is listed by <code>lastName</code> but with an empty <code>firstName</code> rather than using <code>name</code> only. The error caused an crash in <code>ZoteroIndex</code>.</p></li>
 <li><p>Fixed <code>Zotero</code>not being able to use an empty API key to access public libraries</p></li>
 </ul></div>
 <div class="section level5">
@@ -80,21 +118,18 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="c2z-010">c2z 0.1.0<a class="anchor" aria-label="anchor" href="#c2z-010"></a></h2>
-<ul><li>Initial launch with the following features:
-<ul><li>Add, edit, copy, and delete (nested) Zotero collections.</li>
+<ul><li>Initial launch with the following features:</li>
+<li>Add, edit, copy, and delete (nested) Zotero collections.</li>
 <li>Add, edit, copy, and delete Zotero items, including attachments.</li>
 <li>Export Zotero items in R as BibLaTeX (and other formats).</li>
-<li>(Batch) import common references from Cristin.
-<ul><li>Currently supported formats: books (e.g., monographs, anthologies), book chapters, journal articles, presentations (e.g., lectures), and opinions pieces.</li>
-</ul></li>
-<li>(Batch) import references from ISBN and DOI.
-<ul><li>Currently supported formats: books, book chapters, conference papers, journal articles</li>
-</ul></li>
+<li>(Batch) import common references from Cristin.</li>
+<li>Currently supported formats: books (e.g., monographs, anthologies), book chapters, journal articles, presentations (e.g., lectures), and opinions pieces.</li>
+<li>(Batch) import references from ISBN and DOI.</li>
+<li>Currently supported formats: books, book chapters, conference papers, journal articles</li>
 <li>(Batch) import Norwegian white papers (i.e., Meld. St., St.meld.) and official Norwegian reports (i.e., NOU).</li>
 <li>Batch import R packages from CRAN.</li>
 <li>Search CrossRef, automatically and manually, by author(s), title, and year.</li>
 <li>Augment Cristin references through ISBN, DOI, or CrossRef search.</li>
-</ul></li>
 <li>Added <a href="https://oeysan.github.io/c2z/" class="uri">https://oeysan.github.io/c2z/</a> for documentation</li>
 <li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
 <li>Added a <code>TODO.md</code> file to track future work on the package.</li>

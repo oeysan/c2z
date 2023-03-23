@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 <span>  item.keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  collection.keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  item.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  include <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  include.bib <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  style <span class="op">=</span> <span class="st">"apa"</span>,</span>
 <span>  locale <span class="op">=</span> <span class="st">"en-US"</span>,</span>
 <span>  all.results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -103,7 +103,8 @@ id, API key, collections, and items)</p></dd>
 
 
 <dt>use.collection</dt>
-<dd><p>Use collection key if present in Zotero list, Default: TRUE</p></dd>
+<dd><p>Use collection key if present in Zotero list, Default:
+TRUE</p></dd>
 
 
 <dt>use.item</dt>
@@ -111,7 +112,8 @@ id, API key, collections, and items)</p></dd>
 
 
 <dt>append.collections</dt>
-<dd><p>Append `/collections/` to Zotero API url, Default: FALSE</p></dd>
+<dd><p>Append `/collections/` to Zotero API url, Default:
+FALSE</p></dd>
 
 
 <dt>append.items</dt>
@@ -127,7 +129,7 @@ id, API key, collections, and items)</p></dd>
 
 
 <dt>custom.url</dt>
-<dd><p>Use a custrom Zotero API url, Default: NULL</p></dd>
+<dd><p>Use a custom Zotero API url, Default: NULL</p></dd>
 
 
 <dt>open.query</dt>
@@ -143,7 +145,7 @@ id, API key, collections, and items)</p></dd>
 
 
 <dt>format</dt>
-<dd><p>Format of reponse from the Zotero API, Default: 'json'</p></dd>
+<dd><p>Format of response from the Zotero API, Default: 'json'</p></dd>
 
 
 <dt>item.keys</dt>
@@ -158,12 +160,14 @@ id, API key, collections, and items)</p></dd>
 <dd><p>Items to search for (NULL = everything), Default: NULL</p></dd>
 
 
-<dt>include</dt>
-<dd><p>Include bibliography (i.e., `bib`) and/or citation (i.e., `citation`), Default: NULL</p></dd>
+<dt>include.bib</dt>
+<dd><p>Include HTML-formatted bibliography from Zotero, Default:
+FALSE</p></dd>
 
 
 <dt>style</dt>
-<dd><p>Citation style to use for appended bibliography and/or citations, Default: apa</p></dd>
+<dd><p>Citation style to use for appended bibliography and/or
+citations, Default: apa</p></dd>
 
 
 <dt>locale</dt>
@@ -179,7 +183,8 @@ id, API key, collections, and items)</p></dd>
 
 
 <dt>result.type</dt>
-<dd><p>Pointless linguistics to display result type (default = `result`), Default: NULL</p></dd>
+<dd><p>Pointless linguistics to display result type (default =
+`result`), Default: NULL</p></dd>
 
 
 <dt>force</dt>
@@ -194,11 +199,13 @@ id, API key, collections, and items)</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list with information on the specified Zotero library (e.g., collections and items)</p>
+<p>A list with information on the specified Zotero library (e.g.,
+  collections and items)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Please see <a href="https://oeysan.github.io/c2z/">https://oeysan.github.io/c2z/</a></p>
+    <p>Please see
+  <a href="https://oeysan.github.io/c2z/">https://oeysan.github.io/c2z/</a></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -207,17 +214,31 @@ id, API key, collections, and items)</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="co"># Query default group Zotero libray for 1 item</span></span></span>
-<span class="r-in"><span>    <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroGet</span><span class="op">(</span></span></span>
-<span class="r-in"><span>      <span class="fu"><a href="Zotero.html">Zotero</a></span><span class="op">(</span>user <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>      max.results <span class="op">=</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="co"># Use `ZoteroIndex` to print</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">result</span><span class="op">)</span><span class="op">$</span><span class="va">name</span></span></span>
-<span class="r-in"><span>  <span class="op">}</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span>  <span class="co"># Define Zotero list according to default setings</span></span></span>
+<span class="r-in"><span>  <span class="va">zotero</span> <span class="op">=</span> <span class="fu"><a href="Zotero.html">Zotero</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    user <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>    id <span class="op">=</span> <span class="st">"4827927"</span>,</span></span>
+<span class="r-in"><span>    api <span class="op">=</span> <span class="st">"RqlAmlH5l1KPghfCseAq1sQ1"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># Query default group Zotero library for 1 item</span></span></span>
+<span class="r-in"><span>  <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroGet</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">zotero</span>,</span></span>
+<span class="r-in"><span>    max.results <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Found 4 results </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The provided query is limited to 1 result </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">results</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   name                                                                          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Petersen (2012) Seeds of Satan: Conceptions of Magic in Contemporary Satanism…</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

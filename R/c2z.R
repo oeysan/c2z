@@ -43,6 +43,31 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title ZoteroId
+#' @keywords internal
+#' @noRd
+ZoteroId <- \(id.type,
+              data,
+              sep = "\n",
+              return.type = NA) {
+
+  # Define search pattern
+  search <- sprintf(".*%s: (.*)", id.type)
+  id <- unlist(lapply(data, \(x) {
+    # Split vector by sep (e.g., linebreak)
+    x <- unlist(strsplit(x, sep))
+    # Extract by id.type for elements containing id.type
+    x <- gsub(search, "\\1", x[grepl(id.type, x)])
+    # Set missing vector elements as return.type (e.g., NA)
+    if (!length(x)) x <- return.type
+
+    return (x)
+  }))
+
+  return (id)
+
+}
+
 #' @title FixCreators
 #' @keywords internal
 #' @noRd

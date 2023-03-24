@@ -59,17 +59,6 @@ ZoteroCheck <- \(data,
   # Visible bindings
   extra <- NULL
 
-  # Function to extract extra ids
-  ZoteroIDS <- \(id.type, extra) {
-    # Define search parameters
-    search <- sprintf(".*%s: (\\w+).*", id.type)
-    # Exract ids from extra field
-    zotero.ids <- gsub(search, "\\1", extra)
-
-    return (zotero.ids)
-
-  }
-
   # Checking references message
   log <-  LogCat(
     "Checking whether references exist in library",
@@ -86,7 +75,7 @@ ZoteroCheck <- \(data,
   }
 
   # Fetch ids from zotero extras
-  zotero.ids <- ZoteroIDS(id.type, zotero$items$extra)
+  zotero.ids <- ZoteroId(id.type, zotero$items$extra)
 
   # Find unique items
   unique.data <- data |>
@@ -102,7 +91,7 @@ ZoteroCheck <- \(data,
     # Find duplicate items in zotero library
     zotero.duplicates <- zotero$items |>
       dplyr::filter(zotero.ids %in% data.ids) |>
-      dplyr::arrange(match(ZoteroIDS(id.type, extra), data.ids)) |>
+      dplyr::arrange(match(ZoteroId(id.type, extra), data.ids)) |>
       dplyr::distinct(extra, .keep_all = TRUE)
 
     # Find modified date of items

@@ -10,20 +10,20 @@ id="logo" title="Logo">
 <img src="man/figures/badge.webp" width="250px" alt="Logo" /> </a>
 </p>
 <p align="center">
-<a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News">
-<img src="https://img.shields.io/badge/News-2023.03.23 @ 21:45:43-purple.svg" alt="News"/>
-</a><br/>
-<a href="https://cran.r-project.org/package=c2z" id="cran" title="CRAN Version">
-<img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version" />
-</a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version">
-<img src="https://img.shields.io/badge/GitHub-0.1.4.9000-red.svg?style=flat-square" alt="GitHub Version" />
-</a><br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
+<a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
+title="News"><img src="https://img.shields.io/badge/News-2023.03.23 @ 23:29:44-purple.svg" alt="News"/></a><br/><a 
+href="https://cran.r-project.org/package=c2z" id="cran" 
+title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
+alt="CRAN Version"/></a>
+<a href="https://github.com/oeysan/c2z" id="github" 
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9001-orange.svg" alt="GitHub Version" /></a>
+<br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
-<img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License" />
-</a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" 
-title="Build Status">
-<img src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" 
-alt="Build Status" /> </a>
+<img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
+alt="License" /></a> <a href="https://github.com/oeysan/c2z/actions" 
+id="rcmdcheck" title="Build Status"><img 
+src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" 
+alt="Build Status" /></a>
 </p>
 
 # 
@@ -41,7 +41,14 @@ batch, references from Cristin, regjeringen.no, CRAN, ISBN (currently,
 Alma and Library of Congress), and DOI (currently, CrossRef and
 DataCite) to a Zotero library. Add, edit, copy, or delete items,
 including attachments and collections, and export references to BibLaTeX
-(and other formats) directly in *R*.
+(and other formats) directly in *R* (see Figure 1).
+
+<p align="center">
+<a href="https://oeysan.github.io/c2z/reference/figures/flowchart.svg">
+<img src="man/figures/flowchart.svg" alt = "c2z flowchart" /></a>
+</p>
+
+*Figure 1.* *c2z* flowchart.
 
 ### Who would want to use *c2z*?
 
@@ -140,6 +147,15 @@ latest development version.
 devtools::install_github("oeysan/c2z")
 ```
 
+Please note that stable versions are hosted at CRAN, whereas GitHub
+versions are in active development.
+
+#### Stable version ([CRAN](https://CRAN.R-project.org/package=c2z))
+
+``` r
+utils::install.packages("c2z")
+```
+
 ## Example
 
 Also, please see the [magnificent
@@ -150,14 +166,19 @@ I work as an associate professor at a department of teacher education in
 Norway. Doing so, one of my responsibilities is surprisingly enough
 teaching. Even more surprising, most of the literature is in Norwegian,
 and in the form of monographs or anthologies. Unfortunately, Zotero is
-not well-adapted to importing Norwegian books through ISBN. In the
-example below, Imsen (2020) is imported using the Zotero magic wand
-(left) and *`c2z`* (right). Similarly, Zotero is unable to import
-Johannessen et al. (2021) using ISBN (cf. lookup failed). Evidently,
-Alma (47BIBSYS) is superior to Open WorldCat and similar when it comes
-to identifying (most) Norwegian books.
+not well-adapted to importing Norwegian books through ISBN (see Figure
+2). In the example below, Imsen (2020) is imported using the Zotero
+magic wand (left) and *`c2z`* (right). Similarly, Zotero is unable to
+import Johannessen et al. (2021) using ISBN (cf. lookup failed).
+Evidently, Alma (47BIBSYS) is superior to Open WorldCat and similar when
+it comes to identifying (most) Norwegian books.
 
-![*Figure 1.* Zotero vs. *c2z* example.](man/figures/readme_imsen.webp)
+<p align="center">
+<a href="https://oeysan.github.io/c2z/reference/figures/readme_imsen.webp">
+<img src="man/figures/readme_imsen.webp" alt = "c2z example" /></a>
+</p>
+
+*Figure 2.* Zotero vs. *c2z* example.
 
 The following example of *`c2z`* addresses this issue, and the `Zotero`
 function act as a wrapper by 1) connecting to the Zotero API, 2)
@@ -166,8 +187,8 @@ two ISBN identifiers (i.e. Imsen, 2020; Johannessen et al., 2021), 4)
 posting the items to the defined collection, 5) exporting the items as
 BibLaTeX and creating a bibliography in HTML format using the APA7
 reference style, and 6) cleaning up the example by deleting the
-collection and the two items. (The *R* output is rather noisy and can be
-disabled by adding `silent = TRUE`.)
+collection and the two items. The *R* output is rather noisy and can be
+disabled by adding `silent = TRUE`.
 
 ``` r
 library(c2z)
@@ -194,8 +215,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 5YIRUNSC
-#> 2 success PP5JS6SG
+#> 1 success RXEHLDFU
+#> 2 success S5JZ64B7
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -206,7 +227,7 @@ example <- Zotero(
 #> 
 #> Found 0 subcollections 
 #> Found 2 items 
-#> Collection c2z-example (6HHCBD68) contains: 0 subcollections and 2 items 
+#> Collection c2z-example (WEK99RYQ) contains: 0 subcollections and 2 items 
 #> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------

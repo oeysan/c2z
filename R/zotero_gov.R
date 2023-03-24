@@ -169,7 +169,7 @@ ZoteroGov <- \(search, type = "NOU", meta = list()) {
       }
 
       # Set regjeringen.no id in extra
-      meta$extra <- sprintf("Regjeringen: %s.",
+      meta$extra <- sprintf("Regjeringen: %s",
                             basename(search.data$url)
       )
 

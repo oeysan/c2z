@@ -283,9 +283,7 @@ CristinWrangler <- \(data,
         meta$edition <- GoFish(EditionFix(external.data$edition))
         # Set NVI if NVI is NA
         if (is.na(nvi) & "extra" %in% names(external.data)) {
-          if (grepl("NVI: ", external.data$extra)) {
-            nvi <- gsub(".*NVI: (\\w+).*", "\\1", external.data$extra)
-          }
+          nvi <- ZoteroId("NVI", external.data$extra)
         }
         # Fetch publisher
         meta$publisher <- GoFish(external.data$publisher)

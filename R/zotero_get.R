@@ -333,7 +333,22 @@ ZoteroGet <- \(zotero,
 
   # Set bibliography if include is defined
   if (!is.null(include)) {
-    zotero$bibliography <- bibliography
+    zotero$bibliography <- bibliography |>
+      dplyr::mutate(
+        # Find csl-bib-body class
+        bib.body = rvest::read_html(toString(bib)) |>
+          rvest::html_nodes(".csl-bib-body") |>
+          toString() |>
+          (\(.) gsub("\\\n.*", "", .))() |>
+          (\(.) paste0(., "%s", "</div>"))(),
+        # Find csl-entry class
+        bib.item = rvest::read_html(toString(bib)) |>
+          rvest::html_nodes(".csl-entry") |>
+          (\(.) lapply(., toString))() |>
+          unlist()
+      ) |>
+      # arrange by author
+      dplyr::arrange(citation)
   }
 
   # Add zotero version to zotero list

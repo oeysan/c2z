@@ -345,7 +345,7 @@ ZoteroMatch <- \(title,
 
         # Set a caution in meta$extra
         if (autosearch) {
-          result$extra <- AddAppend("CAUTION: DOI automatically retrieved.",
+          result$extra <- AddAppend("CAUTION: DOI automatically retrieved",
                                     result$extra, "\n")
         }
 

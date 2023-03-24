@@ -19,7 +19,7 @@ affiliations:
    index: 1
  - name: Department of Education, University of Bergen, Norway
    index: 2
-date: 11 March 2023
+date: 24 March 2023
 bibliography: paper.bib
 ---
 
@@ -47,11 +47,11 @@ functionalities, import references from Zotero. However, *`RefManageR`* lacks th
 ability to write to the Zotero library. Two, seemingly abandoned, specialized 
 packages [@zoterro; @zoteror] aim at more control of the Zotero 
 library. Unfortunately, the packages are currently not working properly. 
-Thus, *`c2z`*  is at present the only fully fledged *R* package to natively 
+Thus, *`c2z`* is at present the only fully fledged *R* package to natively 
 work with Zotero in *R*.
 
 Furthermore, for Norwegian researchers, students, and others, *`c2z`* provides a
-much-needed tool to access, and export in batch, the vast amount (*n* = 1,978,305,
+much-needed tool to access, and export in batch, the vast amount (*n* = 1,982,988,
 at the time of writing) of references stored in Cristin, regardless of 
 programming platform.
 

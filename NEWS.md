@@ -5,6 +5,17 @@
 * Fixed an issue in `CristinWrangler` where `creatorType` of parent items are
 listed as authors when they are (most probably) editors.
 
+* Fixed some issues with badges in `README`.
+
+* Made some adjustments to `ZoteroGet`. `bibliography`, now contains, in 
+addition to `bib`, `bib.body` and `bib.item`, separating the reference from 
+style.
+
+* Created an internal function called `ZoteroId` to extract ids from extra 
+field.
+
+* Added a flowchart, why not.
+
 # c2z 0.1.4
 
 * Resubmission to CRAN: Part Deux

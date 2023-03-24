@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@
 <a href="https://oeysan.github.io/c2z/reference/figures/badge.webp" id="logo" title="Logo"> <img src="reference/figures/badge.webp" width="250px" alt="Logo"></a>
 </p>
 <p align="center">
-<a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News"> <img src="https://img.shields.io/badge/News-2023.03.23%20@%2021:45:43-purple.svg" alt="News"></a><br><a href="https://cran.r-project.org/package=c2z" id="cran" title="CRAN Version" class="external-link"> <img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version"></a><a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version" class="external-link"> <img src="https://img.shields.io/badge/GitHub-0.1.4.9000-red.svg?style=flat-square" alt="GitHub Version"></a><br><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" title="License"> <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License"></a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" title="Build Status" class="external-link"> <img src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" alt="Build Status"></a>
+<a href="https://oeysan.github.io/c2z/news/index.html" id="news" title="News"><img src="https://img.shields.io/badge/News-2023.03.23%20@%2023:29:44-purple.svg" alt="News"></a><br><a href="https://cran.r-project.org/package=c2z" id="cran" title="CRAN Version" class="external-link"><img src="https://www.r-pkg.org/badges/version/c2z" alt="CRAN Version"></a> <a href="https://github.com/oeysan/c2z" id="github" title="GitHub Version" class="external-link"><img src="https://img.shields.io/badge/GitHub-0.1.4.9001-orange.svg" alt="GitHub Version"></a> <br><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" title="License"> <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" alt="License"></a> <a href="https://github.com/oeysan/c2z/actions" id="rcmdcheck" title="Build Status" class="external-link"><img src="https://github.com/oeysan/c2z/workflows/R-CMD-check/badge.svg" alt="Build Status"></a>
 </p>
 </div>
 <div class="section level1">
@@ -108,7 +108,11 @@
 <div class="section level2">
 <h2 id="what-is-c2z-cristin-to-zotero">What is <em>c2z</em> (Cristin to Zotero)?<a class="anchor" aria-label="anchor" href="#what-is-c2z-cristin-to-zotero"></a>
 </h2>
-<p>The observant reader has already identified the brilliant word play on Psalm 72:8 (King James Version): “He shall have dominion also from <strong>sea to sea</strong>, and from the river unto the ends of the earth”. <em><code>c2z</code></em> aims at obtaining total dominion over <a href="https://app.cristin.no/" class="external-link">Cristin</a> (Current Research Information SysTem in Norway) and <a href="https://www.zotero.org/" class="external-link">Zotero</a>. The package enables manipulating Zotero libraries using <a href="https://www.r-project.org/" class="external-link"><em>R</em></a>. Import, in batch, references from Cristin, regjeringen.no, CRAN, ISBN (currently, Alma and Library of Congress), and DOI (currently, CrossRef and DataCite) to a Zotero library. Add, edit, copy, or delete items, including attachments and collections, and export references to BibLaTeX (and other formats) directly in <em>R</em>.</p>
+<p>The observant reader has already identified the brilliant word play on Psalm 72:8 (King James Version): “He shall have dominion also from <strong>sea to sea</strong>, and from the river unto the ends of the earth”. <em><code>c2z</code></em> aims at obtaining total dominion over <a href="https://app.cristin.no/" class="external-link">Cristin</a> (Current Research Information SysTem in Norway) and <a href="https://www.zotero.org/" class="external-link">Zotero</a>. The package enables manipulating Zotero libraries using <a href="https://www.r-project.org/" class="external-link"><em>R</em></a>. Import, in batch, references from Cristin, regjeringen.no, CRAN, ISBN (currently, Alma and Library of Congress), and DOI (currently, CrossRef and DataCite) to a Zotero library. Add, edit, copy, or delete items, including attachments and collections, and export references to BibLaTeX (and other formats) directly in <em>R</em> (see Figure 1).</p>
+<p align="center">
+<a href="https://oeysan.github.io/c2z/reference/figures/flowchart.svg"> <img src="reference/figures/flowchart.svg" alt="c2z flowchart"></a>
+</p>
+<p><em>Figure 1.</em> <em>c2z</em> flowchart.</p>
 <div class="section level3">
 <h3 id="who-would-want-to-use-c2z">Who would want to use <em>c2z</em>?<a class="anchor" aria-label="anchor" href="#who-would-want-to-use-c2z"></a>
 </h3>
@@ -162,18 +166,26 @@
 </h4>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"oeysan/c2z"</span><span class="op">)</span></span></code></pre></div>
+<p>Please note that stable versions are hosted at CRAN, whereas GitHub versions are in active development.</p>
+</div>
+<div class="section level4">
+<h4 id="stable-version-cran">Stable version (<a href="https://CRAN.R-project.org/package=c2z" class="external-link">CRAN</a>)<a class="anchor" aria-label="anchor" href="#stable-version-cran"></a>
+</h4>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"c2z"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>Also, please see the <a href="https://oeysan.github.io/c2z/articles/c2z_vignette.html">magnificent vignette</a> and other <a href="https://oeysan.github.io/c2z/">documentation</a>.</p>
-<p>I work as an associate professor at a department of teacher education in Norway. Doing so, one of my responsibilities is surprisingly enough teaching. Even more surprising, most of the literature is in Norwegian, and in the form of monographs or anthologies. Unfortunately, Zotero is not well-adapted to importing Norwegian books through ISBN. In the example below, Imsen (2020) is imported using the Zotero magic wand (left) and <em><code>c2z</code></em> (right). Similarly, Zotero is unable to import Johannessen et al. (2021) using ISBN (cf. lookup failed). Evidently, Alma (47BIBSYS) is superior to Open WorldCat and similar when it comes to identifying (most) Norwegian books.</p>
-<div class="figure">
-<img src="reference/figures/readme_imsen.webp" alt=""><p class="caption"><em>Figure 1.</em> Zotero vs. <em>c2z</em> example.</p>
-</div>
-<p>The following example of <em><code>c2z</code></em> addresses this issue, and the <code>Zotero</code> function act as a wrapper by 1) connecting to the Zotero API, 2) creating a collection called “c2z-example”, 3) search for items using two ISBN identifiers (i.e. Imsen, 2020; Johannessen et al., 2021), 4) posting the items to the defined collection, 5) exporting the items as BibLaTeX and creating a bibliography in HTML format using the APA7 reference style, and 6) cleaning up the example by deleting the collection and the two items. (The <em>R</em> output is rather noisy and can be disabled by adding <code>silent = TRUE</code>.)</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>I work as an associate professor at a department of teacher education in Norway. Doing so, one of my responsibilities is surprisingly enough teaching. Even more surprising, most of the literature is in Norwegian, and in the form of monographs or anthologies. Unfortunately, Zotero is not well-adapted to importing Norwegian books through ISBN (see Figure 2). In the example below, Imsen (2020) is imported using the Zotero magic wand (left) and <em><code>c2z</code></em> (right). Similarly, Zotero is unable to import Johannessen et al. (2021) using ISBN (cf. lookup failed). Evidently, Alma (47BIBSYS) is superior to Open WorldCat and similar when it comes to identifying (most) Norwegian books.</p>
+<p align="center">
+<a href="https://oeysan.github.io/c2z/reference/figures/readme_imsen.webp"> <img src="reference/figures/readme_imsen.webp" alt="c2z example"></a>
+</p>
+<p><em>Figure 2.</em> Zotero vs. <em>c2z</em> example.</p>
+<p>The following example of <em><code>c2z</code></em> addresses this issue, and the <code>Zotero</code> function act as a wrapper by 1) connecting to the Zotero API, 2) creating a collection called “c2z-example”, 3) search for items using two ISBN identifiers (i.e. Imsen, 2020; Johannessen et al., 2021), 4) posting the items to the defined collection, 5) exporting the items as BibLaTeX and creating a bibliography in HTML format using the APA7 reference style, and 6) cleaning up the example by deleting the collection and the two items. The <em>R</em> output is rather noisy and can be disabled by adding <code>silent = TRUE</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/oeysan/c2z/" class="external-link">c2z</a></span><span class="op">)</span></span>
 <span><span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Zotero.html">Zotero</a></span><span class="op">(</span></span>
 <span>  collection.names <span class="op">=</span> <span class="st">"c2z-example"</span>,</span>
@@ -198,8 +210,8 @@
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   &lt;fct&gt;   &lt;chr&gt;   </span></span>
-<span><span class="co">#&gt; 1 success 5YIRUNSC</span></span>
-<span><span class="co">#&gt; 2 success PP5JS6SG</span></span>
+<span><span class="co">#&gt; 1 success RXEHLDFU</span></span>
+<span><span class="co">#&gt; 2 success S5JZ64B7</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.items</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
@@ -210,7 +222,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Found 0 subcollections </span></span>
 <span><span class="co">#&gt; Found 2 items </span></span>
-<span><span class="co">#&gt; Collection c2z-example (6HHCBD68) contains: 0 subcollections and 2 items </span></span>
+<span><span class="co">#&gt; Collection c2z-example (WEK99RYQ) contains: 0 subcollections and 2 items </span></span>
 <span><span class="co">#&gt; Found 2 `biblatex` references </span></span>
 <span><span class="co">#&gt; Deleting 1 collection using 1 DELETE request </span></span>
 <span><span class="co">#&gt; -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------</span></span>

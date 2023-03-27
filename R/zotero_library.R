@@ -15,8 +15,6 @@
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
-#' @param result.type Pointless linguistics to display result type (default =
-#'   `result`), Default: NULL
 #' @param include.bib Include HTML-formatted bibliography from Zotero, Default:
 #'   FALSE
 #' @param style Citation style to use for appended bibliography and/or
@@ -60,7 +58,6 @@ ZoteroLibrary <- \(zotero,
                    item.type = NULL,
                    all.results = TRUE,
                    max.results = NULL,
-                   result.type = NULL,
                    include.bib = FALSE,
                    style = "apa",
                    force = FALSE,
@@ -73,14 +70,11 @@ ZoteroLibrary <- \(zotero,
   if (!is.null(zotero$collection.key)) {
 
     # Query all collections in Zotero library
-    if (is.null(result.type)) {
-      result.collection <- "subcollection"
-    } else {
-      result.collection <- result.type
-    }
-    zotero <- ZoteroGet(zotero,
-                        silent = silent,
-                        result.type = result.collection)
+    zotero <- ZoteroGet(
+      zotero,
+      silent = silent,
+      result.type = "collection"
+    )
 
     # Convert json data to data list
     if (zotero$data.cache$status_code == 200) {
@@ -166,8 +160,7 @@ ZoteroLibrary <- \(zotero,
             zotero <- ZoteroLibrary(zotero, case.insensitive, ancestor,
                                     recursive, create, limit, start, get.items,
                                     item.type, all.results, max.results,
-                                    "nested subcollection", include.bib, style,
-                                    force, silent)
+                                    include.bib, style, force, silent)
 
           }
 
@@ -304,8 +297,8 @@ ZoteroLibrary <- \(zotero,
       # Fetch specified data
       zotero <- ZoteroLibrary(zotero, case.insensitive, ancestor, recursive,
                               create, limit, start, get.items, item.type,
-                              all.results, max.results, result.type,
-                              include.bib, style, force, silent)
+                              all.results, max.results, include.bib, style,
+                              force, silent)
 
       # Else find all collections and items
     } else {

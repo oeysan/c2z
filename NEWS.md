@@ -2,6 +2,12 @@
 
 #### Minor
 
+* Fixed an issue in `ZoteroLibrary` where zero collections were reported when
+finding a specific collection key. 
+
+* Fixed an issuse in `ZoteroFormat` where tags could be listed as either a 
+data.frame or list
+
 * Fixed an issue in `CristinWrangler` where `creatorType` of parent items are
 listed as authors when they are (most probably) editors.
 

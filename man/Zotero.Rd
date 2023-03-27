@@ -20,7 +20,6 @@ Zotero(
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
-  result.type = NULL,
   items = NULL,
   doi = NULL,
   isbn = NULL,
@@ -99,9 +98,6 @@ collection), Default: FALSE}
 \item{all.results}{Find all results in query, Default: TRUE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
-
-\item{result.type}{Pointless linguistics to display result type (default =
-`result`), Default: NULL}
 
 \item{items}{Predefined metadata (as tibble), Default: NULL}
 

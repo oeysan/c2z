@@ -154,14 +154,32 @@ ZoteroGet <- \(zotero,
 
   # API query
   if (is.null(custom.url)) {
-    json.get <- httr::RETRY("GET", url, query = query.list, quiet = TRUE)
+    json.get <- GoFish(
+      httr::RETRY("GET", url, query = query.list, quiet = TRUE),
+      stats::setNames(list(404), "status_code")
+    )
   } else {
-    json.get <- httr::RETRY("GET", custom.url, quiet = TRUE)
+    json.get <- GoFish(
+      httr::RETRY("GET", custom.url, quiet = TRUE),
+      stats::setNames(list(404), "status_code")
+    )
+  }
+
+  # Return Zotero list upon error
+  if (json.get$status_code != 200) {
+    zotero$log <-  LogCat(
+      ErrorCode(json.get$status_code),
+      silent = silent,
+      log = zotero$log
+    )
+    return (zotero)
   }
 
   # Number of results
   if (!is.null(keys)) {
     total.results <- do.call(sum,lapply(key.list, nrow))
+  } else if (!all(append.collections, append.items, append.top, append.file)) {
+    total.results <- 1
   } else {
     total.results <- max(0, as.numeric(json.get$headers[["total-results"]]))
   }
@@ -210,7 +228,7 @@ ZoteroGet <- \(zotero,
   }
 
   # Parse data if defined
-  if (!is.null(format) & json.get$status_code == 200) {
+  if (!is.null(format)) {
     # Parse zotero items according to format if not json
     if (format != "json") {
       zotero.items <- ParseUrl(json.get, format)
@@ -221,12 +239,6 @@ ZoteroGet <- \(zotero,
       # Zotero metadata
       zotero.items <- json.data$data
     }
-  } else if (json.get$status_code != 200) {
-    zotero$log <-  LogCat(
-      ErrorCode(json.get$status_code),
-      silent = silent,
-      log = zotero$log
-    )
   }
 
   # Format

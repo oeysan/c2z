@@ -16,7 +16,6 @@ ZoteroLibrary(
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
-  result.type = NULL,
   include.bib = FALSE,
   style = "apa",
   force = FALSE,
@@ -48,9 +47,6 @@ collection), Default: FALSE}
 \item{all.results}{Find all results in query, Default: TRUE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
-
-\item{result.type}{Pointless linguistics to display result type (default =
-`result`), Default: NULL}
 
 \item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
 FALSE}

@@ -20,8 +20,6 @@
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
-#' @param result.type Pointless linguistics to display result type (default =
-#'   `result`), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param items Predefined metadata (as tibble), Default: NULL
 #' @param doi Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL
@@ -112,7 +110,6 @@ Zotero <- \(collection.names = NULL,
             item.type = NULL,
             all.results = TRUE,
             max.results = NULL,
-            result.type = NULL,
             items = NULL,
             doi = NULL,
             isbn = NULL,
@@ -364,7 +361,6 @@ Zotero <- \(collection.names = NULL,
       item.type,
       all.results,
       max.results,
-      result.type,
       include.bib,
       style,
       force,

@@ -43,6 +43,114 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title Month
+#' @keywords internal
+#' @noRd
+Month <- \(i = NULL,
+           lang = NULL,
+           abbreviation = FALSE) {
+
+  # Define months by norwegian if lang = no
+  if (any(lang == "no")) {
+
+    # Month names in Norwegian
+    month.name <- c(
+      "Januar",
+      "Februar",
+      "Mars",
+      "April",
+      "Mai",
+      "Juni",
+      "Juli",
+      "August",
+      "September",
+      "Oktober",
+      "November",
+      "Desember"
+    )
+
+    # Abbreviated month names in Norwegian
+    month.abb <- c(
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des"
+    )
+
+  }
+
+  # Set month as either month or abbreviated monther by integer
+  month <- if (abbreviation) month.abb[i] else month.name[i]
+
+  return (month)
+
+}
+
+#' @title ChangeDate
+#' @keywords internal
+#' @noRd
+ChangeDate <- \(date, i, type = "months") {
+
+  # Return NULL if not a date
+  if (is.na(GoFish(as.Date(date)))) {
+    return (NULL)
+  }
+
+  # sequence date by +- date (e.g., months) subtract tail
+  date <- seq(date, by = paste(i, type), length = 2)[2]
+
+  return (date)
+}
+
+#' @title FloorDate
+#' @keywords internal
+#' @noRd
+FloorDate <- \(date) {
+
+  # Convert date to character and split by dash
+  date <- strsplit(as.character(date), "-")[[1]]
+  # Remove days if any
+  if (any(length(date) == 3)) date <- head(date, -1)
+
+  # Paste and add day 1
+  date <- date |>
+    paste(collapse = "-") |>
+    paste0("-01") |>
+    as.Date() |>
+    GoFish(NULL) # Set as null if date is erronous
+
+
+  return (date)
+
+}
+
+#' @title CeilingDate
+#' @keywords internal
+#' @noRd
+CeilingDate <-  \(date) {
+
+  # Return NULL if not a date
+  if (is.na(GoFish(as.Date(date)))) {
+    return (NULL)
+  }
+
+  # Floor date, add month, subtract one day
+  date <- FloorDate(date) |>
+    ChangeDate(1, "months") |>
+    ChangeDate(-1, "days")
+
+  return (date)
+
+}
+
 #' @title ZoteroId
 #' @keywords internal
 #' @noRd

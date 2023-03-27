@@ -5,6 +5,9 @@
 * Fixed an issue in `CristinWrangler` where `creatorType` of parent items are
 listed as authors when they are (most probably) editors.
 
+* Fixed an issue in `DoiCrossref` where first and last names sometimes are 
+switched due to an alt-name field in the XML.
+
 * Fixed some issues with badges in `README`.
 
 * Made some adjustments to `ZoteroGet`. `bibliography`, now contains, in 
@@ -13,6 +16,11 @@ style.
 
 * Created an internal function called `ZoteroId` to extract ids from extra 
 field.
+
+* Added some internal functions to handle dates: `Months` to display 
+(abbreviated) month names in Norwegian and English, `ChangeDate` to add/subtract
+date from date (e.g., days, weeks, months), `FloorDate` to set the first day of
+the month, and `CeilingDate` so set the last day of the month.
 
 * Added a flowchart, why not.
 

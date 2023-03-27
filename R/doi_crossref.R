@@ -85,10 +85,18 @@ DoiCrossref <- \(data, meta = list()) {
         type <- x |>
           rvest::html_attr("contributor_role")
       }
-      # Fetch creator names
-      name <- x |>
-        rvest::html_nodes("surname,given_name") |>
+
+      # Fetch last name
+      last.name <- x |>
+        rvest::html_nodes(xpath = "surname[not(parent::alt-name)]") |>
         rvest::html_text()
+      # Fetch first name
+      first.name <- x |>
+        rvest::html_nodes(xpath = "given_name[not(parent::alt-name)]") |>
+        rvest::html_text()
+
+      # Combine names
+      name <- c(last.name, first.name)
 
       # Some authors are only named by surname/name
       if (length(name) == 1) {
@@ -101,7 +109,7 @@ DoiCrossref <- \(data, meta = list()) {
       }
 
       # Return creators
-      list(type = type, name = rev(name))
+      list(type = type, name = name)
 
     })
 

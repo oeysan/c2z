@@ -175,11 +175,25 @@ ZoteroGet <- \(zotero,
     return (zotero)
   }
 
+  # Parse data if defined
+  if (!is.null(format)) {
+    # Parse zotero items according to format if not json
+    if (format != "json") {
+      zotero.items <- ParseUrl(json.get, format)
+      # else parse data as JSON
+    } else {
+      # Full JSON data including bibliography
+      json.data <- JsonToTibble(json.get)
+      # Zotero metadata
+      zotero.items <- json.data$data
+    }
+  }
+
   # Number of results
   if (!is.null(keys)) {
     total.results <- do.call(sum,lapply(key.list, nrow))
-  } else if (!all(append.collections, append.items, append.top, append.file)) {
-    total.results <- 1
+  } else if (!any(append.collections, append.items, append.top, append.file)) {
+    total.results <- max(0, GoFish(json.data$meta[[1]]$numCollections, NULL))
   } else {
     total.results <- max(0, as.numeric(json.get$headers[["total-results"]]))
   }
@@ -225,20 +239,6 @@ ZoteroGet <- \(zotero,
       silent = silent,
       log = zotero$log
     )
-  }
-
-  # Parse data if defined
-  if (!is.null(format)) {
-    # Parse zotero items according to format if not json
-    if (format != "json") {
-      zotero.items <- ParseUrl(json.get, format)
-      # else parse data as JSON
-    } else {
-      # Full JSON data including bibliography
-      json.data <- JsonToTibble(json.get)
-      # Zotero metadata
-      zotero.items <- json.data$data
-    }
   }
 
   # Format

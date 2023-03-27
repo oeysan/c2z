@@ -42,10 +42,9 @@ ZoteroDelete <- \(zotero,
   MassDelete <- \(zotero,
                   append.collections = FALSE,
                   delete.limit,
-                  force = FALSE,
                   silent = FALSE) {
 
-    # Find latest zotero version if force set to TRUE
+    # Find latest Zotero version
     version <- ZoteroGet(
       Zotero(
         user = zotero$user,
@@ -196,7 +195,7 @@ ZoteroDelete <- \(zotero,
         log = zotero$log
       )
     } else {
-      zotero <- MassDelete(zotero, TRUE, delete.limit, force, silent)
+      zotero <- MassDelete(zotero, TRUE, delete.limit, silent)
     }
   }
   # Delete items if delete.items = TRUE
@@ -208,7 +207,7 @@ ZoteroDelete <- \(zotero,
         log = zotero$log
       )
     } else {
-      zotero <- MassDelete(zotero, FALSE, delete.limit, force, silent)
+      zotero <- MassDelete(zotero, FALSE, delete.limit, silent)
     }
   }
 

@@ -354,7 +354,6 @@ ZoteroFormat <- \(data = NULL,
                        "creators",
                        "relations")
   double.items <- c("version", "mtime")
-  dataframe.items <- c("relations", "tags")
   list.items <- c("collections", "relations", "tags")
 
   # Check if metadata and not in a data frame
@@ -377,8 +376,8 @@ ZoteroFormat <- \(data = NULL,
       # Add to list if element is a data frame
       ## Make certain list.items is in a list
       if (is.data.frame(x) | names %in% list.items) {
-        if (names %in% dataframe.items) x <- as.data.frame(x)
-        if (!all(is.na(x))) x <- list(x)
+        x <- if (all(is.na(GoFish(as.character(unlist(x)))))) NA else list(x)
+
         # Make certain double.items are double
       } else if (names %in% double.items) {
         x <- as.double(x)
@@ -413,10 +412,14 @@ ZoteroFormat <- \(data = NULL,
 
   # Set data as tibble if data frame
   if (is.data.frame(data)) {
+
     data <- tibble::as_tibble(data) |>
       # Replace empty string with NA
       dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
       dplyr::mutate(
+        dplyr::across(
+          dplyr::any_of("tags"), ~ purrr::map(tags, ~ as.data.frame(.))
+        ),
         # Add prefix if defined
         prefix = GoFish(prefix),
         # Fix creators
@@ -424,6 +427,7 @@ ZoteroFormat <- \(data = NULL,
       ) |>
       # Remove empty columns
       dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0))
+
     # Else convert to string
   } else {
     data <- ToString(data, "\n")

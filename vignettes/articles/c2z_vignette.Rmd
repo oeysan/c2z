@@ -189,7 +189,7 @@ cristin <- Cristin(
   use.identifiers = TRUE,
   crossref.search = TRUE,
   autosearch = TRUE,
-  silent = TRUE
+  silent = FALSE
 )
 
 # Get the fox key

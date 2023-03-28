@@ -1,7 +1,7 @@
 Type: Package
 Package: c2z
 Title: A Reference Manager
-Version: 0.1.4.9004
+Version: 0.1.4.9005
 Authors@R: 
     person("Øystein Olav", "Skaar", , "oeysan@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5605-3492"))

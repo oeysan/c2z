@@ -115,6 +115,11 @@ ChangeDate <- \(date, i, type = "months") {
 #' @noRd
 FloorDate <- \(date) {
 
+  # Return NULL if not a date
+  if (is.na(GoFish(as.Date(date)))) {
+    return (NULL)
+  }
+
   # Convert date to character and split by dash
   date <- strsplit(as.character(date), "-")[[1]]
   # Remove days if any
@@ -418,7 +423,9 @@ ZoteroFormat <- \(data = NULL,
       dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
       dplyr::mutate(
         dplyr::across(
-          dplyr::any_of("tags"), ~ purrr::map(tags, ~ as.data.frame(.))
+          dplyr::any_of("tags"), ~ purrr::map(tags, ~ {
+            if (all(!is.na(.x))) as.data.frame(.x)
+            })
         ),
         # Add prefix if defined
         prefix = GoFish(prefix),

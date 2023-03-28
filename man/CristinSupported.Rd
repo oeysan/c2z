@@ -50,7 +50,7 @@ Please see
 }
 \examples{
 # Supported Cristin items
-print(CristinSupported(), n = 32)
+print(CristinSupported(), n = 5)
 }
 \seealso{
 \code{\link[tibble]{tibble}}

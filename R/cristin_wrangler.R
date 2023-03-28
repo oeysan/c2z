@@ -249,14 +249,15 @@ CristinWrangler <- \(data,
       external.data <- Cristin(id = basename(x$part_of$url),
                                silent = TRUE,
                                force.type = "book",
+                               remove.na = FALSE,
                                zotero.check = FALSE,
                                use.identifiers = use.identifiers,
                                crossref.search = crossref.search,
                                autosearch = autosearch,
                                override = override)$results
 
-      # Change itemType if book metadata is not NULL
-      if (!is.null(external.data)) {
+      # Change itemType if book metadata is not empty
+      if (all(is.na(GoFish(external.data)))) {
 
         # Change creator-type of external.data
         external.data$creators[[1]] <- external.data$creators[[1]] |>

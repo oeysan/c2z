@@ -115,9 +115,9 @@ ChangeDate <- \(date, i, type = "months") {
 #' @noRd
 FloorDate <- \(date) {
 
-  # Return NULL if not a date
-  if (is.na(GoFish(as.Date(date)))) {
-    return (NULL)
+  # Return null if no dash in date
+  if (grepl("-", date)) {
+      return (NULL)
   }
 
   # Convert date to character and split by dash

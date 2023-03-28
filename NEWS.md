@@ -2,10 +2,13 @@
 
 #### Minor
 
+* Fixed a bug in `CristinWrangler` where `remove.na` was set to TRUE rather
+than forcing item-type to book (`part_of`) for book chapters.
+
 * Fixed an issue in `ZoteroLibrary` where zero collections were reported when
 finding a specific collection key. 
 
-* Fixed an issuse in `ZoteroFormat` where tags could be listed as either a 
+* Fixed an issue in `ZoteroFormat` where tags could be listed as either a 
 data.frame or list
 
 * Fixed an issue in `CristinWrangler` where `creatorType` of parent items are
@@ -16,9 +19,9 @@ switched due to an alt-name field in the XML.
 
 * Fixed some issues with badges in `README`.
 
-* Made some adjustments to `ZoteroGet`. `bibliography`, now contains, in 
-addition to `bib`, `bib.body` and `bib.item`, separating the reference from 
-style.
+* Made some adjustments to `ZoteroGet`. `bibliography` now contains, in 
+addition to `bib`, `bib.body` and `bib.item` separating style form the 
+reference.
 
 * Created an internal function called `ZoteroId` to extract ids from extra 
 field.

@@ -19,7 +19,7 @@
 #'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 #' @examples
 #' # Supported Cristin items
-#' print(CristinSupported(), n = 32)
+#' print(CristinSupported(), n = 5)
 #' @seealso
 #'  \code{\link[tibble]{tibble}}
 #' @rdname CristinSupported
@@ -44,6 +44,7 @@ CristinSupported <- \(data = NULL,
   # Currently supported references
   supported.types <- c(
     anthologyaca= "book",
+    booktransl = "book",
     monographaca= "book",
     commentaryaca= "book",
     textbook= "book",

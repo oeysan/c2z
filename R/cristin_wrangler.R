@@ -503,6 +503,11 @@ CristinWrangler <- \(data,
     # Sett as NULL if no creators
     if (is.null(GoFish(meta$creators[[1]], NULL))) meta$creators <- NA
 
+    # Remove hyphens from ISBN
+    if (!is.na(GoFish(meta$ISBN))) meta$ISBN <-  Trim(
+      gsub('[^[:alnum:] ]', "", meta$ISBN)
+    )
+
     # Add or append results
     results <- AddAppend(meta, results)
 

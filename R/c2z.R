@@ -116,7 +116,7 @@ ChangeDate <- \(date, i, type = "months") {
 FloorDate <- \(date) {
 
   # Return null if no dash in date
-  if (grepl("-", date)) {
+  if (!grepl("-", date)) {
       return (NULL)
   }
 

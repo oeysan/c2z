@@ -2,6 +2,8 @@
 
 #### Minor
 
+* Removed hyphens from ISBN when importing from `Cristin` to simplify filtering.
+
 * Fixed a bug in `CristinWrangler` where `remove.na` was set to TRUE rather
 than forcing item-type to book (`part_of`) for book chapters.
 

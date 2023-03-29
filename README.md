@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.03.28 @ 22:54:15-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.03.29 @ 11:12:36-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9006-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9007-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -215,8 +215,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success SPK7J8CY
-#> 2 success D9X5CBBN
+#> 1 success PBHDEXPS
+#> 2 success A27SQAGY
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -227,7 +227,7 @@ example <- Zotero(
 #> 
 #> Found 0 subcollections 
 #> Found 2 items 
-#> Collection c2z-example (TXHR8MUY) contains: 0 subcollections and 2 items 
+#> Collection c2z-example (DWS47383) contains: 0 subcollections and 2 items 
 #> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
 #> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------

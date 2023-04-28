@@ -4,12 +4,16 @@
 \alias{ZoteroDoi}
 \title{Use DOI to acquire metadata}
 \usage{
-ZoteroDoi(doi, meta = list())
+ZoteroDoi(doi, meta = list(), silent = TRUE, log = list())
 }
 \arguments{
 \item{doi}{A digital object identifier}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 A Zotero-type matrix (tibble)
@@ -26,9 +30,12 @@ Please see
   # Simple use of `ZoteroDoi`
   example <- ZoteroDoi("10.1126/sciadv.abd1705")
 
-  ZoteroIndex(example) |>
+  # Print index using `ZoteroIndex`
+  if (any(nrow(example$data))) {
+  ZoteroIndex(example$data) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

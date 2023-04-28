@@ -65,23 +65,37 @@ Please see
   )
 
   # Display collections
-  print(zotero$collections, width = 80)
+  if (any(nrow(zotero$collections))) {
+    zotero$collections |>
+      dplyr::select(key, version, parentCollection) |>
+      print(width = 80)
+  }
 
   # Display items
-  print(zotero$items, width = 80)
+  if (any(nrow(zotero$items))) {
+    zotero$items |>
+      dplyr::select(key, version) |>
+      print(width = 80)
+  }
 
   # Copy items
   example <- ZoteroCopy(
     zotero,
   )
 
-  # Display new keys and version for collections
-  example$collections |>
-    dplyr::select(key, version, parentCollection)
+  # Display collections
+  if (any(nrow(example$collections))) {
+    example$collections |>
+      dplyr::select(key, version, parentCollection) |>
+      print(width = 80)
+  }
 
-  # Display new keys and version for items
-  example$items |>
-    dplyr::select(key, version)
+  # Display items
+  if (any(nrow(example$items))) {
+    example$items |>
+      dplyr::select(key, version) |>
+      print(width = 80)
+  }
 }
 }
 \seealso{

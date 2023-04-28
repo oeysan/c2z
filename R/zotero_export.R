@@ -69,7 +69,7 @@ ZoteroExport <- \(zotero,
   if (!is.null(csl.type)) {
 
     # Fetch csl
-    get.csl <- GoFish(
+    httr.get <- Online(
       httr::RETRY(
         "GET",
         sprintf(
@@ -78,19 +78,16 @@ ZoteroExport <- \(zotero,
           csl.type
         ),
         quiet = TRUE),
-      stats::setNames(list(404), "status_code")
+      silent = TRUE
     )
+    zotero$log <- append(zotero$log, httr.get$log)
 
-    # Return Zotero-list upon error
-    if (get.csl$status_code != 200) {
-      zotero$log <-  LogCat(
-        ErrorCode(get.csl$status_code),
-        silent = silent,
-        log = zotero$log
-      )
+    # Log and return error if status code != 200
+    if (httr.get$error) {
       return (zotero)
     }
 
+    # Log CSL format
     zotero$log <-  LogCat(
       sprintf("Found CLS in `%s` format", csl.type),
       silent = silent,
@@ -98,7 +95,7 @@ ZoteroExport <- \(zotero,
     )
 
     # Format csl
-    csl.style <- rawToChar(get.csl$content)
+    csl.style <- rawToChar(httr.get$data$content)
 
     # Save data if save.data is TRUE
     if (save.data) {

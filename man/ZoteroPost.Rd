@@ -82,9 +82,11 @@ Please see
   )
 
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example$items) |>
-    dplyr::select(name) |>
-    print(width = 80)
+  if (any(nrow(example$items))) {
+    ZoteroIndex(example$items) |>
+      dplyr::select(name) |>
+      print(width = 80)
+  }
 }
 }
 \seealso{

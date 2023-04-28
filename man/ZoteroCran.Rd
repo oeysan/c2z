@@ -4,12 +4,16 @@
 \alias{ZoteroCran}
 \title{Wrangle CRAN metadata into Zotero-type format}
 \usage{
-ZoteroCran(id, meta = list())
+ZoteroCran(id, meta = list(), silent = TRUE, log = list())
 }
 \arguments{
 \item{id}{name of R package}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 A Zotero-type matrix (tibble)
@@ -18,7 +22,7 @@ A Zotero-type matrix (tibble)
 Query CRAN by name and fetch metadata
 }
 \details{
-Please see 
+Please see
 \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
 }
 \examples{
@@ -27,9 +31,11 @@ Please see
   example <- ZoteroCran(c("dplyr", "jsonlite", "httr"))
 
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example) |>
+  if (any(nrow(example$data))) {
+  ZoteroIndex(example$data) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

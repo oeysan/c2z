@@ -4,13 +4,13 @@
 \alias{ZoteroAdd}
 \title{Add items to Zotero list}
 \usage{
-ZoteroAdd(zotero, items = NULL, doi = NULL, isbn = NULL, silent = FALSE)
+ZoteroAdd(zotero, metadata = NULL, doi = NULL, isbn = NULL, silent = FALSE)
 }
 \arguments{
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items)}
 
-\item{items}{Predefined metadata (as tibble), Default: NULL}
+\item{metadata}{Predefined metadata in Zoter-format, Default: NULL}
 
 \item{doi}{Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL}
 
@@ -40,8 +40,10 @@ Please see
     isbn = "978-1529797138"
   )
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example$items) |>
-    dplyr::select(name) |>
-    print(width = 80)
+  if (any(nrow(example$items))) {
+    ZoteroIndex(example$items) |>
+      dplyr::select(name) |>
+      print(width = 80)
+  }
 }
 }

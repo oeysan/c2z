@@ -200,7 +200,7 @@ fox <- collections$collections |>
 # Post the items to the collection called fox
 post.cristin <- Zotero(
   collection.key = fox,
-  items = cristin$results,
+  metadata = cristin$results,
   library = TRUE,
   index = TRUE,
   post = TRUE,
@@ -233,6 +233,7 @@ cristin2 <- Cristin(
   filter = cristin.filter,
   zotero.import = TRUE,
   zotero.check = TRUE,
+  use.identifiers = FALSE,
   zotero = post.cristin
 )
 ```
@@ -281,16 +282,16 @@ So, let's add some random white papers and official reports using `ZoteroGov`.
 # Combine to a single tibble using dplyr
 gov.items <- dplyr::bind_rows(
   # Find some random white papers
-  ZoteroGov(c("26 (2001-2002)", "31 (2014-2015)"), type = "meldst"),
+  ZoteroGov(c("26 (2001-2002)", "31 (2014-2015)"), type = "meldst")$data,
   # Finds some random official Norwegian reports.
-  ZoteroGov(c("2014: 4", "2018: 2"), type = "nou")
+  ZoteroGov(c("2014: 4", "2018: 2"), type = "nou")$data
 )
 
 # Post the items to the collection called brown
 ## Fitting given the source
 the.man <- Zotero(
   collection.names = c("The", "quick", "brown"),
-  items = gov.items,
+  metadata = gov.items,
   library = TRUE,
   index  = TRUE,
   post = TRUE,
@@ -347,14 +348,14 @@ packages <- c(
 # Post the items to the collections called lazy and dog
 cran <- Zotero(
   collection.key = lazy,
+  metadata = ZoteroCran(packages)$data,
   library = TRUE,
   index = TRUE,
   recursive = TRUE,
-  items = ZoteroCran(packages),
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
-  silent = TRUE,
+  silent = FALSE,
   get.items = FALSE
 )
 

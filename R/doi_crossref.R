@@ -2,6 +2,8 @@
 #' @description Query CrossRef by DOI and fetch metadata
 #' @param data XML data from CrossRef containing metadata
 #' @param meta A list collecting all metadata used to create , Default: list()
+#' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
+#' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
 #' @details Please see
 #'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
@@ -11,16 +13,21 @@
 #'   example <- ZoteroDoi("10.1126/sciadv.abd1705")
 #'
 #'   # Print index using `ZoteroIndex`
-#'   ZoteroIndex(example) |>
-#'     dplyr::select(name) |>
-#'     print(width = 80)
+#'   if (!is.null(example$data)) {
+#'     ZoteroIndex(example$data) |>
+#'       dplyr::select(name) |>
+#'       print(width = 80)
 #'
-#'   # Display catalog
-#'   example$libraryCatalog
+#'     # Display catalog
+#'     example$data$libraryCatalog
+#'   }
 #' }
 #' @rdname DoiCrossref
 #' @export
-DoiCrossref <- \(data, meta = list()) {
+DoiCrossref <- \(data,
+                 meta = list(),
+                 silent = TRUE,
+                 log = list()) {
 
   # Function to extract date from Crossref
   CrossrefDate <- \(ref, type, date.type = "/publication_date") {
@@ -63,7 +70,7 @@ DoiCrossref <- \(data, meta = list()) {
 
     }
 
-    date <- paste(c(year,month,day), collapse="-")
+    date <- paste(c(year, month, day), collapse="-")
     if (date == "") date <- NA
 
     return (date)
@@ -119,7 +126,7 @@ DoiCrossref <- \(data, meta = list()) {
   }
 
   # Find crossref metadata
-  ref <- data |>
+  ref <- rvest::read_html(data) |>
     rvest::html_nodes(xpath = "//doi_record//crossref") |>
     rvest::html_children()
   # Type of metadata (e.g., journal, book)
@@ -135,8 +142,13 @@ DoiCrossref <- \(data, meta = list()) {
     "-"
   ))
 
+  # Return NULL if empty
+  if (all(is.na(ref.type))) {
+    return (list(data = NULL, log = log))
+  }
+
   # Do if ref.type is a journal article
-  if (ref.type == "journal") {
+  if ((ref.type == "journal")) {
 
     # Set itemType
     meta$itemType <- "journalArticle"
@@ -478,6 +490,6 @@ DoiCrossref <- \(data, meta = list()) {
 
   } # end of itemTypes
 
-  return (meta)
+  return (list(data = meta, log = log))
 
 }

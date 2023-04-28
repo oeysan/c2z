@@ -29,11 +29,12 @@ Please see
     api = "RqlAmlH5l1KPghfCseAq1sQ1",
     library = TRUE
   )
-
   # Print index using `ZoteroIndex`
+  if (any(nrow(example$items))) {
   ZoteroIndex(example$items) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

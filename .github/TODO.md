@@ -1,5 +1,4 @@
 # TODO
-- [ ] Make handling of API status codes consistent throughout the package
 - [ ] Add support for more Cristin categories (e.g., interviews)
 - [ ] Make `ZoteroIsbn` and `ZoteroDoi` less convoluted 
 - [ ] Add support for more categories using identifiers (e.g., thesis through ISBN)
@@ -9,6 +8,7 @@
 - [ ] Prepare migration to Cris (Current research information system)
 
 # Archive
+- [x] Make handling of API status codes consistent throughout the package
 - [x] Integrate DOI (DataCite)
 - [x] Integrate Cristin API
 - [x] Integrate DOI (CrossRef)

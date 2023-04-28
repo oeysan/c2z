@@ -2,6 +2,8 @@
 #' @description Connects with doi.org to create metadata
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
+#' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
+#' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
 #' @details Please see
 #' \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
@@ -10,9 +12,12 @@
 #'   # Simple use of `ZoteroDoi`
 #'   example <- ZoteroDoi("10.1126/sciadv.abd1705")
 #'
-#'   ZoteroIndex(example) |>
+#'   # Print index using `ZoteroIndex`
+#'   if (any(nrow(example$data))) {
+#'   ZoteroIndex(example$data) |>
 #'     dplyr::select(name) |>
 #'     print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[httr]{http_error}}, \code{\link[httr]{GET}},
@@ -23,199 +28,140 @@
 #'  \code{\link[dplyr]{bind}}, \code{\link[dplyr]{arrange}}
 #' @rdname ZoteroDoi
 #' @export
-ZoteroDoi <- \(doi, meta = list()) {
+ZoteroDoi <- \(doi,
+               meta = list(),
+               silent = TRUE,
+               log = list()) {
 
   # Visible bindings
-  key <- NULL
+  key <- data <- log.eta <- NULL
 
   # Function to check DOI
-  CheckDOI <- \(doi) {
+  CheckDoi <- \(doi, meta = list()) {
 
     # Visible bindings
-    error <- TRUE
-    data <- type <- NULL
+    type <- NULL
 
-    # Check if DOI
-    if (grepl("^.*(10\\..*)", doi)) {
+    if (!grepl("^.*(10\\..*)", doi)) {
+      return (list(error = TRUE, log = sprintf("DOI: `%s` is not valid", doi)))
+    }
 
-      # Remove any https part
-      doi <- Trim(gsub("^.*(10\\..*)", "\\1", doi, perl = TRUE))
-      # Remove any excess white space
-      doi <- gsub("\\s", "", doi)
+    # Remove any https part
+    doi <- Trim(gsub("^.*(10\\..*)", "\\1", doi, perl = TRUE))
+    # Remove any excess white space
+    doi <- gsub("\\s", "", doi)
 
-      # Try DOI key
-      doi.works <- httr::RETRY(
-        "GET", sprintf("https://doi.org/api/handles/%s", doi),
+    # Try DOI key
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        sprintf("https://doi.org/api/handles/%s", doi),
         quiet = TRUE
-      )
-
-      if (doi.works$status_code == "200") {
-
-        # Format JSON date
-        doi.json <- jsonlite::fromJSON(
-          ParseUrl(doi.works, "text")
-        )
-
-        # Check if DOI is an alias
-        doi.alias <- GoFish(
-          doi.json$values$data[
-            doi.json$values$type == "HS_ALIAS","value"
-          ][[1]]
-        )
-
-        # Set new DOI if alias exist
-        if (any(!is.na(doi.alias))) {
-          doi <- Trim(
-            gsub("^.*(10\\..*)", "\\1", doi.alias[[1]], perl = TRUE)
-          )
-        }
-
-        # Query Crossref for metadata
-        crossref.data <- httr::RETRY(
-          "GET", sprintf("https://api.crossref.org/works/%s.xml", doi),
-          quiet = TRUE
-        )
-
-        # Set type and data as crossref data if found
-        if (crossref.data$status_code == "200") {
-
-          # Set libraryCatalog
-          meta$libraryCatalog <- "DOI.org (Crossref)"
-
-          # Set error to FALSE
-          error <- FALSE
-
-          # Set data as crossref data
-          data <- crossref.data
-
-          # Else check for datacite data
-        } else {
-          # Query datacite for metadata
-          datacite.data <- httr::RETRY(
-            "GET", sprintf("https://api.datacite.org/dois/%s", doi),
-            quiet = TRUE
-          )
-          # Set type and data as datacite data if found
-          if (datacite.data$status_code == "200") {
-
-            # Set libraryCatalog
-            meta$libraryCatalog <- "DOI.org (Datacite)"
-            # Set error to FALSE
-            error <- FALSE
-            # Set data as datacite data
-
-            # Format datacite as JSON
-            datacite.json <- jsonlite::fromJSON(
-              ParseUrl(datacite.data, "text")
-            )$data$attributes
-
-            # There is currently a bug in OSF/Datacite XML where
-            # Authors are not correctly identified.
-            # Thus, c2z currently use JSON data to create creators metadata
-
-            # Add url
-            meta$url <- GoFish(datacite.json$url)
-
-            # Run if osf.io in url
-            if (grepl("osf.io", meta$url)) {
-
-              # Find osf data
-              osf.data <- httr::RETRY(
-                "GET", sprintf("https://api.osf.io/v2/nodes/%s/contributors/",
-                               basename(meta$url)),
-                query = stats::setNames(list("true", "json"),
-                                        c("filter[bibliographic]","format")),
-                quiet = TRUE
-              )
-
-              # Format osf data as JSON
-              osf.json <- jsonlite::fromJSON(
-                ParseUrl(osf.data, "text")
-              )$data$embeds$users$data$attributes
-
-              # Create Zotero-type matrix
-              meta$creators <- ZoteroCreator(
-                lapply(seq_len(nrow(osf.json)), \(i) {
-                  list(
-                    type = "author",
-                    name = c(osf.json[i,]$family_name,
-                             osf.json[i,]$given_name)
-                  )
-                })
-              )
-
-              # Else find creators from datacite data
-            } else {
-
-              # Find creators
-              creators <- GoFish(datacite.json$creators$name)
-              if (any(!is.na(creators))) {
-                meta$creators <- ZoteroCreator(
-                  lapply(creators, \(x) {
-                    c(type = "author",
-                      name = strsplit(x, ", "))
-                  })
-                )
-              }
-
-            }
-
-            # Check for contributors
-            contributors <- GoFish(datacite.json$contributors$name)
-            # ... and the role of he contribuors
-            contributor.type <- GoFish(
-              datacite.json$contributors$contributorType
-            )
-            # Append any contributors to creators
-            if (any(!is.na(contributors))) {
-              meta$creators <- AddAppend(ZoteroCreator(
-                lapply(seq_along(contributors), \(i) {
-                  c(type = contributor.type[i],
-                    name = strsplit(contributors[i], ", "))
-                })
-              ), meta$creators)
-            }
-
-            # Set data as datacite data
-            data <- rawToChar(jsonlite::base64_dec(
-              datacite.json$xml
-            ))
-
-          } # End check of datecite
-        } # End check of crossref
-      } # End of DOI lookup
-    } # End check of DOI
-
-    # Create return list
-    return.list <- list(
-      error = error,
-      data = data,
-      meta = meta
+      ),
+      silent = TRUE,
+      message = "DOI",
+      reference = doi,
     )
 
-    return (return.list)
+    # Return data if error
+    if (httr.get$error) {
+      return (c(httr.get, meta = list(meta)))
+    }
+
+    # Format JSON date
+    doi.json <- jsonlite::fromJSON(
+      ParseUrl(httr.get$data, "text")
+    )
+
+    # Check if DOI is an alias
+    doi.alias <- GoFish(
+      doi.json$values$data[
+        doi.json$values$type == "HS_ALIAS","value"
+      ][[1]]
+    )
+
+    # Set new DOI if alias exist
+    if (any(!is.na(doi.alias))) {
+      doi <- Trim(
+        gsub("^.*(10\\..*)", "\\1", doi.alias[[1]], perl = TRUE)
+      )
+    }
+
+    # Try DOI key
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        sprintf("https://api.crossref.org/works/%s.xml", doi),
+        quiet = TRUE
+      ),
+      silent = TRUE,
+      message = "CrossRef",
+      log = httr.get$log
+    )
+
+    # Return data if no error
+    if (!httr.get$error) {
+      # Set libraryCatalog
+      meta$libraryCatalog <- "DOI.org (Crossref)"
+      return (c(httr.get, meta = list(meta)))
+    }
+
+    # Else query datacite for metadata
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        sprintf("https://api.datacite.org/dois/%s", doi),
+        quiet = TRUE
+      ),
+      silent = TRUE,
+      message = "DataCite",
+      log = httr.get$log
+    )
+
+    # Return data if no error
+    if (!httr.get$error) {
+      # Set libraryCatalog
+      meta$libraryCatalog <- "DOI.org (Datacite)"
+      return (c(httr.get, meta = list(meta)))
+    }
+
+    # Else return error
+    return(list(error = TRUE, append(httr.get, "DOI not identified")))
 
   }
 
-  # Function to convert Crossref XML to zotero-type reference
-  DOI <- \(data, meta) {
+  # Start time for query
+  query.start <- Sys.time()
 
-    # Read  metadata
-    data <- rvest::read_html(data)
+  # Cycle through queries
+  ## Should perhaps vectorize, but for loop seems more informative tbh
+  for (i in seq_along(doi)) {
+
+    # Check DOI
+    check <- CheckDoi(doi[[i]])
+
+    # Skip if error
+    if (check$error) {
+      log <- append(log, check$log)
+      next
+    }
 
     # Run as crossref
-    if (meta$libraryCatalog == "DOI.org (Crossref)") {
-      meta <- DoiCrossref(data, meta)
+    if (check$meta$libraryCatalog == "DOI.org (Crossref)") {
+      metadata <- DoiCrossref(check$data, check$meta, silent, check$log)
       # Else run as datacite
-    } else if (meta$libraryCatalog == "DOI.org (Datacite)") {
-      meta <- DoiDatacite(data, meta)
+    } else if (check$meta$libraryCatalog == "DOI.org (Datacite)") {
+      metadata <- DoiDatacite(check$data, check$meta, silent, check$log)
     }
+
+    # Set meta
+    meta <- metadata$data
 
     # Set abstractNote to string
     meta$abstractNote <- ToString(GoFish(meta$abstractNote,""),"\n")
 
     # Set accessDate
-    meta$accessDate <- as.character(Sys.time())
+    meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
 
     # Create zotero-type matrix
     meta <- GoFish(ZoteroFormat(meta), NULL)
@@ -223,25 +169,23 @@ ZoteroDoi <- \(doi, meta = list()) {
     # Remove if no Creator is found
     if (all(is.na(GoFish(meta$creators[[1]])))) meta <- NULL
 
-    return (meta)
+    # Append data
+    data <- AddAppend(meta, data)
 
+    # Add to log
+    log <- append(log, metadata$log)
+
+    # Estimate time of arrival
+    log.eta <- LogCat(
+      Eta(query.start, i, length(doi)),
+      silent = silent,
+      flush = TRUE,
+      append.log = FALSE
+    )
   }
+  # Add to log
+  log <- append(log, log.eta)
 
-  # Fetch metadata from Crossref
-  metadata <- lapply(doi, \(x) {
-    x <- CheckDOI(x)
-    if (!x$error) DOI(x$data, x$meta)
-  })
-
-  # Check if metadata has tibbles
-  if (any(lengths(metadata))) {
-    metadata <- dplyr::bind_rows(metadata)
-
-    # Set metadata as null if empty
-  } else {
-    metadata <- NULL
-  }
-
-  return (metadata)
+  return (list(data = data, log = log))
 
 }

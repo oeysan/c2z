@@ -16,12 +16,16 @@
 #' @param create Create missing collections, Default: FALSE
 #' @param limit Number of results per query (max 100), Default: 100
 #' @param start Starting position of query (0 = first result), Default: 0
-#' @param get.items Fetch items along with collections, Default: TRUE
+#' @param get.collections Fetch collections, Default: TRUE
+#' @param get.items Fetch items, Default: TRUE
 #' @param item.type Items to search for (NULL = everything), Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param max.results Do you need a limit?, Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
+#' @param collections Predefined collections (as tibble), Default: NULL
 #' @param items Predefined metadata (as tibble), Default: NULL
+#' @param attachments Predefined attachments (as tibble), Default: NULL
+#' @param metadata Predefined metadata in Zoter-format, Default: NULL
 #' @param doi Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL
 #' @param isbn Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default:
 #'   NULL
@@ -34,8 +38,9 @@
 #' @param save.data Save data (e.g., bibliography) to disk, Default: FALSE
 #' @param save.path Location to store data on disk, Default: NULL
 #' @param bib.name Name of exported bibliography, Default: 'references'
-#' @param include.bib Include HTML-formatted bibliography from Zotero, Default:
-#'   FALSE
+#' @param library.type Commma-separated data from Zotero (i.e., data, bib,
+#' citation), Default: NULL
+#' @param linkwrap Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1
 #' @param style Citation style to use for appended bibliography and/or
 #'   citations, Default: apa
 #' @param locale Desired language format of bibliography, Default: 'en-US'
@@ -71,13 +76,16 @@
 #'   Default: TRUE
 #' @param index Create an index of items, Default: FALSE
 #' @param id User or group ID, Default: NULL
+#' @param token Name of user or group token as defined in `.Renviron`, Default:
+#' NULL
+#' @param token.api Name of API token as defined in `.Renviron`, Default:
+#' NULL
 #' @param api API key to connect with the Zotero library. Set API to `NA` if key
 #'   is not needed. See
 #'   \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API},
 #'   Default: NULL
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param base.url Base url of the Zotero API, Default: 'https://api.zotero.org'
-#' @param debug Let you test the Zotero API for errors, Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param zotero A list with information on the specified Zotero library (e.g.,
 #'   id, API key, collections, and items), Default: NULL
@@ -106,11 +114,15 @@ Zotero <- \(collection.names = NULL,
             create = FALSE,
             limit = 100,
             start = 0,
+            get.collections = TRUE,
             get.items = TRUE,
             item.type = NULL,
             all.results = TRUE,
             max.results = NULL,
+            collections = NULL,
             items = NULL,
+            attachments = NULL,
+            metadata = NULL,
             doi = NULL,
             isbn = NULL,
             export = FALSE,
@@ -120,7 +132,8 @@ Zotero <- \(collection.names = NULL,
             save.data = FALSE,
             save.path = NULL,
             bib.name = "references",
-            include.bib = FALSE,
+            library.type = NULL,
+            linkwrap = 1,
             style = "apa",
             locale = "en-US",
             copy = FALSE,
@@ -145,10 +158,11 @@ Zotero <- \(collection.names = NULL,
             user = TRUE,
             index = FALSE,
             id = NULL,
+            token = NULL,
+            token.api = NULL,
             api = NULL,
             force = FALSE,
             base.url = "https://api.zotero.org",
-            debug = FALSE,
             silent = FALSE,
             zotero = NULL,
             log = list()) {
@@ -163,14 +177,14 @@ Zotero <- \(collection.names = NULL,
       collection.key = collection.key,
       collection.path = collection.path,
       item.key = item.key,
+      collections = collections,
+      items = items,
+      attachments = attachments,
       n.collections = 0,
       n.items = 0,
       n.attachments = 0,
       data.cache = NULL,
       results = NULL,
-      collections = NULL,
-      items = NULL,
-      attachments = NULL,
       export = NULL,
       bibliography = NULL,
       locale = locale,
@@ -186,117 +200,60 @@ Zotero <- \(collection.names = NULL,
 
   # Determine whether to use user or group id
   if (is.null(zotero$user)) zotero$user <- user
+
+  # Define tokens
   if (zotero$user) {
-    zotero$id <- if (is.null(id)) Sys.getenv("ZOTERO_USER") else id
-    if (is.null(zotero$id)) {
-      zotero$log <- LogCat(
-        "User id is empty. Have du set Sys.getenv(\"ZOTERO_USER\")?
-        Please specify id",
-        fatal = TRUE,
-        log = zotero$log
-      )
-    }
+    if (is.null(token)) token <- "ZOTERO_USER"
     user.type <- "users"
   } else {
-    zotero$id <- if (is.null(id)) Sys.getenv("ZOTERO_GROUP") else id
-    if (is.null(zotero$id)) {
+    if (is.null(token)) token <- "ZOTERO_GROUP"
+    user.type <- "groups"
+  }
+  if (is.null(token.api)) token.api <- "ZOTERO_API"
+
+  # Fetch tokens from .Renviron
+  token <- Sys.getenv(token)
+  token.api <- Sys.getenv(token.api)
+
+  # Check if id is empty
+  if (is.null(zotero$id)) {
+    zotero$id <- if (is.null(id)) token else id
+    if (grepl("^\\s*$", zotero$id)) {
       zotero$log <- LogCat(
-        "Group id is empty. Have du set  Sys.getenv(\"ZOTERO_GROUP\")?
-        Please specify id",
+        "Id is empty. Have du defined a token in .Renviron? Please specify
+        `id`",
         fatal = TRUE,
         log = zotero$log
       )
     }
-    user.type <- "groups"
+  }
+
+  if (is.null(zotero$api)) {
+    # Set API as NULL if NA
+    if (any(is.na(api))) {
+      zotero$api <- NULL
+      # Define API key
+    } else {
+      zotero$api <- if (is.null(api)) token.api else api
+      if (grepl("^\\s*$", zotero$api)) {
+        zotero$log <- LogCat(
+          "API key is empty. Have du defined a token in .Renviron? Please
+          specify `api`",
+          fatal = TRUE,
+          log = zotero$log
+        )
+      }
+    }
   }
 
   # Set prefix
   zotero$prefix <- paste0(user.type, "/", zotero$id)
 
-  # Define API key and check if API is missing or needed
-  if (all(!is.na(api))) {
-    zotero$api <- if (is.null(api)) Sys.getenv("ZOTERO_API") else api
-    if (is.null(zotero$api)) {
-      zotero$log <- LogCat(
-        "API is missing. Have du set sys.getenv(\"ZOTERO_API\")?
-        Please specify API",
-        fatal = TRUE,
-        log = zotero$log
-      )
-    }
-  } else {
-    zotero$api <- NULL
-  }
-
   # Define primary zotero url
   zotero$url <- sprintf("%s/%s/", base.url, zotero$prefix)
 
-  if (debug) {
-
-    # Check Zotero API
-    zotero$log <- LogCat(
-      message = "Zotero API",
-      error = httr::http_error(httr::GET(base.url)),
-      debug = TRUE,
-      silent = silent,
-      log = zotero$log
-    )
-
-
-    # Check primary url
-    zotero$log <- LogCat(
-      message = sprintf("%s id '%s'", user.type, zotero$id),
-      error = httr::GET(ZoteroUrl(zotero$url))$status_code == 500,
-      debug = TRUE,
-      silent = silent,
-      log = zotero$log
-    )
-
-    # Check API key
-    zotero$log <- LogCat(
-      message = "The provided API key",
-      error = httr::GET(
-        ZoteroUrl(zotero$url, api = zotero$api)
-      )$status_code == 403,
-      silent = silent,
-      debug = TRUE,
-      log = zotero$log
-    )
-
-    # Check collection key
-    if (!is.null(collection.key)) {
-      zotero$log <- LogCat(
-        message = sprintf("Collection key '%s'", collection.key),
-        error = httr::GET(
-          ZoteroUrl(zotero$url,
-                    collection.key = collection.key,
-                    api = zotero$api)
-        )$status_code == 404,
-        silent = silent,
-        debug = TRUE,
-        log = zotero$log
-      )
-    }
-
-    # Check item key
-    if (!is.null(item.key)) {
-      zotero$log <- LogCat(
-        message = sprintf("Item key '%s'", item.key),
-        error = httr::GET(
-          ZoteroUrl(zotero$url,
-                    item.key = item.key,
-                    api = zotero$api)
-        )$status_code == 404,
-        silent = silent,
-        debug = TRUE,
-        log = zotero$log
-      )
-    }
-
-  }
-
   # Fetch collections if library is set to TRUE
-  if (library) {
+  if (library & get.collections) {
     zotero <- ZoteroLibrary(
       zotero,
       case.insensitive,
@@ -305,7 +262,7 @@ Zotero <- \(collection.names = NULL,
       create,
       get.items = FALSE,
       force = force,
-      silent = any(include.bib, get.items, silent)
+      silent = silent
     )
   }
   # Copy data if library is set to TRUE
@@ -322,10 +279,10 @@ Zotero <- \(collection.names = NULL,
     silent
   )
   # Add data if add is set to TRUE
-  if (!is.null(items) | !is.null(doi) | !is.null(isbn)) {
+  if (!is.null(metadata) | !is.null(doi) | !is.null(isbn)) {
     zotero <- ZoteroAdd(
       zotero,
-      items,
+      metadata,
       doi,
       isbn,
       silent
@@ -342,13 +299,9 @@ Zotero <- \(collection.names = NULL,
       force,
       silent
     )
-    # Remove items and collections
-    if (library & any(include.bib, get.items)) {
-      zotero$collections <- zotero$items <- NULL
-    }
   }
-  # Fetch items / bibliography if get.items / include.bib is set to TRUE
-  if (library & any(include.bib, get.items)) {
+  # Fetch items / bibliography
+  if (library & any(!is.null(library.type), get.items)) {
     zotero <- ZoteroLibrary(
       zotero,
       case.insensitive,
@@ -357,12 +310,15 @@ Zotero <- \(collection.names = NULL,
       create,
       limit,
       start,
+      get.collections = FALSE,
       get.items,
       item.type,
       all.results,
       max.results,
-      include.bib,
+      library.type,
+      linkwrap,
       style,
+      locale,
       force,
       silent
     )

@@ -1,6 +1,40 @@
 # c2z (development version)
 
+#### Feature
+
+* Added the function `Cristinunits` to create a tibble with information about
+(nested) units in Cristin (e.g., A University -> Faculties -> Departments -> 
+Groups). The tibble can than be used to extract data for each unit from Cristin.
+
+* Added the function `CristinMonthly` to create a per month Zotero collections
+for units defined in `Cristinunits`. It may use the internal functions 
+`CristinMail` and `CristinWeb` to create a newsletter using HTML for email and 
+web, respectively. 
+
+#### Critical
+
+* Fixed a bug in `ZoteroFormat` where `parentCollection` key, in some special 
+cases, were identified as logical rather than character (Zotero uses a 
+combination of logical and character in this field). The error caused an error
+in combining some collections.
+
+* Fixed a bug in `ZoteroWrangler` where book sections with empty creators in 
+main book caused a NA error.
+
+#### Major
+
+* Made a major revision of `ZoteroLibray`, making it less recursive and bloated.
+
+#### Moderate
+
+* Made handling of API status codes consistent throughout the package. Removed 
+the now somewhat redundant `debug` checks.
+
 #### Minor
+
+* Fixed a bug in `CristinWrangler` where successfully identified duplicates with
+modified content in Cristin failed to update key, version and collections, thus
+creating new copies rather than updating existing items.
 
 * Removed hyphens from ISBN when importing from `Cristin` to simplify filtering.
 

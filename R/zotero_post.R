@@ -53,9 +53,11 @@
 #'   )
 #'
 #'   # Print index using `ZoteroIndex`
-#'   ZoteroIndex(example$items) |>
-#'     dplyr::select(name) |>
-#'     print(width = 80)
+#'   if (any(nrow(example$items))) {
+#'     ZoteroIndex(example$items) |>
+#'       dplyr::select(name) |>
+#'       print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{bind}},
@@ -84,7 +86,8 @@ ZoteroPost <- \(zotero,
               silent) {
 
     # Visible bindings
-    prefix <-  desc <- ind <- status <- values <- summary.list <- NULL
+    prefix <-  desc <- ind <- status <- values <- summary.list <-
+      log.eta <- NULL
 
     # Define data as collection if append.collection is set to TRUE
     if (post.collections) {
@@ -107,8 +110,8 @@ ZoteroPost <- \(zotero,
     # Send error if posting to same prefix and force is set to FALSE
     if ("prefix" %in% names(data)) {
       if (!force &
-          zotero$prefix == data$prefix[[1]] &
-          data$version[[1]] == 0) {
+          any(zotero$prefix == GoFish(data$prefix[[1]], NULL)) &
+          any(data$version[[1]] == 0)) {
         zotero$log <- LogCat(
           "You are posting items to their initial location
         (i.e. creating duplicates). Please set force to TRUE if this is your
@@ -129,11 +132,11 @@ ZoteroPost <- \(zotero,
 
     # JUST SOME MORE POINTLESS LINGUISTICS
     if (post.collections) {
-      items <- Pluralis(total.data, "collection", "collections")
+      items <- Pluralis(total.data, "collection")
     } else {
-      items <- Pluralis(total.data, "item", "items")
+      items <- Pluralis(total.data, "item")
     }
-    posts <- Pluralis(length(metadata), "POST request", "POST requests")
+    posts <- Pluralis(length(metadata), "POST request")
 
     # Create message
     upload.message <- sprintf("Adding %s to library using %s", items, posts)
@@ -162,31 +165,31 @@ ZoteroPost <- \(zotero,
       json.body <- ZoteroToJson(metadata[[i]])
 
       # Post JSON to url defined in zotero list
-      json.post <- httr::RETRY(
-        "POST",
-        ZoteroUrl(zotero$url,
-                  append.collections = post.collections,
-                  append.items = post.items,
-                  api = zotero$api),
-        json.header,
-        body = json.body,
-        quiet = TRUE
+      httr.post <- Online(
+        httr::RETRY(
+          "POST",
+          ZoteroUrl(
+            zotero$url,
+            append.collections = post.collections,
+            append.items = post.items,
+            api = zotero$api
+          ),
+          json.header,
+          body = json.body,
+          quiet = TRUE
+        ),
+        silent = TRUE
       )
+      zotero$log <- append(zotero$log, httr.post$log)
 
-      # Return Zotero list on errror
-      if (json.post$status_code != 200) {
-        log.eta <-  LogCat(
-          ErrorCode(json.post$status_code),
-          silent = silent,
-          log = log,
-          append.log = FALSE
-        )
+      # Log and skip skip iteration upon error
+      if (httr.post$error) {
         next
       }
 
       # Convert results to list
       json.data <- jsonlite::fromJSON(
-        ParseUrl(json.post, "text")
+        ParseUrl(httr.post$data, "text")
       )
 
       # Fetch id from data, keep only success, unchanged, and failure
@@ -255,7 +258,7 @@ ZoteroPost <- \(zotero,
     }
 
     # Append eta log to log
-    zotero$log <- append(zotero$log,log.eta)
+    zotero$log <- append(zotero$log, log.eta)
 
     # Combine summary
     summary <- dplyr::bind_rows(summary)
@@ -301,8 +304,6 @@ ZoteroPost <- \(zotero,
       zotero[["items"]] <- metadata
     }
 
-
-
     return (zotero)
   }
 
@@ -310,11 +311,11 @@ ZoteroPost <- \(zotero,
   UploadAttachments <- \(zotero, silent) {
 
     # Visible bindings
-    key <- status <- NULL
+    key <- status <- log.eta <- NULL
 
     # MORE...
     n.attachments <- Pluralis(nrow(zotero$attachments),
-                              "attachment", "attachments")
+                              "attachment")
 
     # Add message to log
     zotero$log <- LogCat(
@@ -346,24 +347,36 @@ ZoteroPost <- \(zotero,
       )
 
       # Post JSON to url defined in zotero list
-      json.post <- httr::RETRY(
-        "POST",
-        ZoteroUrl(zotero$url,
-                  item.key = x$key,
-                  api = zotero$api,
-                  use.item = TRUE,
-                  append.file = TRUE),
-        json.header,
-        body = x$file[[1]]$content,
-        query = query.list,
-        quiet = TRUE
+      httr.post <- Online(
+        httr::RETRY(
+          "POST",
+          ZoteroUrl(
+            zotero$url,
+            item.key = x$key,
+            api = zotero$api,
+            use.item = TRUE,
+            append.file = TRUE
+          ),
+          json.header,
+          body = x$file[[1]]$content,
+          query = query.list,
+          quiet = TRUE
+        ),
+        silent = TRUE,
+        message = "Zotero Post"
       )
+      zotero$log <- append(zotero$log, httr.post$log)
+
+      # Log and skip skip iteration upon error
+      if (httr.post$error) {
+        next
+      }
 
       # Add status to attachments
-      zotero$attachments[i, "status"] <- json.post$status_code
+      zotero$attachments[i, "status"] <- httr.post$status_code
 
       # Update item version
-      version <- as.double(json.post$headers$`last-modified-version`)
+      version <- as.double(httr.post$data$headers$`last-modified-version`)
       zotero$items$version[zotero$items$key == x$key] <- version
 
       # Estimate time of arrival
@@ -393,7 +406,7 @@ ZoteroPost <- \(zotero,
     )
 
     # Append eta log to log
-    zotero$log <- append(zotero$log,log.eta)
+    zotero$log <- append(zotero$log, log.eta)
 
     return (zotero)
 

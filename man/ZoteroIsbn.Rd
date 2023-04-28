@@ -4,12 +4,16 @@
 \alias{ZoteroIsbn}
 \title{Search libraries using ISBN or MMS ID}
 \usage{
-ZoteroIsbn(key, meta = list())
+ZoteroIsbn(keys, meta = list(), silent = TRUE, log = list())
 }
 \arguments{
-\item{key}{Key to search with (e.g., ISBN or MMS ID)}
+\item{keys}{Keys to search with (e.g., ISBN or MMS ID)}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 A Zotero-type matrix (tibble)
@@ -27,9 +31,11 @@ Please see
   example <- ZoteroIsbn("978-1529797138")
 
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example) |>
+  if (any(nrow(example$data))) {
+  ZoteroIndex(example$data) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

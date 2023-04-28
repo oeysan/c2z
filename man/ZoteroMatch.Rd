@@ -15,6 +15,7 @@ ZoteroMatch(
   cristin.data = NULL,
   external.data = NULL,
   polite = TRUE,
+  silent = FALSE,
   log = list()
 )
 }
@@ -43,6 +44,8 @@ NULL}
 
 \item{polite}{Will use an email stored in `.Renviron`, Default: TRUE}
 
+\item{silent}{Running silent, running deep, Default: FALSE}
+
 \item{log}{A list for storing log elements, Default: list()}
 }
 \value{
@@ -67,9 +70,11 @@ Please see
   )
 
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example) |>
+  if (any(nrow(example$data))) {
+  ZoteroIndex(example$data) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

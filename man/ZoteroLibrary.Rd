@@ -12,12 +12,15 @@ ZoteroLibrary(
   create = FALSE,
   limit = 100,
   start = 0,
+  get.collections = TRUE,
   get.items = TRUE,
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
-  include.bib = FALSE,
+  library.type = NULL,
+  linkwrap = 1,
   style = "apa",
+  locale = "en-US",
   force = FALSE,
   silent = FALSE
 )
@@ -40,7 +43,9 @@ collection), Default: FALSE}
 
 \item{start}{Starting position of query (0 = first result), Default: 0}
 
-\item{get.items}{Fetch items along with collections, Default: TRUE}
+\item{get.collections}{Fetch collections, Default: TRUE}
+
+\item{get.items}{Fetch items, Default: TRUE}
 
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
@@ -48,11 +53,15 @@ collection), Default: FALSE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
 
-\item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
-FALSE}
+\item{library.type}{Commma-separated data from Zotero (i.e., data, bib,
+citation), Default: NULL}
+
+\item{linkwrap}{Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1}
 
 \item{style}{Citation style to use for appended bibliography and/or
 citations, Default: apa}
+
+\item{locale}{Desired language format of bibliography, Default: 'en-US'}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
@@ -80,11 +89,12 @@ Please see
       api = "RqlAmlH5l1KPghfCseAq1sQ1"
     )
   )
-
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example$items) |>
-    dplyr::select(name) |>
-    print(width = 80)
+  if (any(nrow(example$items))) {
+    ZoteroIndex(example$items) |>
+      dplyr::select(name) |>
+      print(width = 80)
+  }
 }
 }
 \seealso{

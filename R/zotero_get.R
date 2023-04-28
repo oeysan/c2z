@@ -18,8 +18,9 @@
 #' @param item.keys Specified vector of items keys, Default: NULL
 #' @param collection.keys Specified vector of collection keys, Default: NULL
 #' @param item.type Items to search for (NULL = everything), Default: NULL
-#' @param include.bib Include HTML-formatted bibliography from Zotero, Default:
-#'   FALSE
+#' @param library.type Commma-separated data from Zotero (i.e., data, bib,
+#' citation), Default: NULL
+#' @param linkwrap Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1
 #' @param style Citation style to use for appended bibliography and/or
 #'   citations, Default: apa
 #' @param locale Desired language format of bibliography, Default: 'en-US'
@@ -49,9 +50,11 @@
 #'   )
 #'
 #'   # Print index using `ZoteroIndex`
+#'   if (any(nrow(example$results))) {
 #'   ZoteroIndex(example$results) |>
 #'     dplyr::select(name) |>
 #'     print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[httr]{RETRY}}
@@ -72,7 +75,8 @@ ZoteroGet <- \(zotero,
                item.keys = NULL,
                collection.keys = NULL,
                item.type = NULL,
-               include.bib = FALSE,
+               library.type = NULL,
+               linkwrap = 1,
                style = "apa",
                locale = "en-US",
                all.results = TRUE,
@@ -83,26 +87,14 @@ ZoteroGet <- \(zotero,
 
   # Visible bindings
   bibliography <- json.data <- include <- zotero.items <- keys <- key <-
-    bib <- citation <- NULL
+    bib <- citation <- log.eta <- any_of <- bib.item <- NULL
 
   # Set definitions if include is defined
-  if (include.bib) {
-    include <- paste("data", "bib", "citation", sep = ",")
-    # Set include as NULL if format is anything other than JSON
-    if (format != "json") include <- NULL
+  if (format == "json") {
+    include <- library.type
+  } else {
+    style <- locale <- linkwrap <-  NULL
   }
-
-  # Define url
-  url <- ZoteroUrl(zotero$url,
-                   zotero$collection.key,
-                   use.collection,
-                   zotero$item.key,
-                   use.item,
-                   zotero$api,
-                   append.collections,
-                   append.items,
-                   append.top,
-                   append.file)
 
   # if limit > zotero max limit
   if (limit > 100) limit <- 100
@@ -133,7 +125,8 @@ ZoteroGet <- \(zotero,
       itemType = item.type,
       include = include,
       style = style,
-      locale = locale
+      locale = locale,
+      linkwrap = linkwrap
     )
   }
 
@@ -143,35 +136,45 @@ ZoteroGet <- \(zotero,
   # Fetch collection keys if defined
   if (!is.null(collection.keys)) {
     keys <- "collectionKey"
-    key.list <- SplitData(collection.keys, limit)
+    key.list <- SplitData(tibble::tibble(keys = collection.keys), limit)
+    append.collections <- TRUE
     # Else fetch item keys if defined
   } else if (!is.null(item.keys)) {
     keys <- "itemKey"
-    key.list <- SplitData(item.keys, limit)
+    key.list <- SplitData(tibble::tibble(keys = item.keys), limit)
+    append.items <- TRUE
   }
   # Add keys if defined to query list
   if (!is.null(keys)) query.list[[keys]] <- ToString(key.list[[1]], ",")
 
+  # Define url
+  url <- ZoteroUrl(zotero$url,
+                   zotero$collection.key,
+                   use.collection,
+                   zotero$item.key,
+                   use.item,
+                   zotero$api,
+                   append.collections,
+                   append.items,
+                   append.file,
+                   append.top)
+
   # API query
   if (is.null(custom.url)) {
-    json.get <- GoFish(
+    httr.get <- Online(
       httr::RETRY("GET", url, query = query.list, quiet = TRUE),
-      stats::setNames(list(404), "status_code")
+      silent = TRUE
     )
   } else {
-    json.get <- GoFish(
+    httr.get <- Online(
       httr::RETRY("GET", custom.url, quiet = TRUE),
-      stats::setNames(list(404), "status_code")
+      silent = TRUE
     )
   }
+  zotero$log <- append(zotero$log, httr.get$log)
 
-  # Return Zotero list upon error
-  if (json.get$status_code != 200) {
-    zotero$log <-  LogCat(
-      ErrorCode(json.get$status_code),
-      silent = silent,
-      log = zotero$log
-    )
+  # Log and return error if status code != 200
+  if (httr.get$error) {
     return (zotero)
   }
 
@@ -179,38 +182,38 @@ ZoteroGet <- \(zotero,
   if (!is.null(format)) {
     # Parse zotero items according to format if not json
     if (format != "json") {
-      zotero.items <- ParseUrl(json.get, format)
+      zotero.items <- ParseUrl(httr.get$data, format)
       # else parse data as JSON
     } else {
       # Full JSON data including bibliography
-      json.data <- JsonToTibble(json.get)
+      json.data <- JsonToTibble(httr.get$data)
       # Zotero metadata
-      zotero.items <- json.data$data
+      if ("data" %in% names(json.data)) zotero.items <- json.data$data
     }
   }
 
-  # Number of results
-  if (!is.null(keys)) {
-    total.results <- do.call(sum,lapply(key.list, nrow))
-  } else if (!any(append.collections, append.items, append.top, append.file)) {
-    total.results <- max(0, GoFish(json.data$meta[[1]]$numCollections, NULL))
-  } else {
-    total.results <- max(0, as.numeric(json.get$headers[["total-results"]]))
+
+  # Format
+  results <- ZoteroFormat(zotero.items, format, zotero$prefix)
+
+  # Set bibliography if include is defined
+  if (!is.null(include) & !is.null(json.data)) {
+    bibliography <- json.data |>
+      dplyr::select(any_of(c("key", "bib", "citation")))
   }
+
+  # Number of results
+  total.results <- max(0, as.numeric(httr.get$data$headers[["total-results"]]))
 
   # Pointless linguistics
   if (is.null(result.type)) result.type <- "result"
-  result.types <- paste0(result.type,"s")
+  result.type[2] <- if (length(result.type == 1)) paste0(result.type,"s")
 
   # Log number of results
   zotero$log <-  LogCat(
     sprintf(
       "Found %s",
-      Pluralis(
-        total.results,
-        result.type,
-        result.types
-      )
+      Pluralis(total.results, result.type[1], result.type[2])
     ),
     silent = silent,
     log = zotero$log
@@ -220,11 +223,15 @@ ZoteroGet <- \(zotero,
   max.results <- min(max.results, total.results)
 
   if (start > max.results) {
-    zotero$log <-  LogCat(sprintf("The current query contains %s" ,
-                           Pluralis(max(0,(max.results-1)), "page", "pages")),
-                   silent = silent,
-                   fatal = TRUE,
-                   log = zotero$log)
+    zotero$log <-  LogCat(
+      sprintf(
+        "The current query contains %s" ,
+        Pluralis(max(0,(max.results-1)), "page")
+      ),
+      silent = silent,
+      fatal = TRUE,
+      log = zotero$log
+    )
   }
 
   # Log number of remaining results if max.results < total.results
@@ -232,22 +239,11 @@ ZoteroGet <- \(zotero,
     zotero$log <-  LogCat(
       sprintf(
         "The provided query is limited to %s",
-        Pluralis(max.results,
-                 "result",
-                 "results")
+        Pluralis(max.results, "result")
       ),
       silent = silent,
       log = zotero$log
     )
-  }
-
-  # Format
-  results <- ZoteroFormat(zotero.items, format, zotero$prefix)
-
-  # Set bibliography if include is defined
-  if (!is.null(include)) {
-    bibliography <- json.data |>
-      dplyr::select(key, bib, citation)
   }
 
   # Fetch remaining results if max.results > limit and all.results set to TRUE
@@ -265,24 +261,32 @@ ZoteroGet <- \(zotero,
     # Stop function if 10 or more queries are needed and force is FALSE
     if (k.remaining.pages >= 10 & !force) {
 
-      zotero$log <- LogCat("10 or more queries to the API is needed to complete
-                           the request. Are you sure you want do this?
-                           Set force to TRUE",
-                    fatal = TRUE, silent = silent, log = zotero$log
+      zotero$log <- LogCat(
+        "10 or more queries to the API is needed to complete the request.
+        Are you sure you want do this? Set force to TRUE",
+        fatal = TRUE,
+        silent = silent,
+        log = zotero$log
       )
     }
 
-    zotero$log <-  LogCat(sprintf("Conducting remaining %s" ,
-                           Pluralis(k.remaining.pages, "query", "queries")),
-                   silent = silent,
-                   log = zotero$log)
+    zotero$log <-  LogCat(
+      sprintf(
+        "Need %s addtional %s to gather %s" ,
+        k.remaining.pages,
+        Pluralis(k.remaining.pages, "query", "queries", FALSE),
+        result.type[2]
+      ),
+      silent = silent,
+      log = zotero$log
+    )
 
     # Start time for query
     query.start <- Sys.time()
 
     # Cycle through remaining queries
     ## Should perhaps vectorize, but for loop seems more informative tbh
-    for (i in seq_along(k.remaining.pages)) {
+    for (i in seq_len(k.remaining.pages)) {
 
       # Add collection/item keys if defined to query.list
       if (!is.null(keys)) {
@@ -293,18 +297,27 @@ ZoteroGet <- \(zotero,
       }
 
       # Fetch remaining data
-      json.get <- httr::RETRY("GET", url, query = query.list, quiet = TRUE)
+      httr.get <- Online(
+        httr::RETRY("GET", url, query = query.list, quiet = TRUE),
+        silent = TRUE
+      )
+      zotero$log <- append(zotero$log, httr.get$log)
+
+      # Log and skip skip iteration upon error
+      if (httr.get$error) {
+        next
+      }
 
       # Parse data if defined
       # Parse zotero items according to format if not json
       if (format != "json") {
-        zotero.items <- ParseUrl(json.get, format)
+        zotero.items <- ParseUrl(httr.get$data, format)
         # else parse data as JSON
       } else {
         # Full JSON data including bibliography
-        json.data <- JsonToTibble(json.get)
+        json.data <- JsonToTibble(httr.get$data)
         # Zotero metadata
-        zotero.items <- json.data$data
+        if ("data" %in% names(json.data)) zotero.items <- json.data$data
       }
 
       # Append data to list
@@ -315,11 +328,11 @@ ZoteroGet <- \(zotero,
       )
 
       # Append bibliography if include is defined
-      if (!is.null(include)) {
+      if (!is.null(include) & !is.null(json.data)) {
         bibliography <- AddAppend(
           bibliography,
           json.data |>
-            dplyr::select(key, bib, citation)
+            dplyr::select(any_of(c("key", "bib", "citation")))
         )
       }
 
@@ -334,17 +347,17 @@ ZoteroGet <- \(zotero,
         )
     }
     # Add to log
-    zotero$log <- append(zotero$log,log.eta)
+    zotero$log <- append(zotero$log, log.eta)
   }
 
   # Add temp data to zotero list
-  zotero$data.cache <- json.get
+  zotero$data.cache <- httr.get$data
 
   # Add results
   zotero$results <- results
 
   # Set bibliography if include is defined
-  if (!is.null(include)) {
+  if (any(nrow(bibliography))) {
     zotero$bibliography <- bibliography |>
       dplyr::mutate(
         # Find csl-bib-body class
@@ -360,11 +373,11 @@ ZoteroGet <- \(zotero,
           unlist()
       ) |>
       # arrange by author
-      dplyr::arrange(citation)
+      dplyr::arrange(bib.item)
   }
 
   # Add zotero version to zotero list
-  zotero$version <- json.get$headers$`last-modified-version`
+  zotero$version <- httr.get$data$headers$`last-modified-version`
 
   return (zotero)
 

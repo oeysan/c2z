@@ -4,12 +4,16 @@
 \alias{DoiCrossref}
 \title{Wrangle CrossRef metadata into Zotero-type format}
 \usage{
-DoiCrossref(data, meta = list())
+DoiCrossref(data, meta = list(), silent = TRUE, log = list())
 }
 \arguments{
 \item{data}{XML data from CrossRef containing metadata}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 A Zotero-type matrix (tibble)
@@ -27,11 +31,13 @@ Please see
   example <- ZoteroDoi("10.1126/sciadv.abd1705")
 
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example) |>
-    dplyr::select(name) |>
-    print(width = 80)
+  if (!is.null(example$data)) {
+    ZoteroIndex(example$data) |>
+      dplyr::select(name) |>
+      print(width = 80)
 
-  # Display catalog
-  example$libraryCatalog
+    # Display catalog
+    example$data$libraryCatalog
+  }
 }
 }

@@ -1,7 +1,9 @@
 #' @title Search libraries using ISBN or MMS ID
 #' @description Query libraries using ISBN (or MMS ID) and fetch metadata
-#' @param key Key to search with (e.g., ISBN or MMS ID)
+#' @param keys Keys to search with (e.g., ISBN or MMS ID)
 #' @param meta A list collecting all metadata used to create , Default: list()
+#' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
+#' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
 #' @seealso
 #'  \code{\link[rvest]{rename}}, \code{\link[rvest]{html_children}},
@@ -22,15 +24,20 @@
 #'   example <- ZoteroIsbn("978-1529797138")
 #'
 #'   # Print index using `ZoteroIndex`
-#'   ZoteroIndex(example) |>
+#'   if (any(nrow(example$data))) {
+#'   ZoteroIndex(example$data) |>
 #'     dplyr::select(name) |>
 #'     print(width = 80)
+#'   }
 #' }
 #' @export
-ZoteroIsbn <- \(key, meta = list()) {
+ZoteroIsbn <- \(keys,
+                meta = list(),
+                silent = TRUE,
+                log = list()) {
 
   # Visible bindings
-  metadata <- NULL
+  data <- log.eta <- NULL
 
   # Function to check key format
   CheckId <- \(key) {
@@ -58,7 +65,7 @@ ZoteroIsbn <- \(key, meta = list()) {
   }
 
   # Function to fetch metadata from ALMA/LoC using ISBN or MMS id
-  ISBN <- \(key, meta = list()) {
+  Isbn <- \(key, meta = list(), log = list()) {
 
     # Visible bindings
     metadata <- NULL
@@ -67,22 +74,30 @@ ZoteroIsbn <- \(key, meta = list()) {
     query.type <- if (substr(key, 1, 2) == "99") "mms_id" else "isbn"
 
     # Query alma for metadata
-    marc.get <- httr::RETRY("GET",
-                            "https://api.bibs.aws.unit.no/alma",
-                            query = stats::setNames(list(key), query.type),
-                            quiet = FALSE)
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        "https://api.bibs.aws.unit.no/alma",
+        query = stats::setNames(list(key), query.type),
+        quiet = TRUE
+      ),
+      silent = TRUE,
+      message = "Alma (47BIBSYS)",
+      log = log
+    )
 
-    if (marc.get$status_code == 200) {
+    # Get data if no error
+    if (!httr.get$error) {
 
       # Parse content as text
-      metadata <- ParseUrl(marc.get, "text")
+      metadata <- ParseUrl(httr.get$data, "text")
 
       # Run if data is not empty
       if (!is.null(metadata)) {
 
         # Format data from JSON
         marc.json <- jsonlite::fromJSON(metadata)
-        # Find MARC id
+        # Find Marc id
         id <- unique(marc.json$id)
         # Determine number of ids (should be one, but you know...)
         n.id <- length(marc.json$id)
@@ -111,14 +126,23 @@ ZoteroIsbn <- \(key, meta = list()) {
       )
 
       # Query loc for metadata
-      marc.get <- httr::RETRY("GET",
-                              "http://lx2.loc.gov:210/LCDB",
-                              query = query, quiet = FALSE)
+      httr.get <- Online(
+        httr::RETRY(
+          "GET",
+          "http://lx2.loc.gov:210/LCDB",
+          query = query,
+          quiet = TRUE
+        ),
+        silent = TRUE,
+        message = "Library of Congress",
+        log = httr.get$log
+      )
 
-      if (marc.get$status_code == 200) {
+      # Get data if no error
+      if (!httr.get$error) {
 
         # MARCXML metadata
-        metadata <- list(rvest::read_html(marc.get))
+        metadata <- list(rvest::read_html(httr.get$data))
 
         # Number of results
         n.data <- suppressWarnings(as.numeric(
@@ -139,17 +163,17 @@ ZoteroIsbn <- \(key, meta = list()) {
 
     # Convert MARC21 to zotery-type matrix
     if (!is.null(metadata)) {
-      metadata <- ReadMARC(metadata[[1]], meta)
+      metadata <- ReadMarc(metadata[[1]], meta)
     }
 
-    return (metadata)
+    return (list(data = metadata, log = httr.get$log))
   }
 
-  # Function to read MARC XML
-  ReadMARC <- \(marc, meta) {
+  # Function to read Marc XML
+  ReadMarc <- \(marc, meta) {
 
     # Function to convert XML fields
-    MARC <- \(marc, tag, code = NULL, clean.text = TRUE) {
+    Marc <- \(marc, tag, code = NULL, clean.text = TRUE) {
 
       # Run if extracting specific code tag within tags
       if (!is.null(code)) {
@@ -206,8 +230,15 @@ ZoteroIsbn <- \(key, meta = list()) {
       return (creator)
     }
 
-    # Find leader to subtract type of document
+    # Find leader
     leader <- ReadXpath(marc, "//leader", FALSE)
+
+    # Return NULL if empty
+    if (all(is.na(leader))) {
+      return (list(data = NULL, log = log))
+    }
+
+    # Subtract type of document from leader
     leader.type <- strsplit(leader[1], "")[[1]][1:8]
 
     meta$itemType <- if (leader.type[7] == "a" &
@@ -239,16 +270,16 @@ ZoteroIsbn <- \(key, meta = list()) {
 
     # Fetch title
     meta$title <- ToString(
-      MARC(marc, "245", "a"), " \u2013 ")
+      Marc(marc, "245", "a"), " \u2013 ")
     # Fetch subtitle
-    subtitle <- MARC(marc, "245", "b")
+    subtitle <- Marc(marc, "245", "b")
     # Combine title and subtitle if subtitle exist
     if (length(subtitle)) meta$title <- paste0(meta$title,": ", subtitle)
 
     # Fetch part number if part of a volume
-    part.number <- GoFish(MARC(marc, "245", "n")[[1]])
+    part.number <- GoFish(Marc(marc, "245", "n")[[1]])
     # Fetch volume name
-    part.name <- GoFish(ToString(MARC(marc, "245", "p"), " \u2013 "))
+    part.name <- GoFish(ToString(Marc(marc, "245", "p"), " \u2013 "))
 
     # Define volume title if part number and part name exists
     if (!is.na(part.number)) {
@@ -257,9 +288,9 @@ ZoteroIsbn <- \(key, meta = list()) {
     }
 
     # Fetch creator
-    creator <- FormatCreator(MARC(marc, "100"))
+    creator <- FormatCreator(Marc(marc, "100"))
     # Fetch contributors
-    creators <- MARC(marc, "700")
+    creators <- Marc(marc, "700")
 
     # Set contributors as editors if no first author exists
     if (is.null(creator) & (!is.null(creators))) {
@@ -278,7 +309,7 @@ ZoteroIsbn <- \(key, meta = list()) {
       dplyr::distinct()
 
     # Check statement of responsibility field
-    statement <- MARC(marc, "245", "c")
+    statement <- Marc(marc, "245", "c")
     if (!is.null(statement)) {
       statement <- strsplit(statement, ",") |> # split by comma
         unlist() |>
@@ -300,66 +331,66 @@ ZoteroIsbn <- \(key, meta = list()) {
 
     # Fetch abstract
     meta$abstractNote <- meta$abstractNote <- ToString(
-      GoFish(MARC(marc, 520, "a"), ""),
+      GoFish(Marc(marc, 520, "a"), ""),
       "\n"
     )
 
     # Fetch ISBN
     meta$ISBN <- GoFish(
-      ToString(gsub("[^0-9-]", "", MARC(marc, "020", "a")))
+      ToString(gsub("[^0-9-]", "", Marc(marc, "020", "a")))
     )
     # Fetch ISSN
-    issn <- MARC(marc, "022", "a")
+    issn <- Marc(marc, "022", "a")
     # Fetch language field
     language <- ReadXpath(marc, "//controlfield[@tag='008']", FALSE)
     # Subtract language
     meta$language <- substr(language, 36, 38)
     # Fetch meeting name
-    meta$meetingName <- MARC(marc, "111", "a")
-    if (is.null(meta$meetingName)) meta$meetingName  <- MARC(marc, "711", "a")
+    meta$meetingName <- Marc(marc, "111", "a")
+    if (is.null(meta$meetingName)) meta$meetingName  <- Marc(marc, "711", "a")
 
     # Fetch edition
-    meta$edition <- EditionFix(MARC(marc, "250", "a", FALSE))
+    meta$edition <- EditionFix(Marc(marc, "250", "a", FALSE))
 
     # Fetch place of publication
-    meta$place <- MARC(marc, "260", "a")
-    if (is.null(meta$place)) meta$place <- MARC(
+    meta$place <- Marc(marc, "260", "a")
+    if (is.null(meta$place)) meta$place <- Marc(
       marc, "264", "a")
     # Remove everything after first semicolon if place !is.na
     if (!is.null(meta$place)) meta$place <- Trim(
       gsub("(.*);.*", "\\1", meta$place)
     )
     # Fetch distributor
-    meta$distributor <- MARC(marc, "260", "b")
+    meta$distributor <- Marc(marc, "260", "b")
     # Fetch publisher
-    meta$publisher <- MARC(marc, "260", "b")
-    if (is.null(meta$publisher)) meta$publisher <- MARC(marc, "264", "b")
+    meta$publisher <- Marc(marc, "260", "b")
+    if (is.null(meta$publisher)) meta$publisher <- Marc(marc, "264", "b")
     # Fetch publication date
-    meta$date <- MARC(marc, "260", "c")
-    if (is.null(meta$date)) meta$date <- MARC(marc, "264", "c")
+    meta$date <- Marc(marc, "260", "c")
+    if (is.null(meta$date)) meta$date <- Marc(marc, "264", "c")
     # Set as year
     meta$date <- GoFish(
       as.character(gsub('.*?(\\d{4}).*', '\\1', meta$date)[[1]])
     )
 
     # Fetch number of pages and force numeric
-    meta$numPages <- as.character(MARC(marc, "300", "a"))
+    meta$numPages <- as.character(Marc(marc, "300", "a"))
 
     # Fetch series title
-    meta$series <- MARC(marc, "490", "a")
+    meta$series <- Marc(marc, "490", "a")
     # Fetch series number
-    meta$seriesNumber <- MARC(marc, "490", "v")
-    if (is.null(meta$series)) meta$series <- MARC(marc, "440", "a")
-    if (is.null(meta$seriesNumber)) meta$seriesNumber <- MARC(marc, "440", "v")
+    meta$seriesNumber <- Marc(marc, "490", "v")
+    if (is.null(meta$series)) meta$series <- Marc(marc, "440", "a")
+    if (is.null(meta$seriesNumber)) meta$seriesNumber <- Marc(marc, "440", "v")
 
     # Fetch tags
     tags <- GoFish(unique(as.character(unlist(
-      c(MARC(marc, 650, "a"), MARC(marc, 653, "a"))
+      c(Marc(marc, 650, "a"), Marc(marc, 653, "a"))
     ))))
     if (any(!is.na(tags))) meta$tags <- tibble::tibble(tag = tags)
 
     # Set accessDate
-    meta$accessDate <- as.character(Sys.time())
+    meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
 
     # Create zotero-type matrix
     meta <- GoFish(ZoteroFormat(meta), NULL)
@@ -370,19 +401,44 @@ ZoteroIsbn <- \(key, meta = list()) {
     return (meta)
   }
 
-  # Fetch MARC21 data from Alma or LOC
-  metadata <- lapply(key, \(x) {
-    if (!is.null(CheckId(x))) ISBN(CheckId(x), meta)
-  })
 
-  # Check if metadata has tibbles
-  if (any(lengths(metadata))) {
-    metadata <- dplyr::bind_rows(metadata)
-    # Set metadata as null if empty
-  } else {
-    metadata <- NULL
+
+  # Start time for query
+  query.start <- Sys.time()
+
+  # Cycle through queries
+  ## Should perhaps vectorize, but for loop seems more informative tbh
+  for (i in seq_along(keys)) {
+
+    # Check key
+    key <- CheckId(keys[[i]])
+
+    # Skip if not valid key
+    if (is.null(key)) {
+      log <- append(log, sprintf("Key: `%s` is not valid", keys[[i]]))
+      next
+    }
+
+    # Check libraries for metadata
+    metadata <- Isbn(key)
+
+    # Add data
+    data <- AddAppend(metadata$data, data)
+
+    # Append log
+    log <- append(log, metadata$log)
+
+    # Estimate time of arrival
+    log.eta <- LogCat(
+      Eta(query.start, i, length(keys)),
+      silent = silent,
+      flush = TRUE,
+      append.log = FALSE
+    )
   }
+  # Add to log
+  log <- append(log, log.eta)
 
-  return (metadata)
+  return (list(data = data, log = log))
 
 }

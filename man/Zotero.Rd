@@ -16,11 +16,15 @@ Zotero(
   create = FALSE,
   limit = 100,
   start = 0,
+  get.collections = TRUE,
   get.items = TRUE,
   item.type = NULL,
   all.results = TRUE,
   max.results = NULL,
+  collections = NULL,
   items = NULL,
+  attachments = NULL,
+  metadata = NULL,
   doi = NULL,
   isbn = NULL,
   export = FALSE,
@@ -30,7 +34,8 @@ Zotero(
   save.data = FALSE,
   save.path = NULL,
   bib.name = "references",
-  include.bib = FALSE,
+  library.type = NULL,
+  linkwrap = 1,
   style = "apa",
   locale = "en-US",
   copy = FALSE,
@@ -55,10 +60,11 @@ Zotero(
   user = TRUE,
   index = FALSE,
   id = NULL,
+  token = NULL,
+  token.api = NULL,
   api = NULL,
   force = FALSE,
   base.url = "https://api.zotero.org",
-  debug = FALSE,
   silent = FALSE,
   zotero = NULL,
   log = list()
@@ -91,7 +97,9 @@ collection), Default: FALSE}
 
 \item{start}{Starting position of query (0 = first result), Default: 0}
 
-\item{get.items}{Fetch items along with collections, Default: TRUE}
+\item{get.collections}{Fetch collections, Default: TRUE}
+
+\item{get.items}{Fetch items, Default: TRUE}
 
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
@@ -99,7 +107,13 @@ collection), Default: FALSE}
 
 \item{max.results}{Do you need a limit?, Default: NULL}
 
+\item{collections}{Predefined collections (as tibble), Default: NULL}
+
 \item{items}{Predefined metadata (as tibble), Default: NULL}
+
+\item{attachments}{Predefined attachments (as tibble), Default: NULL}
+
+\item{metadata}{Predefined metadata in Zoter-format, Default: NULL}
 
 \item{doi}{Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL}
 
@@ -121,8 +135,10 @@ Language (CSL), Default: NULL}
 
 \item{bib.name}{Name of exported bibliography, Default: 'references'}
 
-\item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
-FALSE}
+\item{library.type}{Commma-separated data from Zotero (i.e., data, bib,
+citation), Default: NULL}
+
+\item{linkwrap}{Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1}
 
 \item{style}{Citation style to use for appended bibliography and/or
 citations, Default: apa}
@@ -183,6 +199,12 @@ Default: TRUE}
 
 \item{id}{User or group ID, Default: NULL}
 
+\item{token}{Name of user or group token as defined in `.Renviron`, Default:
+NULL}
+
+\item{token.api}{Name of API token as defined in `.Renviron`, Default:
+NULL}
+
 \item{api}{API key to connect with the Zotero library. Set API to `NA` if key
 is not needed. See
 \href{https://oeysan.github.io/c2z/articles/zotero_api.html}{Zotero API},
@@ -191,8 +213,6 @@ Default: NULL}
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 
 \item{base.url}{Base url of the Zotero API, Default: 'https://api.zotero.org'}
-
-\item{debug}{Let you test the Zotero API for errors, Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 

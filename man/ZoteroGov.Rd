@@ -4,7 +4,7 @@
 \alias{ZoteroGov}
 \title{Wrangle regjeringen.no metadata into Zotero-type format}
 \usage{
-ZoteroGov(search, type = "NOU", meta = list())
+ZoteroGov(search, type = "NOU", meta = list(), silent = TRUE, log = list())
 }
 \arguments{
 \item{search}{Search term (e.g., 2018: 2)}
@@ -13,6 +13,10 @@ ZoteroGov(search, type = "NOU", meta = list())
 Default: "NOU"}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
+
+\item{log}{A list for storing log elements, Default: list()}
 }
 \value{
 A Zotero-type matrix (tibble)
@@ -28,11 +32,12 @@ Please see
 \donttest{
   # Search the default entity, Norwegian official reports in regjeringen.no
   example <- ZoteroGov("2001:4")
-
   # Print index using `ZoteroIndex`
-  ZoteroIndex(example) |>
+  if (any(nrow(example$data))) {
+  ZoteroIndex(example$data) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

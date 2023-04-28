@@ -55,12 +55,16 @@ Please see
 \donttest{
   # Simple `Cristin` search by id with import set as FALSE
   example <- Cristin(id = "840998", zotero.import = FALSE)
-  # Check if results i supported using `CristinSupported`
-  example.supported <- CristinSupported(example$results)
-  # Use `ZoteroIndex` to print `CristinWrangler`
-  ZoteroIndex(CristinWrangler(example.supported$data)$results) |>
-    dplyr::select(name) |>
-    print(width = 80)
+
+  if (any(nrow(example$results))) {
+    # Check if results i supported using `CristinSupported`
+    example.supported <- CristinSupported(example$results)
+
+    # Use `ZoteroIndex` to print `CristinWrangler`
+    ZoteroIndex(CristinWrangler(example.supported$data)$results) |>
+      dplyr::select(name) |>
+      print(width = 80)
+  }
 }
 }
 \seealso{

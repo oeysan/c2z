@@ -105,10 +105,10 @@ Man pays you to keep track of publications, you could schedule a script (e.g.,
 [taskscheduleR](https://github.com/bnosac/taskscheduleR) or Github Actions) to 
 keep track of new publications from an institution or research group and email 
 you (or the Man) recent publications on a monthly or weekly (or hourly) basis 
-(e.g., [mailR](https://github.com/rpremrajGit/mailR)). If you really feel like
-it you could use 
-[Home Assistant](https://developers.home-assistant.io/docs/api/rest/) to play 
-[Tina Turner - The Best (Official Music 
+(e.g., [emayili](https://github.com/datawookie/emayili/) or 
+[mailR](https://github.com/rpremrajGit/mailR)). If you really feel like it you 
+could use [Home Assistant](https://developers.home-assistant.io/docs/api/rest/) 
+to play [Tina Turner - The Best (Official Music 
 Video)](https://www.youtube.com/watch?v=GC5E8ie2pdM) whenever one of your
 publications is registered on Cristin.
 
@@ -206,29 +206,25 @@ library(c2z)
 example <- Zotero(
   collection.names = "c2z-example",
   library = TRUE,
+  library.type = "data,bib",
   create = TRUE,
   isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
   export = TRUE,
-  include.bib = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,
   delete.items = TRUE,
   index = TRUE
 )
-
-# Order the bibliography by creators (alphabetically) and date (descending)
-bibliography <- example$index |>
-  dplyr::arrange(citation, desc(date))
 ```
                   
 The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-`r c2z:::ToString(bibliography$bib, "\n")`
+`r c2z:::ToString(example$bibliography$bib, "\n")`
 </div>
 
 Johannessen et al. (2021) is an interesting (well, perhaps not interesting to 

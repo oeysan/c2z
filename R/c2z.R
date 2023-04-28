@@ -4,7 +4,7 @@
 
 #' @importFrom dplyr arrange bind_rows case_when coalesce distinct filter
 #' group_by mutate na_if one_of pull row_number select slice_head transmute
-#' ungroup full_join join_by
+#' ungroup full_join join_by any_of
 #' @importFrom httr GET RETRY add_headers content http_error
 #' @importFrom jsonlite fromJSON toJSON
 #' @importFrom purrr map pmap pmap_chr
@@ -21,15 +21,6 @@ NULL
 #################################Internal Data##################################
 ################################################################################
 
-#' @title List with empty cristin-items
-#' @description Each tibble in the list represents a cristin-item
-#' @format A list with 70 tibbles with zero rows and various columns
-#' @details Used to create Zotero-items from list of metadata
-#' @rdname cristin.types
-#' @keywords internal
-"cristin.types"
-#> NULL
-
 #' @title List with empty zotero-items
 #' @description Each tibble in the list represents a zotero-item
 #' @format A list with 36 tibbles with zero rows and various columns
@@ -43,6 +34,333 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title CristinWeb
+#' @keywords internal
+#' @noRd
+CristinWeb <- \(data) {
+
+  # Visible bindings
+  body <- month.key <- year.month <- NULL
+  start.n <- start.pos <- 0
+
+  # Where to begin headings if more than 1 units
+  if (max(data$n.units) > 1) {
+    #  Start heading at > 1 if more than 1 subunit else 2
+    if (length(unique(data$post.unit2)) > 1) {
+      start.n <- start.pos <- 1
+    } else {
+      start.n <- 2
+    }
+  }
+
+  # Create list by each month
+  data <- data |>
+    dplyr::filter(!is.na(month.key)) |>
+    dplyr::mutate(year = replace(year, duplicated(year), NA)) |>
+    dplyr::group_split(year.month) |>
+    rev()
+
+  # Create html for each month i data
+  for (i in seq_along(data)) {
+
+    month <- year <- NULL
+
+    # Define bibliography for current month
+    bib <- data[[i]] |>
+      dplyr::mutate(
+        # Remove duplicated values in units
+        dplyr::across(
+          dplyr::starts_with("post.unit"), ~
+            replace(.x, duplicated(.x), NA)
+        ),
+        # Create headers for each row
+        headers = purrr::pmap_chr(
+          dplyr::across(dplyr::starts_with("post.unit")), ~ {
+            x <- c(...)
+            lapply(seq_along(x), \(i) {
+              if (!is.na(x[[i]]) & i > start.n) {
+                sprintf("<h%1$s>%2$s</h%1$s>", max(3, i+start.pos), x[[i]])
+              }
+            }) |>
+              ToString("\n") |>
+              GoFish()
+          }
+        )
+      )
+
+    # Check if year is in current month
+    if (!is.na(bib$year[[1]])) {
+      year <- sprintf(
+        "<h1 class=\"csl-bib-year\">%s</h1>",
+        bib$year[[1]]
+      )
+    }
+
+    # Define month
+    month <- sprintf(
+      "<h2 class=\"csl-bib-month\">%s</h2>",
+      unique(bib$month[[1]])
+    )
+
+    # Define HTML bibliography
+    bib <- ToString(Interleave(bib$headers, Trim(bib$bib)), "\n")
+
+    # Define body
+    body <- c(body, paste0(year, month, bib))
+
+  } # End loop
+
+  # Combine bodies
+  body <- sprintf(
+    "<div class=\"csl-bib-container\">%s</div>",
+    ToString(body, "\n")
+  )
+
+  return (body)
+
+}
+
+#' @title CristinMail
+#' @keywords internal
+#' @noRd
+CristinMail <- \(data,
+                 main.units,
+                 subject = NULL,
+                 header = NULL,
+                 footer = NULL,
+                 replace.style = TRUE,
+                 width = 700) {
+
+  # Visible bindings
+  body <- month.key <- year.month <- year <- NULL
+
+  # Keep only latest entry
+  bib <- data |>
+    dplyr::filter(!is.na(month.key)) |>
+    dplyr::mutate(
+      dplyr::across(
+        c(year, dplyr::starts_with("post.unit")), ~
+          replace(.x, duplicated(.x), NA)
+      )
+    ) |>
+    dplyr::group_split(year.month) |>
+    rev() |>
+    purrr::pluck(1) |>
+    dplyr::mutate(
+      # Create headers for each row
+      headers = purrr::pmap_chr(
+        dplyr::across(dplyr::starts_with("post.unit")), ~ {
+          x <- c(...)
+          lapply(seq_along(x), \(i) {
+            if (!is.na(x[[i]])) {
+              if (i == 1) {
+                sprintf("<h1 style=\"text-align:center;\">%s</h1>", x[[i]])
+              } else {
+                sprintf("<h%1$s>%2$s</h%1$s>", i, x[[i]])
+              }
+            }
+          }) |>
+            ToString("\n") |>
+            GoFish()
+        }
+      )
+    )
+
+  # Return NULL if no data
+  if (!any(nrow(bib))) {
+    return (NULL)
+  }
+
+  # replace style from bibliography
+  ## CSS is poorly supported in many email clients
+  if (replace.style) {
+    bib$bib <- gsub(
+      "*.style=(\"|')[^(\"|')]*(\"|')",
+      "",
+      bib$bib
+    )
+    # Add space between items
+    bib$bib <- gsub(
+      "class=\"csl-entry\"",
+      "class=\"csl-entry\" style=\"margin: 0.5em 0;\"",
+      bib$bib
+    )
+  }
+
+  # Define subject
+  if (is.null(subject)) {
+    subject <- sprintf(
+      "Nyleg registrerte publikasjonar i Cristin (%s, %s)",
+      tolower(bib$month[[1]]),
+      bib$year[[1]]
+    )
+  }
+
+  # Define header
+  if (is.null(header)) {
+    header <- sprintf(
+      "Dette dokumentet inneheld nyleg registrerte publikasjonar i Cristin ved
+      %s for %s, %s. Kvar publikasjon er oppf\u00f8rt med lenkje til resultatet
+      i Cristin, samt lenkje til referansen i Zotero-arkivet.",
+      ToString(main.units),
+      tolower(bib$month[[1]]),
+      bib$year[[1]]
+    )
+  }
+
+  # Define footer
+  if (is.null(footer)) {
+    footer <- "<div style=\"font-size:80%;margin: 2em auto 0 auto; text-align:
+    center;\">CRIStin Bot nyttar seg av<i>
+    <a href=\"https://oeysan.github.io/c2z/\">c2z</a></i></div>"
+  }
+
+  # Create HTML body with references from Cristin
+  body <- Trim(sprintf(
+    "<table width=\"%1$s\" cellpadding=\"0\" cellspacing=\"0\">
+    <tr><td>
+    <div style=\"max-width:%1$spx;\">
+    %2$s%3$s%4$s
+    </div>
+    </td></tr>
+    </table>",
+    width,
+    header,
+    ToString(Interleave(bib$headers, bib$bib), "\n"),
+    footer
+  ))
+
+  return (list(subject = subject, body = body))
+
+}
+
+#' @title Interleave
+#' @keywords internal
+#' @noRd
+Interleave <- function(a, b, rm.na = TRUE) {
+  interleave <- order(c(seq_along(a), seq_along(b)))
+  ab <- c(a, b)[interleave]
+  if (rm.na) ab <- ab[!is.na(ab)]
+  return(ab)
+}
+
+#' @title AncestorPath
+#' @keywords internal
+#' @noRd
+AncestorPath <- \(data, path.key, name = FALSE) {
+
+  # Return NULL if not in data
+  if (!path.key %in% data$key) {
+    return (NULL)
+  }
+
+  # Find parent key
+  parent = data[data$key == path.key, ]$parentCollection
+  # Use parent name if name is TRUE else use key
+  id <- if(name) data[data$key == path.key, ]$name else path.key
+
+  # Return id if parentCollection is FALSE
+  if(parent == "FALSE")  {
+    path <- id
+    # Else continue searching for ancestor
+  } else {
+    path <- c(AncestorPath(data, parent, name), id)
+  }
+
+  return (path)
+
+}
+
+#' @title DescendingPath
+#' @keywords internal
+#' @noRd
+DescendingPath <- \(data, path.key, name = FALSE) {
+
+  # Return NULL if not in data
+  if (!path.key %in% data$key) {
+    return (NULL)
+  }
+
+  # Function to travel trough the lineage of the collections
+  Descending <- \(data, path.key, name) {
+
+    # Find parent key
+    child <- data[data$parentCollection == path.key, ]$key
+    # Use child name if name is TRUE else use key
+    id <- if(name) {
+      data[data$parentCollection == path.key, ]$name
+    } else {
+      child
+    }
+
+    # Return id if child key not defined in parentCollection
+    path <- unlist(lapply(seq_along(child), \(i) {
+      if (!child[i] %in% data$parentCollection) {
+        id[i]
+      } else {
+        c(id[i], Descending(data, child[i], name))
+      }
+    }))
+
+    return (path)
+
+  }
+
+  # Define ancestor
+  ancestor <- if(name) data[data$key == path.key, ]$name else path.key
+
+  return (c(ancestor, Descending(data, path.key, name)))
+
+}
+
+#' @title FindPath
+#' @keywords internal
+#' @noRd
+FindPath <- \(data, path.name, case.insensitive = TRUE) {
+
+  # Visible bindings
+  path <- item <- name <- parentCollection <- NULL
+
+  for (i in seq_along(path.name)) {
+
+    # Find parent, if k=1 there are no parents, strangely enough
+    parent <- if (i == 1) "FALSE" else parent
+
+    # Search for item using name and parentCollection if data is defined
+    if (!is.null(data)) {
+      item <- data |>
+        dplyr::filter(grepl(
+          path.name[i], name, ignore.case = case.insensitive) &
+            parentCollection == parent
+        ) |>
+        dplyr::arrange(version) |>
+        dplyr::slice(1)
+    }
+
+    # Create item if not found
+    if (!any(nrow(item))) {
+      item <- tibble::tibble(
+        key = ZoteroKey(),
+        version = 0,
+        name = path.name[i],
+        parentCollection = parent
+      )
+
+      # Add to data
+      data <- dplyr::bind_rows(data, item)
+    }
+
+    # Define parrent
+    parent <- item$key
+    # Add key to path
+    path <- c(path, item$key)
+
+  }
+
+  return (list(data = data, path = path))
+
+}
+
 #' @title Month
 #' @keywords internal
 #' @noRd
@@ -50,8 +368,15 @@ Month <- \(i = NULL,
            lang = NULL,
            abbreviation = FALSE) {
 
+  # Return Null
+  if (!GoFish(as.numeric(i) %in% seq(12), FALSE)) {
+    return (NULL)
+  } else {
+    i <- as.numeric(i)
+  }
+
   # Define months by norwegian if lang = no
-  if (any(lang == "no")) {
+  if (any(lang %in% c("no", "nn", "nb"))) {
 
     # Month names in Norwegian
     month.name <- c(
@@ -117,7 +442,7 @@ FloorDate <- \(date) {
 
   # Return null if no dash in date
   if (!grepl("-", date)) {
-      return (NULL)
+    return (NULL)
   }
 
   # Convert date to character and split by dash
@@ -181,42 +506,85 @@ ZoteroId <- \(id.type,
 
 }
 
-#' @title FixCreators
+#' @title Online
 #' @keywords internal
 #' @noRd
-ErrorCode <- \(code, reference = NULL) {
+Online <- \(query,
+            message = NULL,
+            reference = NULL,
+            silent = FALSE,
+            log = list()) {
 
-  error.codes <- c(
+  # Visible bindings
+  data <- NULL
+  error <- TRUE
+
+  # Check query/url and set 404 error upon error
+  query <- GoFish(query, stats::setNames(list(404), "status_code"))
+
+  # Set data as query upon success else NULL
+  if (query$status_code %in% 200:299) {
+    data <- query
+    error <- FALSE
+  }
+
+  # Some status codes
+  status.codes <- c(
     "Invalid type/field (unparseable JSON)" = 400,
     "The target library is locked" = 409,
     "Precondition Failed (e.g.,
     the provided Zotero-Write-Token has already been submitted)" = 412,
     "Request Entity Too Large" = 413,
     "Forbidden (check API key)" = 403,
-    "Resource not found" = 404
+    "Resource not found" = 404,
+    "Everything is awesome" = 200,
+    "Doom of the Noldor" = 204
   )
 
-  # Define creator type according to match in creator types
-  error.code <- sprintf(
-    "Error %s: %s.",
-    code,
-    names(error.codes[error.codes %in% code])
+  # Define message
+  if (is.null(message)) {
+    message <- names(status.codes[status.codes %in% query$status_code])
+    # Set unknown error if error.code is undefined
+    if (!length(message)) message <- "No message. Sorry."
+  } else {
+    append.message <- if (error) "not OK" else "OK"
+    message <- sprintf("%s is %s", message, append.message)
+  }
+
+  # Create feedback
+  feedback <- sprintf("Status %s: %s.", query$status_code, message)
+
+  # Add reference if any
+  if (!is.null(reference)) {
+    feedback <- sprintf(
+      "%s (`%s`: %s)",
+      feedback,
+      as.character(sys.call(-1)[[1]]),
+      reference
+    )
+  }
+
+  # Clean feedback
+  feedback <- Trim(gsub("\r?\n|\r", " ", feedback))
+
+  # Log message
+  log <-  LogCat(
+    feedback,
+    silent = silent,
+    log = log
   )
 
-  # Set as contributor if not found
-  if (!length(error.code)) error.code <- "Unknown error. Sorry."
-
-  # Clean code
-  error.code <- Trim(gsub("\r?\n|\r", " ", error.code))
-
-  # Add reference if exists
-  if (!is.null(reference)) error.code <- sprintf(
-    "%s See: %s.", error.code, reference
+  return (
+    list(
+      error = error,
+      code = query$status_code,
+      data = data,
+      log = log
+    )
   )
-
-  return (error.code)
 
 }
+
 
 #' @title FixCreators
 #' @keywords internal
@@ -349,7 +717,6 @@ ZoteroFormat <- \(data = NULL,
   }
 
   # Visible bindings
-  zotero.types <- zotero.types
   creators <- NULL
 
   multiline.items <- c("tags",
@@ -405,9 +772,8 @@ ZoteroFormat <- \(data = NULL,
     }
     # Remove elements not in category if item
     if (!"parentCollection" %in% names(data.list)) {
-      data.list[!names(data.list) %in%
-                  c(names(zotero.types[[data.list$itemType]]),
-                    "key", "version")] <- NULL
+      data.list <- data.list[names(data.list) %in%
+                               c("key", "version", ZoteroTypes(data.list$itemType))]
     }
 
     # Format as tibble and remove empty elements
@@ -422,11 +788,14 @@ ZoteroFormat <- \(data = NULL,
       # Replace empty string with NA
       dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
       dplyr::mutate(
+        # Make certain tags is a data.frame within a list
         dplyr::across(
           dplyr::any_of("tags"), ~ purrr::map(tags, ~ {
             if (all(!is.na(.x))) as.data.frame(.x)
-            })
+          })
         ),
+        # Make certain that parentCollection is a character
+        dplyr::across(dplyr::any_of("parentCollection"), as.character),
         # Add prefix if defined
         prefix = GoFish(prefix),
         # Fix creators
@@ -487,7 +856,7 @@ ZoteroUrl <- \(url,
   }
 
   # If not using specific item or top level
-  if (!use.item) {
+  if (!use.item & !append.top & !append.file) {
     #  Add items if append.items set to TRUE
     if (append.items) {
       url <- paste0(url,"items")
@@ -532,7 +901,7 @@ Eta <- \(start.time,
          total,
          message = NULL,
          flush = TRUE,
-         sep = "-",
+         sep = "\u2014",
          max.width = 80) {
 
   # Estimate time of arrival
@@ -738,8 +1107,9 @@ TrimSplit <- \(x,
 #' @title Pluralis
 #' @keywords internal
 #' @noRd
-Pluralis <- \(data, singular, plural, prefix = TRUE) {
+Pluralis <- \(data, singular, plural = NULL, prefix = TRUE) {
 
+  if (is.null(plural)) plural <- paste0(singular, "s")
   word <- if (data==1) singular else plural
 
   if (prefix) word <- paste(data, word)
@@ -776,31 +1146,20 @@ AddAppend <- \(data = NULL, old.data = NULL, sep = NULL) {
 #' @keywords internal
 #' @noRd
 LogCat <- \(message = NULL,
-            error = FALSE,
             fatal = FALSE,
             flush = FALSE,
             trim = TRUE,
             width = 80,
             log = list(),
             append.log = TRUE,
-            silent = FALSE,
-            debug = FALSE) {
+            silent = FALSE) {
 
   # Trim message if trim is set to TRUE
   if (trim) message <- Trim(gsub("\r?\n|\r", " ", message))
 
-  # Check for errors if error is set to TRUE
-  if (debug & error) {
-    fatal <- TRUE
-    message <- paste(message, "is not working")
-  } else if (debug) {
-    message <- paste(message, "is working")
-  }
-
   # if fatal stop function
   if (fatal) {
     stop(message, call. = FALSE)
-    # Print message if silent is set to FALSE
   }
 
   # Print text if silent is set to FALSE
@@ -808,9 +1167,12 @@ LogCat <- \(message = NULL,
     # flush console after each message if flush and trim is set to TRUE
     if (flush & trim) {
       cat("\r" , message[[1]], sep="")
+      # Remove padding
       utils::flush.console()
       # if arrived is in message insert new line
-      if (length(message)>1) cat("\n")
+      if (length(message)>1) {
+        cat("\n")
+      }
       # else trim message and print if trim is set to TRUE
     } else if (trim) {
       cat(message,"\n")
@@ -820,6 +1182,9 @@ LogCat <- \(message = NULL,
       cat("\n")
     }
   }
+
+  # Remove padding
+  message <- Trim(gsub("\u2014", "", message))
 
   # Append to log if append.log set to TRUE else static
   log <- if (append.log) append(log, message) else message

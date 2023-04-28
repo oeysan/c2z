@@ -30,23 +30,37 @@
 #'   )
 #'
 #'   # Display collections
-#'   print(zotero$collections, width = 80)
+#'   if (any(nrow(zotero$collections))) {
+#'     zotero$collections |>
+#'       dplyr::select(key, version, parentCollection) |>
+#'       print(width = 80)
+#'   }
 #'
 #'   # Display items
-#'   print(zotero$items, width = 80)
+#'   if (any(nrow(zotero$items))) {
+#'     zotero$items |>
+#'       dplyr::select(key, version) |>
+#'       print(width = 80)
+#'   }
 #'
 #'   # Copy items
 #'   example <- ZoteroCopy(
 #'     zotero,
 #'   )
 #'
-#'   # Display new keys and version for collections
-#'   example$collections |>
-#'     dplyr::select(key, version, parentCollection)
+#'   # Display collections
+#'   if (any(nrow(example$collections))) {
+#'     example$collections |>
+#'       dplyr::select(key, version, parentCollection) |>
+#'       print(width = 80)
+#'   }
 #'
-#'   # Display new keys and version for items
-#'   example$items |>
-#'     dplyr::select(key, version)
+#'   # Display items
+#'   if (any(nrow(example$items))) {
+#'     example$items |>
+#'       dplyr::select(key, version) |>
+#'       print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[httr]{GET}}
@@ -82,189 +96,211 @@ ZoteroCopy <- \(zotero,
 
   # Function to check attachments
   CheckAttachment <- \(item.key, zotero) {
-    # Set file as NA
+
     # Check file
-    file <- NA
-    check <- httr::RETRY(
-      "GET",
-      ZoteroUrl(zotero$url,
-                item.key = item.key,
-                api = zotero$api,
-                use.item = TRUE,
-                append.file = TRUE),
-      quiet = TRUE)
-    # Return file if status is 200
-    if (check$status_code==200) file <- check
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        ZoteroUrl(
+          zotero$url,
+          item.key = item.key,
+          api = zotero$api,
+          use.item = TRUE,
+          append.file = TRUE
+        ),
+        quiet = TRUE),
+      silent = TRUE
+    )
+
+    # Log and return NA if status code != 200
+    file <- if (httr.get$error) NA else httr.get$data
+
     return (file)
+
   }
 
-  if (copy.collections & !is.null(zotero$collections)) {
+  # Return zotero list if copy.collections is FALSE or no collections
+  if (!copy.collections | is.null(zotero$collections)) {
+    return (zotero)
+  }
 
-    # Add to log
-    zotero$log <- LogCat("Copying collections",
-                         silent = silent,
-                         log = zotero$log)
+  # Add to log
+  zotero$log <- LogCat("Copying collections",
+                       silent = silent,
+                       log = zotero$log)
 
-    # Defne keys
-    new.keys <- replicate(nrow(zotero$collections), ZoteroKey())
-    old.keys <- zotero$collections$key
+  # Defne keys
+  new.keys <- replicate(nrow(zotero$collections), ZoteroKey())
+  old.keys <- zotero$collections$key
 
-    # Replace keys
-    zotero$collections <- zotero$collections |>
-      dplyr::arrange(version) |>
-      dplyr::mutate(
-        key = new.keys, # Set new keys
-        version = 0, # Set initial version
-        # Replace parent keys
-        parentCollection = dplyr::case_when(
-          parentCollection == "FALSE" ~ "FALSE",
-          TRUE ~ key[match(parentCollection, old.keys)]
-        )
+  # Replace keys
+  zotero$collections <- zotero$collections |>
+    dplyr::arrange(version) |>
+    dplyr::mutate(
+      key = new.keys, # Set new keys
+      version = 0, # Set initial version
+      # Replace parent keys
+      parentCollection = dplyr::case_when(
+        parentCollection == "FALSE" ~ "FALSE",
+        TRUE ~ key[match(parentCollection, old.keys)]
       )
+    )
 
-    # Set new collection main key
-    if (!is.null(zotero$collection.key)) {
-      zotero$collection.key <- new.keys[match(
-        zotero$collection.key,
-        old.keys
-      )]
-    }
-
-    # Replace collections in items
-    if (copy.items & !is.null(zotero$items)) {
-      zotero$items <- zotero$items |>
-        dplyr::mutate(
-          collections = purrr::pmap(
-            list(collections), ~ ReplaceKeys(., new.keys, old.keys, NULL)
-          )
-        )
-    }
+  # Set new collection main key
+  if (!is.null(zotero$collection.key)) {
+    zotero$collection.key <- new.keys[match(
+      zotero$collection.key,
+      old.keys
+    )]
   }
 
+  # Replace collections in items
   if (copy.items & !is.null(zotero$items)) {
-
-    # Add to log
-    zotero$log <- LogCat("Copying items",
-                         silent = silent,
-                         log = zotero$log)
-
-    # Define keys
-    new.keys <- replicate(nrow(zotero$items), ZoteroKey())
-    old.keys <- zotero$items$key
-
-    # Check attachments if check.attachments is set to TRUE
-    if (copy.extras & "filename" %in% names(zotero$items)) {
-
-      # Add to log
-      zotero$log <- LogCat("Checking for missing attachments",
-                           silent = silent,
-                           log = zotero$log)
-
-      # Define attachments
-      zotero$attachments <- zotero$items |>
-        dplyr::filter(grepl("attachment", itemType)) |> # Filter attachments
-        dplyr::mutate(
-          # Check attachments
-          file = purrr::pmap(list(key), ~ CheckAttachment(., zotero)),
-          # Set new keys
-          key = new.keys[match(key, old.keys)],
-          parentItem = new.keys[match(parentItem, old.keys)],
-          # Find size of attachments
-          size = purrr::pmap_chr(
-            list(file), \(x)
-            if (!all(is.na(x))) x$headers$`content-length` else NA_character_
-          )
-        ) |>
-        # Select needed columns for upload
-        dplyr::select(key, parentItem, filename, file,
-                      md5, mtime, size, prefix)
-
-    }
-
-    # Replace keys
     zotero$items <- zotero$items |>
       dplyr::mutate(
+        collections = purrr::pmap(
+          list(collections), ~ ReplaceKeys(., new.keys, old.keys, NULL)
+        )
+      )
+  }
+
+  # Return zotero list if copy.items is FALSE or no items
+  if (!copy.items | is.null(zotero$items)) {
+    return (zotero)
+  }
+
+  # Add to log
+  zotero$log <- LogCat("Copying items",
+                       silent = silent,
+                       log = zotero$log)
+
+  # Define keys
+  new.keys <- replicate(nrow(zotero$items), ZoteroKey())
+  old.keys <- zotero$items$key
+
+  # Check attachments if check.attachments is set to TRUE
+  if (copy.extras & "filename" %in% names(zotero$items)) {
+
+    # Add to log
+    zotero$log <- LogCat("Checking for missing attachments",
+                         silent = silent,
+                         log = zotero$log)
+
+    # Define attachments
+    zotero$attachments <- zotero$items |>
+      dplyr::filter(grepl("attachment", itemType)) |> # Filter attachments
+      dplyr::mutate(
+        # Check attachments
+        file = purrr::pmap(list(key), ~ CheckAttachment(., zotero)),
         # Set new keys
         key = new.keys[match(key, old.keys)],
-        dplyr::across(
-          tidyselect::any_of("parentItem"), ~ new.keys[match(., old.keys)]
-        ),
-        version = 0, # Set initial version
+        parentItem = new.keys[match(parentItem, old.keys)],
+        # Find size of attachments
+        size = purrr::pmap_chr(
+          list(file), \(x)
+          if (!all(is.na(x))) x$headers$`content-length` else NA_character_
+        )
       ) |>
-      # Remove attachments and notes if copy.extras is set to FALSE
-      dplyr::filter(
-        if (!copy.extras) !grepl('attachment|note', itemType) else TRUE
-      )
+      # Select needed columns for upload
+      dplyr::select(key, parentItem, filename, file,
+                    md5, mtime, size, prefix)
 
-    # Remove missing attachments if remove.missing is set to TRUE
-    if (remove.missing & !is.null(zotero$attachments)) {
+  }
 
-      # Add to log
-      zotero$log <- LogCat("Checking for missing attachments",
-                           silent = silent,
-                           log = zotero$log)
+  # Replace keys
+  zotero$items <- zotero$items |>
+    dplyr::mutate(
+      # Set new keys
+      key = new.keys[match(key, old.keys)],
+      dplyr::across(
+        tidyselect::any_of("parentItem"), ~ new.keys[match(., old.keys)]
+      ),
+      version = 0, # Set initial version
+    ) |>
+    # Remove attachments and notes if copy.extras is set to FALSE
+    dplyr::filter(
+      if (!copy.extras) !grepl('attachment|note', itemType) else TRUE
+    )
 
-      # Find missing attachments / attachments with missing parents
-      missing.attachments <- is.na(zotero$attachments$file)
-      missing.parent <- !zotero$attachments$parentItem %in% new.keys
+  # Remove missing attachments if remove.missing is set to TRUE
+  if (remove.missing & !is.null(zotero$attachments)) {
 
-      # Find anyone missing
-      any.missing <- missing.attachments | missing.parent
+    # Add to log
+    zotero$log <- LogCat(
+      "Checking for missing attachments",
+      silent = silent,
+      log = zotero$log
+    )
 
-      # Find key of missing elements
-      missing.key <- zotero$attachments$key[any.missing]
+    # Find missing attachments / attachments with missing parents
+    missing.attachments <- is.na(zotero$attachments$file)
+    missing.parent <- !zotero$attachments$parentItem %in% new.keys
 
-      # Remove missing from items
-      zotero$items <- zotero$items |>
-        dplyr::filter(!new.keys %in% missing.key)
+    # Find anyone missing
+    any.missing <- missing.attachments | missing.parent
 
-      # Remove missing from attachments
-      zotero$attachments <- zotero$attachments |>
-        dplyr::filter(!any.missing)
-      if (nrow(zotero$attachments)==0) zotero$attachments <- NULL
+    # Find key of missing elements
+    missing.key <- zotero$attachments$key[any.missing]
 
-      # Number of missing attachments / attachments with missing parents
-      n.missing.parent <- max(0,sum(missing.parent))
-      n.missing.attachments <- max(0,sum(missing.attachments))
+    # Remove missing from items
+    zotero$items <- zotero$items |>
+      dplyr::filter(!new.keys %in% missing.key)
 
-      # MORE POINTLESS ... you know
-      missing.parent.message <- Pluralis(
-        n.missing.parent, "attachment", "attachments", FALSE
-      )
+    # Remove missing from attachments
+    zotero$attachments <- zotero$attachments |>
+      dplyr::filter(!any.missing)
+    if (nrow(zotero$attachments)==0) zotero$attachments <- NULL
 
-      # Add to log
-      zotero$log <- LogCat(sprintf("Removed %s forsaken %s",
-                                   n.missing.parent,
-                                   missing.parent.message),
-                           silent = silent,
-                           log = zotero$log)
+    # Number of missing attachments / attachments with missing parents
+    n.missing.parent <- max(0,sum(missing.parent))
+    n.missing.attachments <- max(0,sum(missing.attachments))
 
-      # MORE POINTLESS ... you know
-      missing.attachment.message <- Pluralis(
-        n.missing.attachments, "attachment", "attachments", FALSE
-      )
+    # MORE POINTLESS ... you know
+    missing.parent.message <- Pluralis(
+      n.missing.parent, "attachment", prefix = FALSE
+    )
 
-      # Add to log
-      zotero$log <- LogCat(sprintf("Removed %s missing %s",
-                                   n.missing.attachments,
-                                   missing.attachment.message),
-                           silent = silent,
-                           log = zotero$log)
+    # Add to log
+    zotero$log <- LogCat(
+      sprintf(
+        "Removed %s forsaken %s",
+        n.missing.parent,
+        missing.parent.message
+      ),
+      silent = silent,
+      log = zotero$log
+    )
 
-    }
+    # MORE POINTLESS ... you know
+    missing.attachment.message <- Pluralis(
+      n.missing.attachments, "attachment", prefix = FALSE
+    )
 
-    # Create a copy destination if change.library is set to TRUE
-    if (change.library) {
-      # Remove user
-      zotero$user <- NULL
-      zotero <- Zotero(user = copy.user,
-                       id = copy.id,
-                       api = copy.api,
-                       silent = silent,
-                       log = zotero$log,
-                       zotero = zotero)
-    }
+    # Add to log
+    zotero$log <- LogCat(
+      sprintf(
+        "Removed %s missing %s",
+        n.missing.attachments,
+        missing.attachment.message
+      ),
+      silent = silent,
+      log = zotero$log
+    )
 
+  }
+
+  # Create a copy destination if change.library is set to TRUE
+  if (change.library) {
+    # Remove user
+    zotero$user <- NULL
+    zotero <- Zotero(
+      user = copy.user,
+      id = copy.id,
+      api = copy.api,
+      silent = silent,
+      log = zotero$log,
+      zotero = zotero
+    )
   }
 
   return (zotero)

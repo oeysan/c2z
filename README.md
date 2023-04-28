@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.03.29 @ 11:12:36-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.04.27 @ 20:02:17-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9007-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9008-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -87,6 +87,7 @@ you to keep track of publications, you could schedule a script (e.g.,
 Actions) to keep track of new publications from an institution or
 research group and email you (or the Man) recent publications on a
 monthly or weekly (or hourly) basis (e.g.,
+[emayili](https://github.com/datawookie/emayili/) or
 [mailR](https://github.com/rpremrajGit/mailR)). If you really feel like
 it you could use [Home
 Assistant](https://developers.home-assistant.io/docs/api/rest/) to play
@@ -195,28 +196,45 @@ library(c2z)
 example <- Zotero(
   collection.names = "c2z-example",
   library = TRUE,
+  library.type = "data,bib",
   create = TRUE,
   isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
   export = TRUE,
-  include.bib = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,
   delete.items = TRUE,
   index = TRUE
 )
+#> Searching for collections 
+#> Found 0 collections 
+#> Adding 1 collection to library using 1 POST request 
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> $post.status.collections
+#> # A tibble: 1 × 2
+#>   status  key     
+#>   <fct>   <chr>   
+#> 1 success 9ZKSMNZF
+#> 
+#> $post.summary.collections
+#> # A tibble: 1 × 2
+#>   status  summary
+#>   <fct>     <int>
+#> 1 success       1
+#> 
+#> 
+#> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
-#> Adding 2 formated items to Zotero list 
 #> Adding 2 items to library using 1 POST request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:01-----------------
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> $post.status.items
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success PBHDEXPS
-#> 2 success A27SQAGY
+#> 1 success BF7S8PPN
+#> 2 success JRYN8H5Z
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -225,19 +243,15 @@ example <- Zotero(
 #> 1 success       2
 #> 
 #> 
-#> Found 0 subcollections 
+#> Searching for items using 1 collection 
 #> Found 2 items 
-#> Collection c2z-example (DWS47383) contains: 0 subcollections and 2 items 
+#> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
 #> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Deleting 2 items using 1 DELETE request 
-#> -----------------Process: 100.00% (1/1). Elapsed time: 00:00:00-----------------
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Creating index for items
-
-# Order the bibliography by creators (alphabetically) and date (descending)
-bibliography <- example$index |>
-  dplyr::arrange(citation, desc(date))
 ```
 
 The example will yield the following HTML output:

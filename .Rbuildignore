@@ -26,3 +26,4 @@
 ^paper.pdf$
 .Renviron
 ^codecov\.yml$
+^.*\.Rhistory$

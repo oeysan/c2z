@@ -24,12 +24,16 @@
 #' \donttest{
 #'   # Simple `Cristin` search by id with import set as FALSE
 #'   example <- Cristin(id = "840998", zotero.import = FALSE)
-#'   # Check if results i supported using `CristinSupported`
-#'   example.supported <- CristinSupported(example$results)
-#'   # Use `ZoteroIndex` to print `CristinWrangler`
-#'   ZoteroIndex(CristinWrangler(example.supported$data)$results) |>
-#'     dplyr::select(name) |>
-#'     print(width = 80)
+#'
+#'   if (any(nrow(example$results))) {
+#'     # Check if results i supported using `CristinSupported`
+#'     example.supported <- CristinSupported(example$results)
+#'
+#'     # Use `ZoteroIndex` to print `CristinWrangler`
+#'     ZoteroIndex(CristinWrangler(example.supported$data)$results) |>
+#'       dplyr::select(name) |>
+#'       print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[tidyr]{unnest}}, {\link[tidyr]{nest}}
@@ -58,7 +62,7 @@ CristinWrangler <- \(data,
   log <-  LogCat(
     sprintf(
       "Converting %s from Cristin to Zotero format" ,
-      Pluralis(nrow(data), "reference", "references")
+      Pluralis(nrow(data), "reference")
     ),
     silent = silent,
     log = log
@@ -83,13 +87,6 @@ CristinWrangler <- \(data,
     external.data <- initial.state$external.data
     crossref.search <- initial.state$crossref.search
 
-    # Check if key exist
-    if (!any(is.na(GoFish(x$key)))) {
-      meta$key <- x$key
-      meta$version <- x$version
-      meta$collections <- GoFish(unlist(x$collections),NULL)
-    }
-
     # Set item type
     meta$itemType <- x$category
 
@@ -100,27 +97,42 @@ CristinWrangler <- \(data,
 
     # Get contributors from contributors url
     ## Cristin has for some reason placed them in a different table
-    get.creators <- JsonToTibble(
-      httr::RETRY("GET", sprintf(
-        "https://api.cristin.no/v2/results/%s/contributors",
-        x$cristin_result_id), quiet = TRUE)
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        sprintf(
+          "https://api.cristin.no/v2/results/%s/contributors",
+          x$cristin_result_id),
+        quiet = TRUE
+      ),
+      silent = TRUE,
+      message = "Cristin contributors"
     )
 
+    # Add to log
+    log <- append(log, httr.get$log)
+
     # Create zotero type creator matrix
-    if (nrow(get.creators) > 0) {
-      meta$creators <- ZoteroCreator(
-        lapply(seq_len(nrow(get.creators)), \(i) {
-          list(type = GoFish(
-            get.creators[i, ]$affiliations[[1]]$role_code
-          ),
-          name = GoFish(c(
-            get.creators[i,]$surname,
-            get.creators[i,]$first_name
-          )))
-        })
-      )
-    } else {
-      meta$creators <- NA
+    if (!httr.get$error) {
+
+      # Set creators matrix
+      get.creators <- httr.get$data |>
+        JsonToTibble()
+
+      # Loop through rows and set creators
+      if (any(nrow(get.creators))) {
+        meta$creators <- ZoteroCreator(
+          lapply(seq_len(nrow(get.creators)), \(i) {
+            list(type = GoFish(
+              get.creators[i, ]$affiliations[[1]]$role_code
+            ),
+            name = GoFish(c(
+              get.creators[i,]$surname,
+              get.creators[i,]$first_name
+            )))
+          })
+        )
+      }
     }
 
     # Fetch abstract
@@ -202,16 +214,34 @@ CristinWrangler <- \(data,
         "https://app.cristin.no/results/show.jsf?id=", x$cristin_result_id
       )
       # Find results links
-      cristin.urls <- httr::RETRY("GET", cristin.url) |>
-        rvest::read_html() |>
-        rvest::html_nodes(".fact-box-section .img-with-text-textbox a") |>
-        rvest::html_text()
+      httr.get <- Online(
+        httr::RETRY(
+          "GET",
+          sprintf(
+            httr::RETRY("GET", cristin.url),
+            x$cristin_result_id),
+          quiet = TRUE
+        ),
+        silent = TRUE,
+        message = "Cristin external URLs"
+      )
 
-      # Filter out URLs
-      if (length(cristin.urls)) {
-        # Set DOI if exist
-        if (any(grepl("^.*(10\\..*)", cristin.urls))) {
-          meta$DOI <- cristin.urls[grepl("^.*(10\\..*)", cristin.urls)][[1]]
+      # Add to log
+      log <- append(log, httr.get$log)
+
+      if (!httr.get$error) {
+
+        cristin.urls <- httr.get$data |>
+          rvest::read_html() |>
+          rvest::html_nodes(".fact-box-section .img-with-text-textbox a") |>
+          rvest::html_text()
+
+        # Filter out URLs
+        if (length(cristin.urls)) {
+          # Set DOI if exist
+          if (any(grepl("^.*(10\\..*)", cristin.urls))) {
+            meta$DOI <- cristin.urls[grepl("^.*(10\\..*)", cristin.urls)][[1]]
+          }
         }
       }
     }
@@ -257,9 +287,10 @@ CristinWrangler <- \(data,
                                override = override)$results
 
       # Change itemType if book metadata is not empty
-      if (all(is.na(GoFish(external.data)))) {
+      if (any(nrow(external.data))) {
 
         # Change creator-type of external.data
+        if (any(!is.na(external.data$creators[[1]]))) {
         external.data$creators[[1]] <- external.data$creators[[1]] |>
           dplyr::mutate(
             creatorType = dplyr::case_when(
@@ -267,6 +298,7 @@ CristinWrangler <- \(data,
               TRUE ~ creatorType
             )
           )
+        }
 
         # Set metadata as bookChapter
         meta$itemType <- "bookSection"
@@ -336,34 +368,30 @@ CristinWrangler <- \(data,
 
       # Use CrossRef if DOI is defined
       if (!is.na(meta$DOI)) {
-
-        external.data <- ZoteroDoi(meta$DOI)
+        doi <- ZoteroDoi(meta$DOI)
+        external.data <- doi$data
+        log <- append(log, doi$log)
         # Stop check function for running search again
         if (!is.null(external.data)) crossref.search <- FALSE
-
       } # End DOI
 
       # Use MARC 21 if ISBN is defined and external data is NULL
       ## Only use if part_of is NA
-      if (!is.na(meta$ISBN) &
-          is.null(external.data)) {
-
-        external.data <- ZoteroIsbn(
-          GoFish(strsplit(meta$ISBN, ",")[[1]][[1]])
-        )
-
+      if (!is.na(meta$ISBN) & is.null(external.data)) {
+        isbn <- ZoteroIsbn(GoFish(strsplit(meta$ISBN, ",")[[1]][[1]]))
+        external.data <- isbn$data
+        log <- append(log, isbn$log)
       } # End ISBN
 
       # Search Crossref if enabled and external data is NULL
       # Items to search for
-
       meta.search <- c("book", "bookSection", "journalArticle", "report")
       if (crossref.search &
           is.null(external.data) &
           meta$itemType %in% meta.search &
           any(!is.na(meta$creators))) {
 
-        external.data <- ZoteroMatch(
+        zotero.match <- ZoteroMatch(
           title = meta$title,
           authors = meta$creators,
           date = meta$date,
@@ -372,8 +400,16 @@ CristinWrangler <- \(data,
           cristin.data = meta,
           external.data = external.data,
           polite = polite,
+          silent = TRUE,
           log = log
         )
+
+        # Set external data
+        external.data <- zotero.match$data
+
+        # Add to log
+        log <- append(log, zotero.match$log)
+
         # Stop check function for running search again
         crossref.search <- FALSE
 
@@ -392,22 +428,29 @@ CristinWrangler <- \(data,
           creators <- meta$creators
         }
 
-        external.data <- ZoteroMatch(
+        zotero.match <- ZoteroMatch(
           title = meta$title,
           authors = creators,
           date = meta$date,
           haystack = list(
-            title = list(external.data$title),
-            authors = external.data$creators,
-            date = list(external.data$date)
+            title = list(GoFish(external.data$title)),
+            authors = GoFish(external.data$creators),
+            date = list(GoFish(external.data$date))
           ),
           crossref.search = crossref.search,
           autosearch = autosearch,
           cristin.data = meta,
           external.data = external.data,
           polite = polite,
+          silent = TRUE,
           log = log
         )
+
+        # Set external data
+        external.data <- zotero.match$data
+
+        # Add to log
+        log <- append(log, zotero.match$log)
 
       } # End check data
 
@@ -488,12 +531,18 @@ CristinWrangler <- \(data,
 
     } # End use.identifiers
 
-
     # Set meta as Cristin if not defined by external data
     if (!is.data.frame(meta)) meta <- GoFish(ZoteroFormat(meta), NULL)
 
+    # Replace any keys with existing
+    if (!any(is.na(GoFish(x$key)))) {
+      meta$key <- x$key
+      meta$version <- GoFish(x$version, 0)
+      meta$collections <- GoFish(x$collections, NA)
+    }
+
     # Set accessDate
-    meta$accessDate <-  as.character(Sys.time())
+    meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
 
     # Remove any missing creators
     if (any(!is.na(GoFish(meta$creators[[1]])))) {
@@ -529,11 +578,6 @@ CristinWrangler <- \(data,
   # Add to log
   log <- append(log,log.eta)
 
-  return (
-    list(
-      results = results,
-      log = log
-    )
-  )
+  return (list(results = results, log = log))
 
 }

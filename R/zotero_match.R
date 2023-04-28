@@ -15,6 +15,7 @@
 #' @param external.data Metadata from external source (e.g., CrossRef), Default:
 #'   NULL
 #' @param polite Will use an email stored in `.Renviron`, Default: TRUE
+#' @param silent Running silent, running deep, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble) if match is found otherwise NULL
 #' @details Please see
@@ -30,9 +31,11 @@
 #'   )
 #'
 #'   # Print index using `ZoteroIndex`
-#'   ZoteroIndex(example) |>
+#'   if (any(nrow(example$data))) {
+#'   ZoteroIndex(example$data) |>
 #'     dplyr::select(name) |>
 #'     print(width = 80)
+#'   }
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{select}}, \code{\link[dplyr]{reexports}},
@@ -55,6 +58,7 @@ ZoteroMatch <- \(title,
                  cristin.data = NULL,
                  external.data = NULL,
                  polite = TRUE,
+                 silent = FALSE,
                  log = list()) {
 
   # Visual bindings
@@ -88,15 +92,15 @@ ZoteroMatch <- \(title,
       )
       # Create author vector if tibble
       if (is.data.frame(authors)) {
-      authors <- authors |>
-        # Add missing column names from names
-        (\(.) AddMissing(., names, NA_character_))() |>
-        # Select only columns from names
-        dplyr::select(dplyr::one_of(names)) |>
-        # Keep only !is.na
-        dplyr::transmute(dplyr::coalesce(!!!rlang::syms(names))) |>
-        # Create vector
-        dplyr::pull()
+        authors <- authors |>
+          # Add missing column names from names
+          (\(.) AddMissing(., names, NA_character_))() |>
+          # Select only columns from names
+          dplyr::select(dplyr::one_of(names)) |>
+          # Keep only !is.na
+          dplyr::transmute(dplyr::coalesce(!!!rlang::syms(names))) |>
+          # Create vector
+          dplyr::pull()
       }
       # Create computer friendly author vector
       clean.authors <- authors |> ComputerFriendly()
@@ -146,17 +150,27 @@ ZoteroMatch <- \(title,
       mailto = Sys.getenv("CROSSREF_EMAIL")
     )
 
-    # Query crossref
-    json.get <- httr::RETRY(
-      "GET",
-      "http://api.crossref.org/works/",
-      query = query,
-      quiet = TRUE
+    # Query CrossRef
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        "http://api.crossref.org/works/",
+        query = query,
+        quiet = TRUE
+      ),
+      silent = silent,
+      message = "Zotero Match"
     )
+    log <- append(log, httr.get$log)
+
+    # Log and return error if status code != 200
+    if (httr.get$error) {
+      return (httr.get)
+    }
 
     # Convert results to tables
     haystack.data <- jsonlite::fromJSON(
-      ParseUrl(json.get, "text")
+      ParseUrl(httr.get$data, "text")
     )$message$items
 
     # Select search parameters from haystack data
@@ -189,192 +203,216 @@ ZoteroMatch <- \(title,
   # Number of elements in haystack
   haystack.seq <- seq_len(length(haystack))
 
-  # Run if haystack has length
-  if (length(haystack)) {
+  # Return if haystack has no length
+  if (!length(haystack)) {
+    log <-  LogCat(
+      "Found no potential matches",
+      silent = silent,
+      log = log
+    )
+    return (list(data = NULL, log = log))
+    # Else log number potential matches
+  } else {
+    log <-  LogCat(
+      sprintf(
+        "Found %s" ,
+        Pluralis(length(haystack), "potential match", "potential matches")
+      ),
+      silent = silent,
+      log = log
+    )
+  }
 
-    if (autosearch) {
+  if (autosearch) {
 
-      # Try to find best match with all authors
+    # Try to find best match with all authors
+    author.match <- unlist(lapply(haystack, function (x) {
+      needle$string.authors == x$string.authors
+    }))
+
+    # Try to find the best match using length and first author
+    if (!any(author.match)) {
       author.match <- unlist(lapply(haystack, function (x) {
-        needle$string.authors == x$string.authors
+        # Check if authors is of equal length
+        length <- max(0,length(needle$clean.authors)) ==
+          max(0,length(x$clean.authors))
+        # Check if first author name is equal
+        names <- grepl(
+          needle$clean.authors[[1]], x$clean.authors[[1]]
+        )
+        all(length & names)
       }))
+    }
 
-      # Try to find the best match using length and first author
-      if (!any(author.match)) {
-        author.match <- unlist(lapply(haystack, function (x) {
-          # Check if authors is of equal length
-          length <- max(0,length(needle$clean.authors)) ==
-            max(0,length(x$clean.authors))
-          # Check if first author name is equal
-          names <- grepl(
-            needle$clean.authors[[1]], x$clean.authors[[1]]
-          )
-          all(length & names)
-        }))
-      }
+    # Try to find best match with all authors regardless of order
+    if (!any(author.match)) {
+      author.match <- unlist(lapply(haystack, function (x) {
+        all(x$clean.authors %in% needle$clean.authors)
+      }))
+    }
 
-      # Try to find best match with all authors regardless of order
-      if (!any(author.match)) {
-        author.match <- unlist(lapply(haystack, function (x) {
-          all(x$clean.authors %in% needle$clean.authors)
-        }))
-      }
+    # Try to find best match of the three results using title
+    title.match <- unlist(lapply(haystack, function (x) {
+      # Check if titles are equal
+      check <- grepl(needle$clean.title, x$clean.title)
+      return (check)
+    }))
 
-      # Try to find best match of the three results using title
+    # Second attempt on title if no match is found
+    # Calculate distance between title and search
+    if (!any(title.match)) {
       title.match <- unlist(lapply(haystack, function (x) {
-        # Check if titles are equal
-        check <- grepl(needle$clean.title, x$clean.title)
-        return (check)
+        needle <- strsplit(needle$clean.title, "_")[[1]]
+        # Calculate mean distance between elements in title vs. search
+        dist <- mean(
+          utils::adist(needle, x$clean.title,
+                       fixed = TRUE,
+                       partial = TRUE,
+                       useBytes = TRUE)
+        )
+        # Why not a distance of, oh, one?
+        dist.ratio <- dist < 1
+
+        # Find difference in number of words in titles
+        needle <- length(needle)
+        haystack <- length(strsplit(x$clean.title, "_")[[1]])
+        length.ratio <- needle %in% c(haystack-2, haystack, haystack+2)
+
+        all(dist.ratio, length.ratio)
+
       }))
-
-      # Second attempt on title if no match is found
-      # Calculate distance between title and search
-      if (!any(title.match)) {
-        title.match <- unlist(lapply(haystack, function (x) {
-          needle <- strsplit(needle$clean.title, "_")[[1]]
-          # Calculate mean distance between elements in title vs. search
-          dist <- mean(
-            utils::adist(needle, x$clean.title,
-                  fixed = TRUE,
-                  partial = TRUE,
-                  useBytes = TRUE)
-          )
-          # Why not a distance of, oh, one?
-          dist.ratio <- dist < 1
-
-          # Find difference in number of words in titles
-          needle <- length(needle)
-          haystack <- length(strsplit(x$clean.title, "_")[[1]])
-          length.ratio <- needle %in% c(haystack-2, haystack, haystack+2)
-
-          all(dist.ratio, length.ratio)
-
-        }))
-      }
-
-      # Final attempt on title if no match is found
-      # Calculate distance between short.title and search
-      if (!any(title.match)) {
-        title.match <- unlist(lapply(haystack, function (x) {
-          needle <- strsplit(needle$short.title, "_")[[1]]
-          # Calculate mean distance between elements in title vs. search
-          dist <- mean(
-            utils::adist(needle, x$short.title,
-                  fixed = TRUE,
-                  partial = TRUE,
-                  useBytes = TRUE)
-          )
-          # Why not a distance of, oh, one?
-          dist.ratio <- dist < 1
-
-          # Find difference in number of words in titles
-          needle <- length(needle)
-          haystack <- length(strsplit(x$short.title, "_")[[1]])
-          length.ratio <- needle %in% c(haystack-2, haystack, haystack+2)
-
-          all(dist.ratio, length.ratio)
-
-        }))
-      }
-
-      # Try to find best match of the three results using date
-      date.match <- grepl(needle$date, purrr::map(haystack, "date"))
-
-      # Try date-range (+- 1 year) if match is not found on date
-      if (!any(date.match)) {
-        date.match <- unlist(lapply(haystack, \(x) {
-          year <- as.numeric(x$date)
-          needle$date %in% c(year-2, year, year+2)
-        }))
-      }
-
-      # Best match equals TRUE in all cases
-      matches <- which(author.match & title.match & date.match)
-      best.match <- if (!length(matches)) NA else matches[[1]]
-
-    } else {
-
-      # Set initial search parameters
-      needle.search <- sprintf(
-        "\n\nSearch title: %s\nAuthors: %s \nYear: %s \n",
-        needle$title, ToString(needle$authors), needle$date
-      )
-
-      # Set search results
-      haystack.search <- lapply(seq_along(haystack), \(i) {
-        sprintf(
-          "\n\n%s) Crossref title: %s\nAuthors: %s \nYear: %s", i,
-          haystack[[i]]$title,
-          ToString(haystack[[i]]$authors),
-          haystack[[i]]$date
-        )
-      })
-
-      # Display
-      cat(needle.search)
-      for (i in haystack.seq) {
-        cat(haystack.search[[i]])
-      }
-      cat(
-        sprintf(
-          "\n\nEnter 1-%s to select a result, or press enter to abort\n\n",
-          utils::tail(haystack.seq,1)
-        )
-      )
-
-      # Display prompt to answer
-      answer <- as.integer(readline(prompt="Your input: " ))
-
-      # Find best match
-      best.match <- if (answer %in% haystack.seq) answer else NA
-
     }
 
-    # Find reference based on DOI if best.match is found and DOI is defined
-    if (!is.na(best.match) & exists("haystack.data", inherits = FALSE)) {
+    # Final attempt on title if no match is found
+    # Calculate distance between short.title and search
+    if (!any(title.match)) {
+      title.match <- unlist(lapply(haystack, function (x) {
+        needle <- strsplit(needle$short.title, "_")[[1]]
+        # Calculate mean distance between elements in title vs. search
+        dist <- mean(
+          utils::adist(needle, x$short.title,
+                       fixed = TRUE,
+                       partial = TRUE,
+                       useBytes = TRUE)
+        )
+        # Why not a distance of, oh, one?
+        dist.ratio <- dist < 1
 
-      # Find metadata from Crossref using DOI
-      doi <- haystack.data[best.match,"DOI"]
-      result <- ZoteroDoi(doi)
-      if (!is.null(result)) {
+        # Find difference in number of words in titles
+        needle <- length(needle)
+        haystack <- length(strsplit(x$short.title, "_")[[1]])
+        length.ratio <- needle %in% c(haystack-2, haystack, haystack+2)
 
-        # Set doi in extra if book
-        if (result$itemType == "book" | result$itemType == "bookSection") {
-          result$extra <- paste0("DOI: ", doi)
-        }
+        all(dist.ratio, length.ratio)
 
-        # Set a caution in meta$extra
-        if (autosearch) {
-          result$extra <- AddAppend("CAUTION: DOI automatically retrieved",
-                                    result$extra, "\n")
-        }
-
-      }
-
-      # Else search Crossref if DOI not defined
-    } else if (crossref.search &
-               is.na(best.match) &
-               !exists("haystack.data", inherits = FALSE)) {
-
-      result <- ZoteroMatch(
-        title = title,
-        authors = authors,
-        date = date,
-        crossref.search = crossref.search,
-        autosearch = autosearch,
-        cristin.data = cristin.data,
-        external.data = external.data,
-        polite = polite,
-        log = log
-      )
-
-      # Else external data matches Cristin data. Return external data
-    } else if (!is.na(best.match)) {
-      result <- external.data
+      }))
     }
+
+    # Try to find best match of the three results using date
+    date.match <- grepl(needle$date, purrr::map(haystack, "date"))
+
+    # Try date-range (+- 1 year) if match is not found on date
+    if (!any(date.match)) {
+      date.match <- unlist(lapply(haystack, \(x) {
+        year <- as.numeric(x$date)
+        needle$date %in% c(year-2, year, year+2)
+      }))
+    }
+
+    # Best match equals TRUE in all cases
+    matches <- which(author.match & title.match & date.match)
+    best.match <- if (!length(matches)) NA else matches[[1]]
+
+  } else {
+
+    # Set initial search parameters
+    needle.search <- sprintf(
+      "\n\nSearch title: %s\nAuthors: %s \nYear: %s \n",
+      needle$title, ToString(needle$authors), needle$date
+    )
+
+    # Set search results
+    haystack.search <- lapply(seq_along(haystack), \(i) {
+      sprintf(
+        "\n\n%s) Crossref title: %s\nAuthors: %s \nYear: %s", i,
+        haystack[[i]]$title,
+        ToString(haystack[[i]]$authors),
+        haystack[[i]]$date
+      )
+    })
+
+    # Display
+    cat(needle.search)
+    for (i in haystack.seq) {
+      cat(haystack.search[[i]])
+    }
+    cat(
+      sprintf(
+        "\n\nEnter 1-%s to select a result, or press enter to abort\n\n",
+        utils::tail(haystack.seq,1)
+      )
+    )
+
+    # Display prompt to answer
+    answer <- as.integer(readline(prompt="Your input: " ))
+
+    # Find best match
+    best.match <- if (answer %in% haystack.seq) answer else NA
 
   }
 
-  return (result)
+  # Find reference based on DOI if best.match is found and DOI is defined
+  if (!is.na(best.match) & exists("haystack.data", inherits = FALSE)) {
+
+    # Find metadata from Crossref using DOI
+    doi <- haystack.data[best.match,"DOI"]
+    doi <- ZoteroDoi(doi)
+    result <- doi$data
+    log <- append(log, doi$log)
+    if (!is.null(result)) {
+
+      # Set doi in extra if book
+      if (result$itemType == "book" | result$itemType == "bookSection") {
+        result$extra <- paste0("DOI: ", doi)
+      }
+
+      # Set a caution in meta$extra
+      if (autosearch) {
+        result$extra <- AddAppend("CAUTION: DOI automatically retrieved",
+                                  result$extra, "\n")
+      }
+
+    }
+
+    # Else search Crossref if DOI not defined
+  } else if (crossref.search &
+             is.na(best.match) &
+             !exists("haystack.data", inherits = FALSE)) {
+
+    result <- ZoteroMatch(
+      title = title,
+      authors = authors,
+      date = date,
+      crossref.search = crossref.search,
+      autosearch = autosearch,
+      cristin.data = cristin.data,
+      external.data = external.data,
+      polite = polite,
+      log = log
+    )
+
+    # Else external data matches Cristin data. Return external data
+  } else if (!is.na(best.match)) {
+    result <- external.data
+  } else if (is.na(best.match)) {
+    log <-  LogCat(
+      "Found no matches",
+      silent = silent,
+      log = log
+    )
+
+  }
+
+  return (list(data = result, log = log))
 
 }

@@ -20,7 +20,8 @@ ZoteroGet(
   item.keys = NULL,
   collection.keys = NULL,
   item.type = NULL,
-  include.bib = FALSE,
+  library.type = NULL,
+  linkwrap = 1,
   style = "apa",
   locale = "en-US",
   all.results = TRUE,
@@ -64,8 +65,10 @@ FALSE}
 
 \item{item.type}{Items to search for (NULL = everything), Default: NULL}
 
-\item{include.bib}{Include HTML-formatted bibliography from Zotero, Default:
-FALSE}
+\item{library.type}{Commma-separated data from Zotero (i.e., data, bib,
+citation), Default: NULL}
+
+\item{linkwrap}{Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1}
 
 \item{style}{Citation style to use for appended bibliography and/or
 citations, Default: apa}
@@ -110,9 +113,11 @@ Please see
   )
 
   # Print index using `ZoteroIndex`
+  if (any(nrow(example$results))) {
   ZoteroIndex(example$results) |>
     dplyr::select(name) |>
     print(width = 80)
+  }
 }
 }
 \seealso{

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9008</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DoiCrossref</span><span class="op">(</span><span class="va">data</span>, meta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DoiCrossref</span><span class="op">(</span><span class="va">data</span>, meta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span>, log <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,6 +79,14 @@
 
 <dt>meta</dt>
 <dd><p>A list collecting all metadata used to create , Default: list()</p></dd>
+
+
+<dt>silent</dt>
+<dd><p>c2z is noisy, tell it to be quiet, Default: TRUE</p></dd>
+
+
+<dt>log</dt>
+<dd><p>A list for storing log elements, Default: list()</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -100,16 +108,18 @@
 <span class="r-in"><span>  <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu"><a href="ZoteroDoi.html">ZoteroDoi</a></span><span class="op">(</span><span class="st">"10.1126/sciadv.abd1705"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">data</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="co"># Display catalog</span></span></span>
+<span class="r-in"><span>    <span class="va">example</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">libraryCatalog</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   name                                                                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Serra-Garcia &amp; Gneezy (2021) Nonreplicable publications are cited more than r…</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Display catalog</span></span></span>
-<span class="r-in"><span>  <span class="va">example</span><span class="op">$</span><span class="va">libraryCatalog</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "DOI.org (Crossref)"</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

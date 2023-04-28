@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9008</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,8 @@
 <span>  item.keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  collection.keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  item.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  include.bib <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  library.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  linkwrap <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  style <span class="op">=</span> <span class="st">"apa"</span>,</span>
 <span>  locale <span class="op">=</span> <span class="st">"en-US"</span>,</span>
 <span>  all.results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -160,9 +161,13 @@ FALSE</p></dd>
 <dd><p>Items to search for (NULL = everything), Default: NULL</p></dd>
 
 
-<dt>include.bib</dt>
-<dd><p>Include HTML-formatted bibliography from Zotero, Default:
-FALSE</p></dd>
+<dt>library.type</dt>
+<dd><p>Commma-separated data from Zotero (i.e., data, bib,
+citation), Default: NULL</p></dd>
+
+
+<dt>linkwrap</dt>
+<dd><p>Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1</p></dd>
 
 
 <dt>style</dt>
@@ -227,12 +232,15 @@ citations, Default: apa</p></dd>
 <span class="r-in"><span>    <span class="va">zotero</span>,</span></span>
 <span class="r-in"><span>    max.results <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Found 0 results </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Found 4 results </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The provided query is limited to 1 result </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">results</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">results</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   name                                                                          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span>

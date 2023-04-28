@@ -12,7 +12,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9008</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,11 +83,15 @@
 <span>  create <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  get.collections <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  get.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  item.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  all.results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  max.results <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  collections <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  items <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  attachments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  metadata <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  doi <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  isbn <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  export <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -97,7 +101,8 @@
 <span>  save.data <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  save.path <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bib.name <span class="op">=</span> <span class="st">"references"</span>,</span>
-<span>  include.bib <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  library.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  linkwrap <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  style <span class="op">=</span> <span class="st">"apa"</span>,</span>
 <span>  locale <span class="op">=</span> <span class="st">"en-US"</span>,</span>
 <span>  copy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -122,10 +127,11 @@
 <span>  user <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  index <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  id <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token.api <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  api <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  base.url <span class="op">=</span> <span class="st">"https://api.zotero.org"</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  zotero <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  log <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -182,8 +188,12 @@ collection), Default: FALSE</p></dd>
 <dd><p>Starting position of query (0 = first result), Default: 0</p></dd>
 
 
+<dt>get.collections</dt>
+<dd><p>Fetch collections, Default: TRUE</p></dd>
+
+
 <dt>get.items</dt>
-<dd><p>Fetch items along with collections, Default: TRUE</p></dd>
+<dd><p>Fetch items, Default: TRUE</p></dd>
 
 
 <dt>item.type</dt>
@@ -198,8 +208,20 @@ collection), Default: FALSE</p></dd>
 <dd><p>Do you need a limit?, Default: NULL</p></dd>
 
 
+<dt>collections</dt>
+<dd><p>Predefined collections (as tibble), Default: NULL</p></dd>
+
+
 <dt>items</dt>
 <dd><p>Predefined metadata (as tibble), Default: NULL</p></dd>
+
+
+<dt>attachments</dt>
+<dd><p>Predefined attachments (as tibble), Default: NULL</p></dd>
+
+
+<dt>metadata</dt>
+<dd><p>Predefined metadata in Zoter-format, Default: NULL</p></dd>
 
 
 <dt>doi</dt>
@@ -240,9 +262,13 @@ Language (CSL), Default: NULL</p></dd>
 <dd><p>Name of exported bibliography, Default: 'references'</p></dd>
 
 
-<dt>include.bib</dt>
-<dd><p>Include HTML-formatted bibliography from Zotero, Default:
-FALSE</p></dd>
+<dt>library.type</dt>
+<dd><p>Commma-separated data from Zotero (i.e., data, bib,
+citation), Default: NULL</p></dd>
+
+
+<dt>linkwrap</dt>
+<dd><p>Set URL (e.g., DOI) as HTML link (1 = yes), Default: 1</p></dd>
 
 
 <dt>style</dt>
@@ -352,6 +378,16 @@ Default: TRUE</p></dd>
 <dd><p>User or group ID, Default: NULL</p></dd>
 
 
+<dt>token</dt>
+<dd><p>Name of user or group token as defined in `.Renviron`, Default:
+NULL</p></dd>
+
+
+<dt>token.api</dt>
+<dd><p>Name of API token as defined in `.Renviron`, Default:
+NULL</p></dd>
+
+
 <dt>api</dt>
 <dd><p>API key to connect with the Zotero library. Set API to `NA` if key
 is not needed. See
@@ -365,10 +401,6 @@ Default: NULL</p></dd>
 
 <dt>base.url</dt>
 <dd><p>Base url of the Zotero API, Default: 'https://api.zotero.org'</p></dd>
-
-
-<dt>debug</dt>
-<dd><p>Let you test the Zotero API for errors, Default: FALSE</p></dd>
 
 
 <dt>silent</dt>
@@ -413,11 +445,11 @@ id, API key, collections, and items), Default: NULL</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $id</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "9913421"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $prefix</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "users/9913421"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $api</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RqlAmlH5l1KPghfCseAq1sQ1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $prefix</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "users/9913421"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $url</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://api.zotero.org/users/9913421/"</span>

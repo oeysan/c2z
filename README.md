@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.04.27 @ 20:02:17-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.04.28 @ 15:44:59-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9008-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.1.4.9009-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -116,6 +116,8 @@ your publications is registered on Cristin.
 - Search CrossRef, automatically and manually, by author(s), title, and
   year.
 - Augment Cristin references through ISBN, DOI, or CrossRef search.
+- Create month-to-month newsletter for registered publications in
+  Cristin.
 
 ## Dependencies
 
@@ -216,7 +218,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 9ZKSMNZF
+#> 1 success V4HPUYZX
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -233,8 +235,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success BF7S8PPN
-#> 2 success JRYN8H5Z
+#> 1 success 6836V7PT
+#> 2 success G5T8T7SL
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2

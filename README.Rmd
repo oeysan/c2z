@@ -131,6 +131,7 @@ publications is registered on Cristin.
 * Batch import *R* packages from CRAN.
 * Search CrossRef, automatically and manually, by author(s), title, and year.
 * Augment Cristin references through ISBN, DOI, or CrossRef search.
+* Create month-to-month newsletter for registered publications in Cristin.
 
 ## Dependencies
 

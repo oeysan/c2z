@@ -38,7 +38,13 @@
 #' @examples
 #' \donttest{
 #'   # Dummy example
-#'   newsletter <- CristinMonthly(Zotero(), "209.0.0.0")
+#'   newsletter <- CristinMonthly(
+#'     Zotero(
+#'       id = "4827927",
+#'       api = "RqlAmlH5l1KPghfCseAq1sQ1"
+#'     ),
+#'     "209.0.0.0"
+#'   )
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{filter}}, \code{\link[dplyr]{arrange}},

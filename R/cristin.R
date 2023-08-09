@@ -56,6 +56,7 @@
 #' @param open.query Define your own query terms, Default: NULL
 #' @param all.results Find all results in query, Default: TRUE
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
+#' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param base.url The base url for the Cristin API, Default:
 #'   https://api.cristin.no/v2/results
@@ -136,6 +137,7 @@ Cristin <- function (id  = NULL,
                      open.query = NULL,
                      all.results = TRUE,
                      force = FALSE,
+                     remove.duplicates = TRUE,
                      silent = FALSE,
                      base.url = "https://api.cristin.no/v2/results",
                      custom.url = NULL,
@@ -279,6 +281,7 @@ Cristin <- function (id  = NULL,
       remove.na = remove.na,
       replace.na = replace.na,
       force.type = force.type,
+      remove.duplicates = remove.duplicates,
       silent = silent,
       log = log
     )
@@ -430,6 +433,7 @@ Cristin <- function (id  = NULL,
           remove.na = remove.na,
           replace.na = replace.na,
           force.type = force.type,
+          remove.duplicates = remove.duplicates,
           silent = TRUE,
           log = log
         )

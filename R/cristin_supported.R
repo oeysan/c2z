@@ -12,7 +12,8 @@
 #'   categories with a predefined itemType if remove.na is set to false,
 #'   Default: 'book'
 #' @param force.type Force all items to a predefined itemType, Default: NULL
-#' @param silent Running silent, running deep, Default: FALSE
+#' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
+#' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return Zotero supported items with unsupported categories as NA
 #' @details Please see
@@ -30,6 +31,7 @@ CristinSupported <- \(data = NULL,
                       remove.na = TRUE,
                       replace.na = "book",
                       force.type = NULL,
+                      remove.duplicates = TRUE,
                       silent = FALSE,
                       log = list()) {
 
@@ -216,6 +218,7 @@ CristinSupported <- \(data = NULL,
       created = "created",
       last.modified = "last_modified",
       zotero = zotero,
+      remove.duplicates = remove.duplicates,
       silent = silent,
       log = log
     )

@@ -11,6 +11,7 @@
 #'   format (e.g., last_modified)
 #' @param zotero A list with information on the specified Zotero library (e.g.,
 #'   id, API key, collections, and items), Default: NULL
+#' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return Returns non-duplicated data in a Zotero-type matrix (tibble)
@@ -53,6 +54,7 @@ ZoteroCheck <- \(data,
                  created,
                  last.modified,
                  zotero = NULL,
+                 remove.duplicates = TRUE,
                  silent = FALSE,
                  log = list()) {
 
@@ -101,14 +103,22 @@ ZoteroCheck <- \(data,
     )
 
     # Check if data is modified since added to zotero
-    modified <- data.modified > zotero.duplicates$dateModified
+    if (remove.duplicates) {
+      modified <- data.modified > zotero.duplicates$dateModified
+    } else {
+      modified <- TRUE
+    }
 
     # Add zotero key, version and collection to modified data
     data.duplicates[modified, c("key", "version", "collections")] <-
       zotero.duplicates[modified, c("key", "version", "collections")]
 
     # Remove duplicates
-    unique.data <- dplyr::bind_rows(unique.data, data.duplicates[modified, ])
+    if (remove.duplicates) {
+      unique.data <- dplyr::bind_rows(unique.data, data.duplicates[modified, ])
+    } else {
+      unique.data <- dplyr::bind_rows(unique.data, data.duplicates)
+    }
 
     # Send message
     log <-  LogCat(sprintf(

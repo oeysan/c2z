@@ -11,6 +11,7 @@ ZoteroCheck(
   created,
   last.modified,
   zotero = NULL,
+  remove.duplicates = TRUE,
   silent = FALSE,
   log = list()
 )
@@ -31,6 +32,8 @@ format (e.g., last_modified)}
 
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items), Default: NULL}
+
+\item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 

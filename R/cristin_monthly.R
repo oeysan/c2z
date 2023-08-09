@@ -17,6 +17,8 @@
 #' @param filter Filter out specific item types, will default to item types
 #' usually associated with NVI, Default: NULL
 #' @param nvi Filter out Cristin items not 1/2 in NVI, Default: TRUE
+#' @param user.cards Get business cards of contributors (currently INN),
+#' Default: FALSE
 #' @param use.identifiers Use if ISBN/DOI identifiers if enabled, Default: TRUE
 #' @param zotero.check Check if Cristin items exists in Zotero library
 #' , Default: FALSE
@@ -70,6 +72,7 @@ CristinMonthly <- \(zotero,
                     use.filter = TRUE,
                     filter = NULL,
                     nvi = TRUE,
+                    user.cards = FALSE,
                     use.identifiers = TRUE,
                     zotero.check = FALSE,
                     lang = "nn",
@@ -88,27 +91,152 @@ CristinMonthly <- \(zotero,
   paths <- items <- multidepartmental <- duplicates <- duplicate.check <-
     email <- web <- key <- cristin.url <- zotero.url <- bib.item <- extra <-
     identifier <- duplicate <- core.key <- parentCollection <- name <-
-    year.key <- desc <- core <- month.key <- post.unit1 <- post.unit2 <-
-    post.unit3 <- post.unit4 <- NULL
+    year.key <- desc <- core <- month.key <- title <- short.title <-
+    destination.key <- root.path <- lang.month <- bib <- bib.body <-
+    abstract <- NULL
+
+  # Update user info @ inn if user.cards = TRUE
+  if (user.cards) {
+
+    # Log
+    zotero$log <-  LogCat(
+      "Updating INN database, please wait...",
+      silent = silent,
+      log = zotero$log
+    )
+
+    inn.users <- InnUsers()
+
+  }
 
   # Function to create HTML bibliography
-  GetBib <- \(x) {
+  GetBib <- \(...) {
+
+    # Trim arguments
+    args <- list(...)
+    for (i in seq_along(args)) {
+      arg <- if (is.character(args[[i]])) Trim(args[[i]]) else args[[i]]
+      assign(names(args[i]), arg)
+    }
 
     # Function to add URLs to bibliography
-    AddUrls<- \(cristin.url, zotero.url, item) {
-      add.urls <- sprintf(
-        " [<a href=\"%s\">Cristin</a>&nbsp;|&nbsp;<a href=\"%s\">Zotero</a>]
-        </div>",
+    AddMore <- \(cristin.url,
+                 zotero.url,
+                 bib.body,
+                 item,
+                 abstract,
+                 url,
+                 pages.url,
+                 pages.path,
+                 key) {
+
+      # Visible bindings
+      add.abstract <- add.personas <- pages <- NULL
+      button.abstract <- button.personas <- button.url <- ""
+
+      # Add url to buttons if any
+      if (any(!is.na(url))) {
+        button.url <- sprintf(
+          "{{< button href=\"%s\" >}}%s{{< /button >}}",
+          url,
+          url.text)
+      }
+
+      # Create abstract if any
+      if (!is.na(abstract)) {
+        add.abstract <- sprintf(
+          "<div class=\"cls-bib-abstract\"><h1>%s</h1>%s</div>",
+          abstract.text,
+          abstract
+        )
+
+        button.abstract <- sprintf(
+          "{{< button class=\"abstract\" href=\"%s\" >}}%s{{< /button >}}",
+          pages.url,
+          abstract.text
+        )
+      }
+
+      # Find buisiness cards at if user.cards i set to TRUE
+      if (user.cards) {
+
+        # Find Cristin id for contributors
+        cristin.contributors <- CristinId(sub("^.*=", "", cristin.url))
+
+        # Finn business cards of contributors at INN
+        inn.cards <- inn.users |>
+          dplyr::filter(cristin.id %in% cristin.contributors) |>
+          dplyr::select(url) |>
+          (\(x) if(nrow(x)) ToString(lapply(x$url, InnCards), ""))()
+
+        if (!is.null(inn.cards)) {
+          add.personas <- sprintf(
+            "<div class=\"cls-bib-cards\"><h1>%s</h1>%s</div>",
+            card.text,
+            inn.cards
+          )
+          button.personas <- sprintf(
+            "{{< button class=\"personas\" href=\"%s\" >}}%s{{< /button >}}",
+            pages.url,
+            card.text
+          )
+        }
+      }
+
+      # Create extras (e.g., Cristin & Zotero link) for email
+      item.email <- sprintf(
+        " [<a href=\"%s\">Cristin</a>&nbsp;|&nbsp;<a href=\"%s\">Zotero</a>]",
         cristin.url,
         zotero.url
       )
+      # Create extras (e.g., Cristin & Zotero link) for web
+      item.web <-  sprintf(
+        "<div class=\"cls-bib-button\">
+        {{< button href=\"%s\" >}}Cristin{{< /button >}}
+        {{< button href=\"%s\" >}}Zotero{{< /button >}}%s%s%s
+        </div>",
+        cristin.url,
+        zotero.url,
+        button.url,
+        button.personas,
+        button.abstract
+      )
 
-      return(sub("</div>", add.urls, item))
+      # Add extras to reference
+      item.email <- sub("</div>", paste0(item.email, "</div>"), item)
+      item.web <- sub("</div>", paste0(item.web, "</div>"), item)
+
+      # Create individual pages if any abstract or business card
+      if (!is.null(add.abstract) | !is.null(add.personas)) {
+
+        page.html <- Trim(ToString(
+          c(sprintf(bib.body, item.web),
+            add.abstract,
+            add.personas),
+          "\n"))
+
+        # Create page
+        pages <- tibble::tibble(
+          path = pages.path,
+          key = key,
+          html = page.html,
+          archive = FALSE
+        )
+
+      }
+
+      item <- tibble::tibble(
+        email = item.email,
+        web = item.web,
+        pages = list(pages)
+      )
+
+      return(item)
 
     }
 
     # Find items in collection
-    items <- dplyr::filter(zotero$items, grepl(x, collections))
+    items <- dplyr::filter(zotero$items, grepl(month.key, collections))
 
     # Find corresponding bibliography
     bib <- zotero$bibliography |>
@@ -130,18 +258,49 @@ CristinMonthly <- \(zotero,
         zotero.url = sprintf(
           "http://zotero.org/%s/items/%s", items$prefix, key
         ),
-        bib.item = purrr::pmap_chr(
-          list(cristin.url, zotero.url, bib.item), ~ AddUrls(...)
+        abstract = items$abstractNote,
+        url = items$url,
+        bib.item = purrr::pmap(
+          list(cristin.url,
+               zotero.url,
+               bib.body,
+               bib.item,
+               abstract,
+               url,
+               pages.url = file.path(
+                 paste0("/", tolower(pub.text)),
+                 key
+               ),
+              pages.path = paste0("/", tolower(pub.text)),
+              key = key
+          ),
+          ~ AddMore(...)
         )
       )
 
-    # Combine to bibliography
-    bibliography <- sprintf(
+    # Combine to email bibliography
+    email <- sprintf(
       bib$bib.body[[1]],
-      ToString(bib$bib.item, "\n")
+      ToString(lapply(bib$bib.item, \(x) x$email), "\n")
     )
 
-    return (bibliography)
+    # Combine to web bibliography
+    web <- sprintf(
+      bib$bib.body[[1]],
+      ToString(lapply(bib$bib.item, \(x) x$web), "\n")
+    )
+
+    # Combine individual pages
+    pages <- dplyr::bind_rows(lapply(bib$bib.item, \(x) x$pages))
+
+    # Combine all elements
+    bibliography <- tibble::tibble(
+      bib.email = email,
+      bib.web = web,
+      bib.pages = list(pages)
+    )
+
+    return(bibliography)
 
   }
 
@@ -158,6 +317,26 @@ CristinMonthly <- \(zotero,
 
   # Define collections
   collections <- zotero$collections
+
+  # Languages
+  # Set language to en if not nb or nn
+  if (!lang %in% c("nb", "nn", "no")) {
+    lang <- "en"
+    affiliation <- "Affiliated"
+    more.text <- "Read more"
+    abstract.text <- "Abstract"
+    card.text <- "Contributors"
+    url.text <- "Webpage"
+    pub.text <- "Publications"
+  } else {
+    lang <- "no"
+    affiliation <- "Affiliert"
+    more.text <- "Les meir"
+    abstract.text <- "Samandrag"
+    card.text <- "Bidragsytarar"
+    url.text <- "Nettside"
+    pub.text <- "Publikasjonar"
+  }
 
   # Define units
   units <- CristinUnits(unit.key, recursive = TRUE, lang = lang)
@@ -191,9 +370,10 @@ CristinMonthly <- \(zotero,
       # Else format end.date as beginning of defined month
     } else {
       end.date <- FloorDate(end.date)
+      if (start.date >= end.date) end.date <- ChangeDate(start.date, 1)
     }
 
-    # Create tibble with k periods equalling 1 month
+    # Create tibble with k periods equaling 1 month
     period <- seq(start.date, end.date, by = "months") |>
       (\(.) {
         tibble::tibble(
@@ -236,6 +416,10 @@ CristinMonthly <- \(zotero,
 
     for (i in seq_len(nrow(post.data))) {
 
+      # Current unit
+      unit <- post.data[i, ] |>
+        dplyr::select(dplyr::starts_with("path")) |>
+        (\(x) x[!is.na(x)])()
       # Current month number
       month.i <- as.numeric(format(post.data$start.date[[i]], format="%m"))
       # Current month
@@ -244,9 +428,11 @@ CristinMonthly <- \(zotero,
       year <- as.numeric(format(post.data$start.date[[i]], format="%Y"))
       # Define path name
       path.name <-    c(
-        post.data$lineage[[i]], # Unit and subunits
-        year, # year
-        sprintf("%02d: %s", month.i, month) # Month (e.g., 01: Januar)
+        unit,
+        # year
+        year,
+        # Month (e.g., 01: Januar)
+        sprintf("%02d: %s", month.i, month)
       )
 
       # Find path to collection
@@ -280,8 +466,9 @@ CristinMonthly <- \(zotero,
 
       # Find core location (i.e., where all items in units are stored)
       core.location <- collections |>
-        FindPath(units$core.location[[1]]) |>
-        (\(x) tail(x$path, 1))()
+        dplyr::filter(version > 0 & parentCollection == FALSE) |>
+        dplyr::select(key) |>
+        dplyr::pull()
 
       # Fetch items
       if (length(core.location)) {
@@ -314,7 +501,7 @@ CristinMonthly <- \(zotero,
     for (i in seq_len(nrow(post.data))) {
 
       # Searching Cristin
-      cristin <- c2z::Cristin(
+      cristin <- Cristin(
         unit = post.data$id[[i]],
         created_since = post.data$start.date[[i]],
         created_before = post.data$end.date[[i]],
@@ -349,7 +536,7 @@ CristinMonthly <- \(zotero,
           # Search remaining ids
           cristin <- dplyr::bind_rows(
             lapply(cristin.id, \(x) {
-              c2z::Cristin(
+              Cristin(
                 id = x,
                 use.identifiers = TRUE,
                 force = TRUE,
@@ -388,7 +575,7 @@ CristinMonthly <- \(zotero,
     # Log number of units and periods
     zotero$log <- LogCat(
       sprintf(
-        "Found %s new/modified %s",
+        "Found %s new, or modfied, %s",
         max(0,nrow(items)),
         Pluralis(max(0,nrow(items)), "item", prefix = FALSE)
       ),
@@ -422,10 +609,12 @@ CristinMonthly <- \(zotero,
             !is.na(ISBN) ~ Trim(gsub('[^[:alnum:] ]', "", ISBN)),
             !is.na(DOI) ~ DOI,
             TRUE ~ NA
-          )
+          ),
+          # Create short.title to check for duplicates
+          short.title = ComputerFriendly(title, remove.after = TRUE)
         ) |>
         # Group by identifiers and find duplicates
-        dplyr::group_by(identifier) |>
+        dplyr::group_by(identifier, short.title) |>
         dplyr::mutate(
           # Add to extra field the duplicated id
           extra = dplyr::case_when(
@@ -487,7 +676,7 @@ CristinMonthly <- \(zotero,
 
     # Remove added columns
     zotero$items <- items |>
-      dplyr::select(-c(multidepartmental, duplicate, identifier))
+      dplyr::select(-c(multidepartmental, duplicate, identifier, short.title))
 
     # Remove collections not found in Cristin query
     zotero$collections <- collections |>
@@ -504,48 +693,27 @@ CristinMonthly <- \(zotero,
       dplyr::filter(version > 0) |>
       dplyr::distinct(key, .keep_all = TRUE)
 
-  } #End post
+  } # End post
 
   # Find Zotero locations of units
-  unit.paths <- dplyr::bind_rows(lapply(units$lineage, \(x) {
-
-      # Define names
-      names <- paste0("unit", seq_along(x))
-      # Find keys
-      keys <- FindPath(collections, x)$path
-      # post names
-      post.names <- paste0("post.unit", seq_along(x))
-      # Define core
-      core.unit <- c(core = tail(x, 1), core.key = tail(keys, 1))
-      # Define units
-      units <- stats::setNames(x, names)
-      # Define post units
-      post.units <- stats::setNames(replace(x, duplicated(x), NA), post.names)
-      # Find keys and set names
-      unit.keys <- stats::setNames(keys, paste0(names, ".key"))
-
-      # Create named vector
-      vector <- c(
-        core.unit,
-        units,
-        unit.keys,
-        post.units,
-        n.units = length(x)
-      )
-
-      return(vector)
-
-    })) |>
-    (\(x) x[,order(names(x))])()
-
-  # Find core location
-  core.location <- collections |>
-    FindPath(units$core.location[[1]]) |>
-    (\(x) tail(x$path, 1))()
+  unit.paths <- units |>
+    dplyr::mutate(
+      core.key = purrr::pmap_chr(
+        dplyr::across(core),
+        ~ tail(FindPath(collections, c(...))$path, 1)
+      ),
+      destination.key = purrr::pmap_chr(
+        dplyr::across(dplyr::starts_with("path")),
+        ~ tail(FindPath(collections, c(...))$path, 1)
+      ),
+      n.units = purrr::pmap_dbl(
+        dplyr::across(dplyr::starts_with("path")),
+        ~ sum(!is.na(c(...))))
+    )
 
   # Find items
   zotero <- Zotero(
-    collection.key = core.location,
+    collection.key = unit.paths$core.key[[1]],
     user = zotero$user,
     id = zotero$id,
     api = zotero$api,
@@ -571,62 +739,51 @@ CristinMonthly <- \(zotero,
 
   # Create monthly bibliographies for Cristin per unit
   cristin.monthly <- dplyr::left_join(
-    unit.paths, collections, dplyr::join_by(core.key == parentCollection)
+    unit.paths,
+    collections,
+    dplyr::join_by(destination.key == parentCollection)
   ) |>
     dplyr::rename(year = name, year.key = key) |>
     dplyr::left_join(
       collections, dplyr::join_by(year.key == parentCollection)
     ) |>
     dplyr::rename(month = name, month.key = key) |>
-    # Ugly for works for now...
+    dplyr::select(
+      -c(dplyr::starts_with("prefix"), dplyr::starts_with("version"))
+    ) |>
+    dplyr::filter(!is.na(month.key)) |>
     dplyr::arrange(
       desc(year),
       desc(month),
-      GoFish(!is.na(post.unit1)),
-      GoFish(post.unit1),
-      GoFish(!is.na(post.unit2)),
-      GoFish(post.unit2),
-      GoFish(!is.na(post.unit3)),
-      GoFish(post.unit3),
-      GoFish(!is.na(post.unit4)),
-      GoFish(post.unit4)
+      dplyr::across(
+        dplyr::starts_with("path"),
+        ~ data.frame(!is.na(.x), !.x %in% affiliation, .x)
+      )
     ) |>
-    dplyr::filter(!is.na(month.key)) |>
-    dplyr::mutate_at("n.units", as.numeric) |>
     dplyr::mutate(
       year.month = paste0(year, "_" , month),
-      month = gsub(".*: ", "", month),
-      bib = purrr::map_chr(month.key, ~ GetBib(.x), .progress = !silent)
+      month = as.numeric(gsub(":.*", "", month)),
+      lang.month = purrr::map_chr(month, ~ Month(.x, lang)),
+      root.path = purrr::pmap_chr(dplyr::across(dplyr::starts_with("path")), ~ {
+        lapply(c(...), \(x) {
+          ComputerFriendly(x)
+        }) |>
+          (\(x) do.call(file.path, x))()
+      }),
+      bib = purrr::pmap(
+        list(month.key = month.key,
+             root.path = root.path,
+             year = year,
+             month = lang.month,
+             user.cards = user.cards), ~
+          GetBib(...),
+        .progress = !silent
+      )
     ) |>
-    dplyr::select(
-      -c(dplyr::starts_with("prefix"), dplyr::starts_with("version"))
-    )
-
-
-  # Define main unit (for headings)
-  main.units <- ToString(units$core.location[[1]])
-
-  # Create mail if create.email is TRUE
-  if (create.email) {
-    email <- CristinMail(
-      cristin.monthly,
-      main.units,
-      subject = subject,
-      header = header,
-      footer = footer,
-      replace.style = replace.style,
-      width = width
-    )
-  }
-
-  # Create web if create.web is TRUE
-  if (create.web) {
-    web <- CristinWeb(cristin.monthly)
-  }
+    tidyr::unnest(bib)
 
   return(
     list(
-      main.units = main.units,
       units = units,
       monthly = cristin.monthly,
       multidepartmental = multidepartmental,

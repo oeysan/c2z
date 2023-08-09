@@ -14,6 +14,7 @@
 #' @importFrom stats setNames
 #' @importFrom tibble add_column as_tibble remove_rownames tibble is_tibble
 #' @importFrom utils adist flush.console head tail write.csv
+#' @importFrom rlang :=
 NULL
 #> NULL
 
@@ -34,89 +35,218 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title CreateHeader
+#' @keywords internal
+#' @noRd
+CreateHeader <- \(title,
+                  level,
+                  md.headers = FALSE,
+                  id = "",
+                  class = "") {
+
+  if (any(is.na(GoFish(title)))) {
+    return (character(0))
+  }
+
+  if (md.headers) {
+    header <- sprintf(
+      "<div id=\"%s\" class=\"%s\">\n\n%s %s\n\n</div>",
+      id,
+      class,
+      strrep("#", level),
+      title
+    )
+  } else {
+    header <- sprintf(
+      "<h%1$s id=\"%3$s\" class=\"%4$s\">%2$s</h%1$s>",
+      level,
+      title,
+      id,
+      class
+    )
+  }
+
+  return (header)
+}
+
 #' @title CristinWeb
 #' @keywords internal
 #' @noRd
-CristinWeb <- \(data) {
+CristinWeb <- \(data,
+                k.paths = seq_len(2),
+                md.headers = TRUE,
+                lang = "nn") {
 
   # Visible bindings
-  body <- month.key <- year.month <- NULL
-  start.n <- start.pos <- 0
+  html <- month.key <- year.month <- years <- months <- NULL
+  collapse <- archive <- TRUE
 
-  # Where to begin headings if more than 1 units
-  if (max(data$n.units) > 1) {
-    #  Start heading at > 1 if more than 1 subunit else 2
-    if (length(unique(data$post.unit2)) > 1) {
-      start.n <- start.pos <- 1
+  CreateWeb <- \(data, paths) {
+
+    # Languages
+    # Set language to en if not nb or nn
+    if (!lang %in% c("nb", "nn", "no")) {
+      lang <- "en"
+      affiliation <- "Affiliated"
+      more <- "Read more"
     } else {
-      start.n <- 2
+      lang <- "no"
+      affiliation <- "Affiliert"
+      more <- "Les meir"
     }
+
+    # Combine indivial pages
+    pages <- dplyr::bind_rows(data$bib.pages) |>
+      dplyr::bind_rows()
+
+    # Filter data that all paths are not NA and split data by paths
+    data <- data |>
+      dplyr::filter(dplyr::if_all(dplyr::all_of(paths), ~ !is.na(.x))) |>
+      dplyr::group_split(!!!rlang::syms(paths))
+
+    # Loop through data lists
+    monthlies <- lapply(data, \(data) {
+
+      # Create title
+      if (any(grepl("month", paths))) {
+
+        title <- data$lang.month[[1]]
+        collapse <- FALSE
+
+      } else if (any(grepl("year", paths))) {
+
+        title <- data$year[[1]]
+
+      } else {
+
+        title <- data[1, paths] |>
+          (\(x) ToString(tail(unlist(x), 1)) )()
+
+      }
+
+      # Define md.tags
+      md.tags <- sprintf("bookCollapseSection: %s\ntitle: \"%s\"", collapse, title)
+
+      # Create data pahts
+      path <- data[1, paths] |>
+        ComputerFriendly() |>
+        (\(x) file.path(do.call(file.path, as.list(x[!is.na(x)]))))()
+
+      # Vector with full name paths
+      full.path <- data[1, paths] |>
+        (\(x) x[!is.na(x)] )() |>
+        list()
+
+      # Define period for data
+      period <- paste(unique(c(min(data$year), max(data$year))), collapse = "-")
+
+      # Clear all path names to avoid redundant headers
+      data[, paths] <- NA
+
+      # Split all data by year and month
+      data <- data |>
+        dplyr::mutate(year = replace(year, duplicated(year), NA)) |>
+        dplyr::group_split(year.month) |>
+        rev()
+
+      # Create html for each month
+      for (i in seq_along(data)) {
+
+        bib <- data[[i]] |>
+          dplyr::mutate(
+            # Remove duplicated values in units
+            dplyr::across(
+              dplyr::starts_with("path"), ~
+                replace(.x, duplicated(.x), NA)
+            ),
+            dplyr::across(
+              c(dplyr::starts_with("path")), ~ replace(.x, .x %in% affiliation, NA)
+            ),
+            # Create headers for each row
+            headers = purrr::pmap_chr(
+              dplyr::across(dplyr::starts_with("path")), ~ {
+                x <- c(...)
+                lapply(seq_along(x), \(i) {
+                  if (!is.na(x[[i]])) {
+                    CreateHeader(x[[i]], i, md.headers, class = "csl-bib-headers")
+                  }
+                }) |>
+                  ToString("\n") |>
+                  GoFish()
+              }
+            )
+          )
+
+        # Check if year is in current month
+        year <- CreateHeader(
+          bib$year[[1]],
+          1,
+          md.headers,
+          class = "csl-bib-year"
+        )
+
+        # Define month
+        month <- CreateHeader(
+          bib$lang.month[[1]],
+          2,
+          md.headers,
+          class = "csl-bib-month"
+        )
+
+        # Define HTML bibliography
+        bib <- ToString(
+          c(GoFish(year, NULL),
+            GoFish(month, NULL),
+            Interleave(bib$headers, Trim(bib$bib.web))
+          ), "\n")
+
+        # Define body
+        html <- c(html, bib)
+
+      } # End loop
+
+      # Combine bodies
+      html <- sprintf(
+        "<div class=\"csl-bib-container\">%s</div>",
+        ToString(html, "\n")
+      )
+
+      # Create tibble with data
+      data <- tibble::tibble(
+        period = period,
+        title = title,
+        path = path,
+        full.path = full.path,
+        md.tags = md.tags,
+        html = html,
+        archive = TRUE
+      )
+
+      return (data)
+
+    })
+
+    # Combine archive data and individuals pages
+    data <- dplyr::bind_rows(monthlies, pages)
+
+    return (data)
+
   }
 
-  # Create list by each month
-  data <- data |>
-    dplyr::filter(!is.na(month.key)) |>
-    dplyr::mutate(year = replace(year, duplicated(year), NA)) |>
-    dplyr::group_split(year.month) |>
-    rev()
+  # Create the various paths according to k.paths
+  paths <- unlist(lapply(k.paths, \(i) {
+    lapply(0:2, \(j) {
+      c(paste0("path", seq_len(i)), c("year", "lang.month")[seq_len(j)])
+    })
+  }), recursive = FALSE)
 
-  # Create html for each month i data
-  for (i in seq_along(data)) {
+  # Finalize pages
+  pages <- lapply(paths, \(x) CreateWeb(data, x)) |>
+    dplyr::bind_rows() |>
+    dplyr::arrange(!archive)
 
-    month <- year <- NULL
 
-    # Define bibliography for current month
-    bib <- data[[i]] |>
-      dplyr::mutate(
-        # Remove duplicated values in units
-        dplyr::across(
-          dplyr::starts_with("post.unit"), ~
-            replace(.x, duplicated(.x), NA)
-        ),
-        # Create headers for each row
-        headers = purrr::pmap_chr(
-          dplyr::across(dplyr::starts_with("post.unit")), ~ {
-            x <- c(...)
-            lapply(seq_along(x), \(i) {
-              if (!is.na(x[[i]]) & i > start.n) {
-                sprintf("<h%1$s>%2$s</h%1$s>", max(3, i+start.pos), x[[i]])
-              }
-            }) |>
-              ToString("\n") |>
-              GoFish()
-          }
-        )
-      )
-
-    # Check if year is in current month
-    if (!is.na(bib$year[[1]])) {
-      year <- sprintf(
-        "<h1 class=\"csl-bib-year\">%s</h1>",
-        bib$year[[1]]
-      )
-    }
-
-    # Define month
-    month <- sprintf(
-      "<h2 class=\"csl-bib-month\">%s</h2>",
-      unique(bib$month[[1]])
-    )
-
-    # Define HTML bibliography
-    bib <- ToString(Interleave(bib$headers, Trim(bib$bib)), "\n")
-
-    # Define body
-    body <- c(body, paste0(year, month, bib))
-
-  } # End loop
-
-  # Combine bodies
-  body <- sprintf(
-    "<div class=\"csl-bib-container\">%s</div>",
-    ToString(body, "\n")
-  )
-
-  return (body)
+  return (pages)
 
 }
 
@@ -124,23 +254,36 @@ CristinWeb <- \(data) {
 #' @keywords internal
 #' @noRd
 CristinMail <- \(data,
-                 main.units,
                  subject = NULL,
                  header = NULL,
                  footer = NULL,
                  replace.style = TRUE,
-                 width = 700) {
+                 width = 700,
+                 lang = "nn") {
 
   # Visible bindings
   body <- month.key <- year.month <- year <- NULL
+
+  # Languages
+  # Set language to en if not nb or nn
+  if (!lang %in% c("nb", "nn", "no")) {
+    lang <- "en"
+    affiliation <- "Affiliated"
+  } else {
+    lang <- "no"
+    affiliation <- "Affiliert"
+  }
 
   # Keep only latest entry
   bib <- data |>
     dplyr::filter(!is.na(month.key)) |>
     dplyr::mutate(
       dplyr::across(
-        c(year, dplyr::starts_with("post.unit")), ~
+        c(year, dplyr::starts_with("path")), ~
           replace(.x, duplicated(.x), NA)
+      ),
+      dplyr::across(
+      c(dplyr::starts_with("path")), ~ replace(.x, .x %in% affiliation, NA)
       )
     ) |>
     dplyr::group_split(year.month) |>
@@ -149,7 +292,7 @@ CristinMail <- \(data,
     dplyr::mutate(
       # Create headers for each row
       headers = purrr::pmap_chr(
-        dplyr::across(dplyr::starts_with("post.unit")), ~ {
+        dplyr::across(dplyr::starts_with("path")), ~ {
           x <- c(...)
           lapply(seq_along(x), \(i) {
             if (!is.na(x[[i]])) {
@@ -174,16 +317,16 @@ CristinMail <- \(data,
   # replace style from bibliography
   ## CSS is poorly supported in many email clients
   if (replace.style) {
-    bib$bib <- gsub(
+    bib$bib.email <- gsub(
       "*.style=(\"|')[^(\"|')]*(\"|')",
       "",
-      bib$bib
+      bib$bib.email
     )
     # Add space between items
-    bib$bib <- gsub(
+    bib$bib.email <- gsub(
       "class=\"csl-entry\"",
       "class=\"csl-entry\" style=\"margin: 0.5em 0;\"",
-      bib$bib
+      bib$bib.email
     )
   }
 
@@ -191,7 +334,7 @@ CristinMail <- \(data,
   if (is.null(subject)) {
     subject <- sprintf(
       "Nyleg registrerte publikasjonar i Cristin (%s, %s)",
-      tolower(bib$month[[1]]),
+      tolower(Month(bib$month[[1]], lang = lang)),
       bib$year[[1]]
     )
   }
@@ -202,8 +345,8 @@ CristinMail <- \(data,
       "Dette dokumentet inneheld nyleg registrerte publikasjonar i Cristin ved
       %s for %s, %s. Kvar publikasjon er oppf\u00f8rt med lenkje til resultatet
       i Cristin, samt lenkje til referansen i Zotero-arkivet.",
-      ToString(main.units),
-      tolower(bib$month[[1]]),
+      ToString(data$path1[[1]]),
+      tolower(Month(bib$month[[1]], lang = lang)),
       bib$year[[1]]
     )
   }
@@ -226,11 +369,195 @@ CristinMail <- \(data,
     </table>",
     width,
     header,
-    ToString(Interleave(bib$headers, bib$bib), "\n"),
+    ToString(Interleave(bib$headers, bib$bib.email), "\n"),
     footer
   ))
 
   return (list(subject = subject, body = body))
+
+}
+
+#' @title CristinId
+#' @keywords internal
+#' @noRd
+CristinId <- \(id, error = NULL) {
+
+  # Visible bindings
+  cristin_person_id <- NULL
+
+  # Find contributors to Cristin reference
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      sprintf(
+        "https://api.cristin.no/v2/results/%s/contributors",
+        id),
+      quiet = TRUE
+    ),
+    silent = TRUE,
+    message = "Cristin contributors"
+  )
+
+  # Return Null not found
+  if (httr.get$error) {
+    return (error)
+  }
+
+  # Find names from Cristin profile
+  cristin <- httr.get$data |>
+    JsonToTibble() |>
+    dplyr::select(cristin_person_id) |>
+    unlist()
+
+}
+
+#' @title InnCristin
+#' @keywords internal
+#' @noRd
+InnCristin <- \(name) {
+
+  # Query user url
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      "https://api.cristin.no/v2/persons/",
+      query = list(
+        name = paste(name, collapse=" "),
+        institution = 209
+      ),
+      quiet = TRUE
+    ),
+    silent = TRUE
+  )
+
+  # Return NA if not found
+  if (httr.get$error) {
+    return (NA)
+  }
+
+  id <- GoFish(
+    httr::content(httr.get$data)[[1]]$cristin_person_id[[1]]
+  )
+
+  return (id)
+
+}
+
+#' @title InnCards
+#' @keywords internal
+#' @noRd
+InnCards <- \(url, error = NULL) {
+
+  # Query user url
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      url,
+      quiet = TRUE,
+      httr::accept("text/html")
+    ),
+    silent = TRUE,
+    message = "Cristin contributors"
+  )
+
+  # Return Null not found
+  if (httr.get$error) {
+    return (error)
+  }
+
+  # Find card
+  card <- httr.get$data |>
+    rvest::read_html() |>
+    rvest::html_nodes(".vrtx-hinn-person-card") |>
+    toString() |>
+    Trim()
+
+  # Add user url to adress
+  card <- sub(
+    "#vrtx-hinn-addresses",
+    paste0(url, "#vrtx-hinn-addresses"),
+    card
+  ) |>
+    (\(x) tibble::tibble(card = x))()
+
+  return (card)
+
+}
+
+#' @title InnUsers
+#' @keywords internal
+#' @noRd
+InnUsers <- \(i = 1, lang = "no") {
+
+  # Languages
+  # Set language to en if not nb or nn
+  if (!lang %in% c("nb", "nn", "no")) {
+    lang <- "en"
+    card.url <- "https://www.inn.no/english/find-an-employee/"
+  } else {
+    lang <- "no"
+    card.url <- "https://www.inn.no/finn-en-ansatt/"
+  }
+
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      card.url,
+      query = list(page = i),
+      quiet = TRUE,
+      httr::accept("text/html")
+    ),
+    silent = TRUE,
+    message = "Cristin contributor"
+  )
+
+  # Return Null not found
+  if (httr.get$error) {
+    return (NULL)
+  }
+
+  # Find urls
+  urls <- httr.get$data |>
+    rvest::read_html() |>
+    rvest::html_nodes(".vrtx-person-listing li span:first-child a") |>
+    rvest::html_attr('href')
+
+  # Return Null not found
+  if (!length(urls)) {
+    return (NULL)
+  }
+
+  names <- httr.get$data |>
+    rvest::read_html() |>
+    rvest::html_nodes(".vrtx-person-listing li span:first-child a") |>
+    rvest::html_text() |>
+    Trim() |>
+    (\(x) {
+      dplyr::bind_rows(
+        lapply(strsplit(x, ", "), \(x) {
+          setNames(x, c("last.name", "first.name"))
+        })
+      )
+    })()
+
+
+  cristin.ids <- lapply(seq_len(nrow(names)), \(i) {
+    tibble::tibble(cristin.id = InnCristin(names[i, ]))
+  }) |>
+    dplyr::bind_rows()
+
+
+  users <- tibble::tibble(names, cristin.ids, url = urls)
+
+  remaining.pages <- httr.get$data |>
+    rvest::read_html() |>
+    rvest::html_nodes(".vrtx-paging-wrapper a") |>
+    rvest::html_text() |>
+    (\(x) if ((i+1) %in% x) InnUsers(i+1, lang))()
+
+  users <- dplyr::bind_rows(users, remaining.pages)
+
+  return (users)
 
 }
 
@@ -1047,7 +1374,6 @@ GoFish <- \(data, type = NA) {
 #' @noRd
 ToString <- \(x, sep = ", ") {
 
-
   x <- paste(unlist(GoFish(x,NULL)), collapse = sep)
 
   if (x == "") x <- NULL
@@ -1206,7 +1532,7 @@ SaveData <- \(data,
   file <- sprintf("%s.%s", save.name, extension)
   if (!is.null(save.path)) {
     # Create folder if it does not exist
-    dir.create(file.path(save.path), showWarnings = FALSE)
+    dir.create(file.path(save.path), showWarnings = FALSE, recursive = TRUE)
     file <- file.path(save.path, file)
   }
 
@@ -1232,7 +1558,7 @@ CleanText <- \(x, multiline = FALSE) {
 
   # List of characters to remove
   character.vector <- c(".",",",":",";","-","--","\u2013","\u2014",
-                        "[","]","(",")","{","}","=","&","/")
+                        "[","]","{","}","=","&","/")
   remove.characters <- paste0("\\", character.vector, collapse="|")
 
   # Remove first character if unwanted
@@ -1257,6 +1583,11 @@ CleanText <- \(x, multiline = FALSE) {
 
   # Remove HTML/XML tags
   x <- Trim(gsub("<.*?>|\ufffd|&lt;|&gt", "", x))
+
+  # Remove any abstract from beginning of string
+  if (any(grepl("abstract", tolower(substr(x, 1, 8))))) {
+    x <- substring(x, 9)
+  }
 
   # Remove NA
   x <- x[! x %in% c("NANA")]

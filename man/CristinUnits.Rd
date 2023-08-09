@@ -4,10 +4,12 @@
 \alias{CristinUnits}
 \title{create a tibble with information about selected Cristin units}
 \usage{
-CristinUnits(unit, recursive = FALSE, lang = "en")
+CristinUnits(unit.key, subunits = TRUE, recursive = FALSE, lang = "en")
 }
 \arguments{
-\item{unit}{What unit to search for}
+\item{unit.key}{Unit to search for}
+
+\item{subunits}{Add subunits, Default: TRUE}
 
 \item{recursive}{Search for (nested) subunits, Default: FALSE}
 
@@ -30,7 +32,7 @@ selected units
 \donttest{
 # Find units for Inland University
   CristinUnits("209.0.0.0") |>
-    dplyr::select(id, name) |>
+    dplyr::select(id, path2) |>
     print(width = 80)
 }
 }

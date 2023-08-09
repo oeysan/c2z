@@ -225,7 +225,7 @@ The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-`r c2z:::ToString(example$bibliography$bib, "\n")`
+`r ToString(example$bibliography$bib, "\n")`
 </div>
 
 Johannessen et al. (2021) is an interesting (well, perhaps not interesting to 

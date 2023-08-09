@@ -14,6 +14,7 @@ CristinMonthly(
   use.filter = TRUE,
   filter = NULL,
   nvi = TRUE,
+  user.cards = FALSE,
   use.identifiers = TRUE,
   zotero.check = FALSE,
   lang = "nn",
@@ -52,6 +53,9 @@ Default: NULL}
 usually associated with NVI, Default: NULL}
 
 \item{nvi}{Filter out Cristin items not 1/2 in NVI, Default: TRUE}
+
+\item{user.cards}{Get business cards of contributors (currently INN),
+Default: FALSE}
 
 \item{use.identifiers}{Use if ISBN/DOI identifiers if enabled, Default: TRUE}
 

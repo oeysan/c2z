@@ -11,6 +11,7 @@ CristinSupported(
   remove.na = TRUE,
   replace.na = "book",
   force.type = NULL,
+  remove.duplicates = TRUE,
   silent = FALSE,
   log = list()
 )
@@ -34,7 +35,9 @@ Default: 'book'}
 
 \item{force.type}{Force all items to a predefined itemType, Default: NULL}
 
-\item{silent}{Running silent, running deep, Default: FALSE}
+\item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
+
+\item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 
 \item{log}{A list for storing log elements, Default: list()}
 }

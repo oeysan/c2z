@@ -28,7 +28,7 @@ Please see
 \examples{
 \donttest{
   # `DoiDatacite` is called from `ZoteroDoi` (if item found)
-  example <- ZoteroDoi("https://doi.org/10.13140/rg.2.2.31532.74885")
+  example <- ZoteroDoi("10.17605/OSF.IO/7HZ4P")
 
   # Use `ZoteroIndex` to print
   # Print index using `ZoteroIndex`

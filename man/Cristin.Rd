@@ -35,6 +35,7 @@ Cristin(
   open.query = NULL,
   all.results = TRUE,
   force = FALSE,
+  remove.duplicates = TRUE,
   silent = FALSE,
   base.url = "https://api.cristin.no/v2/results",
   custom.url = NULL,
@@ -137,6 +138,8 @@ with fewer fields will be returned, Default: all}
 \item{all.results}{Find all results in query, Default: TRUE}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
+
+\item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4.9010</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,6 +75,7 @@
 <span>  remove.na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  replace.na <span class="op">=</span> <span class="st">"book"</span>,</span>
 <span>  force.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  remove.duplicates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  log <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -112,8 +113,12 @@ Default: 'book'</p></dd>
 <dd><p>Force all items to a predefined itemType, Default: NULL</p></dd>
 
 
+<dt>remove.duplicates</dt>
+<dd><p>Remove duplicates if TRUE, Default: TRUE</p></dd>
+
+
 <dt>silent</dt>
-<dd><p>Running silent, running deep, Default: FALSE</p></dd>
+<dd><p>c2z is noisy, tell it to be quiet, Default: FALSE</p></dd>
 
 
 <dt>log</dt>

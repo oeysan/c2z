@@ -12,7 +12,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,6 +112,7 @@
 <span>  zotero <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  zotero.import <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  zotero.check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  nvi <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  replace.na <span class="op">=</span> <span class="st">"book"</span>,</span>
 <span>  force.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -314,6 +315,10 @@ into an acceptable format for Zotero, Default: TRUE</p></dd>
 Default: TRUE</p></dd>
 
 
+<dt>nvi</dt>
+<dd><p>Filter out non-NVI publications Default: FALSE</p></dd>
+
+
 <dt>remove.na</dt>
 <dd><p>Cristin contains many, more or less, obscure categories, and
 not all are (yet) supported. By default these are removed, however, if this
@@ -370,8 +375,8 @@ Default: TRUE</p></dd>
 <span class="r-in"><span>  <span class="co"># Simple `Cristin` search by id</span></span></span>
 <span class="r-in"><span>  <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">Cristin</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"840998"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Found 1 result </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Checking whether references are supported. See `CristinSupported()`. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Looking for missing data. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Checking whether references are supported. See `CristinSupported()` </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Looking for missing data </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converting 1 reference from Cristin to Zotero format </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————</span>
 <span class="r-in"><span></span></span>

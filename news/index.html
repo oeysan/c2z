@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,6 +61,29 @@
       <small>Source: <a href="https://github.com/oeysan/c2z/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="c2z-development-version">c2z (development version)<a class="anchor" aria-label="anchor" href="#c2z-development-version"></a></h2>
+<div class="section level5">
+<h5 id="breaking-development-version">Breaking<a class="anchor" aria-label="anchor" href="#breaking-development-version"></a></h5>
+<ul><li>Moved <code>CristinMonthly</code> and <code>CristinUnits</code>, including several internal functions (e.g., <code>CristinMail</code> and <code>CristinWeb</code> <code>Dict</code>) to <code>c2z4uni</code> to keep maintenance simpler.</li>
+</ul></div>
+<div class="section level5">
+<h5 id="minor-development-version">Minor<a class="anchor" aria-label="anchor" href="#minor-development-version"></a></h5>
+<ul><li><p>Fixed an error in <code>DoiCrossref</code> where sub.type was length &gt; 1 and type (e.g., “preprint”) was not succesfully extracted with rvest.</p></li>
+<li><p>Made <code>CristinWrangler</code> somewhat less cumbersome.</p></li>
+<li><p>Made a small adjustment to <code>ZoteroIsbn</code> where some edited books contained both 100 and 700 fields leading to an error where first editor was also listed as first author rather than only listing editors.</p></li>
+<li><p>Added the option to filter out non-nvi publication in <code>Cristin</code>, using the logical argument <code>nvi</code>, default FALSE.</p></li>
+<li><p>Improved speed of <code>ZoteroDelete</code>.</p></li>
+<li><p>Moved <code>Cls</code> out of <code>ZoteroExport</code> for more universal handling.</p></li>
+<li><p>Fixed a bug in <code>ZoteroExport</code> where <code>ZoteroGET</code> reported wrong number of results.</p></li>
+<li><p>Added a <code>full.update</code> argument (default: TRUE) to <code>CristinMonthly</code>, if set to false the function will only create bibliography for new items.</p></li>
+<li><p>Fixed a bug in <code>ZoteroLibrary</code> where function did not return NULL when searching for non-existing collection keys.</p></li>
+<li><p>Fixed a bug in <code>ZoteroGET</code> where using item/collection keys would only result in a maximum result of 100 items/collections.</p></li>
+<li><p>Creted an internal function <code>Dict</code> to handle language output, for the moment English and Norwegian.</p></li>
+<li><p>Minor adjustments to <code>CristinMonthly</code> and the internal functions <code>CristinMail</code> and <code>CristinWeb</code>.</p></li>
+<li><p>Removed limit from Zotero API when requsted format is versions or keys.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="c2z-020">c2z 0.2.0<a class="anchor" aria-label="anchor" href="#c2z-020"></a></h2><p class="text-muted">CRAN release: 2023-08-10</p>
 <div class="section level5">

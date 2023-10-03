@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,32 +138,30 @@ content.</p>
 <div class="section level2">
 <h2 id="how-it-works">How it works<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Access default zotero library</span></span>
-<span><span class="va">user.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Searching for collections </span></span>
-<span><span class="co">#&gt; Found 0 collections </span></span>
-<span><span class="co">#&gt; Searching for all items in library </span></span>
-<span><span class="co">#&gt; Found 0 items</span></span>
-<span><span class="co"># Print type of library and id</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">user.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The library has the prefix: users/9913421"</span></span>
-<span></span>
-<span><span class="co"># Access the group zotero library</span></span>
-<span><span class="va">group.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span>user <span class="op">=</span> <span class="cn">FALSE</span>, library <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Searching for collections </span></span>
-<span><span class="co">#&gt; Found 2 collections </span></span>
-<span><span class="co">#&gt; The Zotero list contains: 2 collections, 0 items, and 0 attachments </span></span>
-<span><span class="co">#&gt; Searching for all items in library </span></span>
-<span><span class="co">#&gt; Found 4 items </span></span>
-<span><span class="co">#&gt; The Zotero list contains: 2 collections, 2 items, and 2 attachments</span></span>
-<span><span class="co"># Print type of library and id</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The library has the prefix: %s"</span>, <span class="va">group.library</span><span class="op">$</span><span class="va">prefix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The library has the prefix: groups/4827927"</span></span>
-<span></span>
-<span><span class="co"># Print the API</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"The API key for these libraries is: %s"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"ZOTERO_API"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The API key for these libraries is: RqlAmlH5l1KPghfCseAq1sQ1"</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access default zotero library</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>user.library <span class="ot">&lt;-</span> <span class="fu">Zotero</span>(<span class="at">library =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Searching for collections </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 10 collections </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The Zotero list contains: 10 collections, 0 items, and 0 attachments </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Searching for all items in library </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Found 123 items </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Need 1 addtional query to gather items </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>—————————————————Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">1</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span>01—————————————————</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The Zotero list contains: 10 collections, 123 items, and 0 attachments</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print type of library and id</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"The library has the prefix: %s"</span>, user.library<span class="sc">$</span>prefix)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The library has the prefix: users/9913421"</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the group zotero library</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>group.library <span class="ot">&lt;-</span> <span class="fu">Zotero</span>(<span class="at">user =</span> <span class="cn">FALSE</span>, <span class="at">library =</span> <span class="cn">TRUE</span>, <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Print type of library and id</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"The library has the prefix: %s"</span>, group.library<span class="sc">$</span>prefix)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The library has the prefix: groups/4827927"</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the API</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"The API key for these libraries is: %s"</span>, <span class="fu">Sys.getenv</span>(<span class="st">"ZOTERO_API"</span>))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "The API key for these libraries is: RqlAmlH5l1KPghfCseAq1sQ1"</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -1,0 +1,29 @@
+url: https://oeysan.github.io/c2z/
+template:
+  bootstrap: 5
+  bootswatch: litera
+  theme: oblivion
+  bslib:
+    pre-color: white
+navbar:
+  structure:
+    left:
+    - intro
+    - reference
+    - articles
+    - tutorials
+    - news
+    - todo
+    right:
+    - twitter
+    - github
+  components:
+    components: ~
+    todo:
+      text: Todo
+      href: TODO.html
+    twitter:
+      icon: fa-twitter
+      href: http://twitter.com/motsegn
+      aria-label: Twitter
+

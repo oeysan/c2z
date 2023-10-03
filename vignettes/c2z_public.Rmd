@@ -1,0 +1,52 @@
+---
+title: "Public library"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Public library}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+"I think the health of our civilization, the depth of our awareness about the 
+underpinnings of our culture and our concern for the future can all be tested 
+by how well we support our libraries" (Sagan, 1980, p. 282).
+
+I love libraries. I also love meta-libraries. Currently, there exists no 
+adequate way to browse public Zotero libraries, however, you may search groups 
+at the Zotero [website](https://www.zotero.org/search/type/group).
+
+In the following example, we will harvest the items stored in such a public 
+Zotero group. Also, please see the 
+[magnificent vignette](https://oeysan.github.io/c2z/articles/c2z_vignette.html) 
+and other [documentation](https://oeysan.github.io/c2z/).
+
+```{r example}
+# Setup
+library(c2z)
+
+# Query public library
+example <- Zotero(
+  user = FALSE, 
+  id = "4986462",
+  api = NA,
+  library = TRUE,
+  index = TRUE
+)
+
+# Select only names in index and print
+example$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
+``` 
+
+# References
+
+Sagan, C. (1980). *Cosmos*. Ballantine Books.
+

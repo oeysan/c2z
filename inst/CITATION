@@ -1,0 +1,5 @@
+bibentry(bibtype = "Manual",
+         author = person(c("Øystein", "Olav"), "Skaar"),
+         title = "c2z: a Reference Manager in R",
+         year = "2023",
+         url = "https://oeysan.github.io/c2z/")

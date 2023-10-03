@@ -1,0 +1,487 @@
+---
+title: "Behold c2z!"
+bibliography: '`r gsub("\\\\", "/", file.path(tempdir(), "references.bib"))`'
+csl: '`r gsub("\\\\", "/", file.path(tempdir(), "style.csl"))`'
+lang: "en-US"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The following vignette will demonstrate the basic functionality (i.e., awesome 
+might) of *`c2z`*. 
+
+```{r setup}
+library(c2z)
+```
+
+# Collections
+
+Your computer desktop reveals your 
+[D&D alignment](https://www.pcgamer.com/pcg-staff-desktop-dnd-alignment-chart/).
+Similarly, the way you structure your Zotero library through collections 
+reveals your personality. (Chaotic neutral is not using collections, obviously.)
+
+*`c2z`* lets you create nested collections on a whim, as seen below.
+
+## Creating collections
+
+In this example we define a vector of nine elements based on "the quick brown 
+fox jumps over the lazy dog". We use the `Zotero` function, a wrapper that 
+connects with the Zotero API and combines all major functions in *`c2z`*, to 
+create nine nested collections based on the string  (i.e., "dog" nested in 
+"lazy" nested in "the" et cetera). We set `library = TRUE`, thereby querying 
+the Zotero library, and `create = TRUE` to create any collections that does not 
+exist (i.e., all nine collections). 
+
+This is a recursive action, so let's keep the noise at a minimum and set 
+`silent = TRUE`.
+
+```{r create.collections, eval = TRUE}
+# Let's create a vector of nested collections
+collection.names <- c(
+  "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"
+  )
+
+# Create the collections
+create.collections <- Zotero(
+  collection.names = collection.names,
+  library = TRUE,
+  create = TRUE,
+  silent = TRUE
+)
+```
+
+## Using collections
+
+Now that we have created some collections, we can access the collections in
+different ways. By default, the function will find the last element in the vector 
+(i.e., "dog").
+
+```{r find.dog, eval = TRUE}
+# Dog
+create.collections$collections  |>
+  dplyr::select(c(key, name, parentCollection))
+```
+
+However, we often want access all, or some, nested collections. We can achieve 
+this using two different approaches. 1) using `recursive = TRUE` to access the 
+given element and then recursively find the nested collections, or 2) using 
+`ancestor = TRUE` and trace the lineage of the specified collection.
+
+You may use `collection.name` (you don't have several top-level collections 
+with the same name, do you? If so, the function will select the newest 
+collection with the specified name), or `collection.key` if you keep track of
+such things. *`c2z`* will by default look for collections names regardless of 
+letter case, and if this is important set `case.insensitive = FALSE`.
+
+### All collections
+
+```{r find.collections, eval = TRUE}
+# Find collections
+collections <- Zotero(
+  collection.names = "The",
+  recursive = TRUE,
+  library = TRUE,
+  silent = TRUE
+)
+
+# print collections
+collections$collections |>
+  dplyr::select(c(key, name, parentCollection))
+```
+
+### Recursive path
+
+```{r recursive, eval = TRUE}
+# Find collections
+recursive <- Zotero(
+  collection.names = c("The", "quick", "brown"),
+  recursive = TRUE,
+  library = TRUE,
+  silent = TRUE
+)
+
+# print collections
+recursive$collections |>
+  dplyr::select(name)
+```
+
+### Ancestor path
+
+```{r ancestor, eval = TRUE}
+# Find collections
+ancestor <- Zotero(
+  collection.names = c("The", "quick", "brown", "fox"),
+  ancestor = TRUE,
+  library = TRUE,
+  silent = TRUE
+)
+
+# print collections
+ancestor$collections |>
+  dplyr::select(name)
+```
+
+# Items
+
+Okay, so we've created a bunch of collections. Kinda cool, I guess? But 
+collections are somewhat pointless without items. Sooo, lets add some items!
+
+## Adding items from Cristin
+
+One motivation to develop *`c2z`* is an attempt at making registering data at 
+Cristin feel useful. The following example of the `Cristin` function will 
+gather all publications containing the word "cheese", published since 2020 
+(it was a good year for cheese, probably). 
+
+The `zotero.import` is set to `TRUE`, indicating that the function will use 
+`CristinWrangler` to convert Cristin metadata into an acceptable format for
+Zotero. `use.identifiers = TRUE` and the function will therefore use any
+identifiers (i.e., ISBN or DOI) to augment the metadata. Furthermore, 
+`crossref.search = TRUE`, meaning that the function will search CrossRef for 
+metadata if identifiers are missing. Also, `autosearch = TRUE` and the process 
+is consequently conducted automatically. The items are posted to the Zotero 
+library using `Zotero`, where items are uploaded using the `items` argument. 
+The `index = TRUE`, creating an index of the items.
+
+Please note that `crossref.search` should normally not be used (see the 
+[README](https://oeysan.github.io/c2z/)). 
+
+Rather than finicking over h-indexes and impact factors, Norwegians have a 
+weird obsession with NVI (Norwegian Science Index), which is a two-level
+index where level one publications are ordinary and level two are great 
+(it probably makes sense). However, Cristin has no simple method of filtering
+out publications that qualify for the two levels. 
+
+The specified `filter` arguments try to filter out categories that usually 
+contain publications that are worthy of the NVI (see all the Cristin 
+[categories](https://api.cristin.no/v2/results/categories?lang=en)).
+
+Let's post the results to the collection "fox", while using the argument 
+`get.items = FALSE` as not to add any items in the collection to the Zotero 
+list. 
+
+```{r cristin, eval = TRUE}
+# Filter items
+cristin.filter <- c(
+  "ACADEMICREVIEW",
+  "ARTICLEJOURNAL",
+  "ARTICLE", 
+  "ANTHOLOGYACA", 
+  "CHAPTER", 
+  "CHAPTERACADEMIC",
+  "CHAPTERARTICLE",
+  "COMMENTARYACA",
+  "MONOGRAPHACA"
+)
+
+# Query Cristin
+cristin <- Cristin(
+  title = "cheese",
+  published_since = 2020,
+  filter = cristin.filter,
+  zotero.import = TRUE,
+  use.identifiers = TRUE,
+  crossref.search = TRUE,
+  autosearch = TRUE,
+  silent = FALSE
+)
+
+# Get the fox key
+fox <- collections$collections |> 
+  dplyr::filter(name == "fox") |> 
+  dplyr::pull("key")
+
+# Post the items to the collection called fox
+post.cristin <- Zotero(
+  collection.key = fox,
+  metadata = cristin$results,
+  library = TRUE,
+  index = TRUE,
+  post = TRUE,
+  post.collections = FALSE,
+  post.items = TRUE,
+  silent = TRUE
+)
+
+# Select only names in index and print
+post.cristin$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
+```
+
+In this second example we have decided that 2019 was an even better year for 
+cheese and change the `published_since` argument to 2019. The reason why we
+are doing this is to demonstrate the duplicate function in `Cristin`, 
+which will identify any Cristin references imported into Zotero if 
+`zotero.check = TRUE`.  The function will try to use the `zotero` argument 
+to search the specified collection(s).
+
+```{r cristin.check, eval = TRUE}
+# Query Cristin (again)
+cristin2 <- Cristin(
+  title = "cheese",
+  published_since = 2019,
+  filter = cristin.filter,
+  zotero.import = TRUE,
+  zotero.check = TRUE,
+  use.identifiers = FALSE,
+  zotero = post.cristin
+)
+```
+
+## Adding items from identifiers
+
+Sometimes, it happens to everybody, we're having a bunch of ISBNs and DOIs 
+lying around. Luckily, we can easily add them to Zotero using the `Zotero` 
+wrapper. In this case we are adding them to the collection "quick".
+
+```{r identifiers, eval = TRUE}
+# ISBN
+isbn.items <- c("9780761973836", "9788215048451")
+
+# DOI
+doi.items <- c("https://doi.org/10.31234/osf.io/venu6", 
+               "10.1177/1098214010376532")
+
+# Post the items to the collections called quick
+identifiers <- Zotero(
+  collection.names = c("The", "quick"),
+  isbn = isbn.items,
+  doi = doi.items,
+  library = TRUE,
+  index = TRUE,
+  post = TRUE,
+  post.collections = FALSE,
+  post.items = TRUE,
+  silent = TRUE,
+  get.items = FALSE
+)
+
+# Select only names in index and print
+identifiers$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
+```
+
+## Adding items from the Man
+
+When working in academia within a Norwegian context, you will frequently need 
+to examine the musings of politicians, or their selected group of researchers. 
+So, let's add some random white papers and official reports using `ZoteroGov`.
+
+```{r gov, eval = TRUE}
+# Combine to a single tibble using dplyr
+gov.items <- dplyr::bind_rows(
+  # Find some random white papers
+  ZoteroGov(c("26 (2001-2002)", "31 (2014-2015)"), type = "meldst")$data,
+  # Finds some random official Norwegian reports.
+  ZoteroGov(c("2014: 4", "2018: 2"), type = "nou")$data
+)
+
+# Post the items to the collection called brown
+## Fitting given the source
+the.man <- Zotero(
+  collection.names = c("The", "quick", "brown"),
+  metadata = gov.items,
+  library = TRUE,
+  index  = TRUE,
+  post = TRUE,
+  post.collections = FALSE,
+  post.items = TRUE,
+  silent = TRUE,
+  get.items = FALSE
+)
+
+# Select only names in index and print
+the.man$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
+```
+
+## Adding items from CRAN
+
+Show some love (citations are love, yes?) for the authors that create
+the packages that you use! (We see you, Hadley Wickham).
+
+Here, we're using the `ZoteroCran` function to collect metadata from The 
+Comprehensive R Archive Network (CRAN). The `collection.key` is defined as:
+
+```{r lazy, eval = TRUE}
+lazy <- collections$collections |> 
+  dplyr::filter(name == "lazy") |> 
+  dplyr::pull("key")
+```
+
+The key is "`r lazy`" and the argument `recursive = TRUE`, thus the function is 
+looking for the specified collection (i.e., "lazy") and all its children
+(i.e., "dog"). 
+
+It is often useful to link items to several (nested) collections. For instance, 
+you can create the nested collections "project -> CRAN-packages" and link the 
+items to both collections. You can then choose to access all items under 
+"project", including those in "CRAN-packages", or just access those filed under 
+the latter.
+
+```{r cran, eval = TRUE}
+# Find selected packages 
+packages <- c(
+  "dplyr",
+  "httr",
+  "jsonlite",
+  "purrr",
+  "rvest",
+  "rlang",
+  "tibble",
+  "tidyr",
+  "tidyselect"
+)
+
+# Post the items to the collections called lazy and dog
+cran <- Zotero(
+  collection.key = lazy,
+  metadata = ZoteroCran(packages)$data,
+  library = TRUE,
+  index = TRUE,
+  recursive = TRUE,
+  post = TRUE,
+  post.collections = FALSE,
+  post.items = TRUE,
+  silent = FALSE,
+  get.items = FALSE
+)
+
+# What do we got?
+# Select only names in index and print
+index <- cran$index |> 
+  dplyr::select(name) |>
+  print(width = 80)
+```
+
+# Copying
+
+There are many situations where we want to copy collections and items 
+(and attachments) between libraries. You may want to copy from a public Zotero
+library to your own or share your collections with a research group.
+
+The `Zotero` function contains a (somewhat convoluted) method of copying 
+collections and items from a group library to a user library (and vice versa).
+However, in this example we're appending the group collections to our long line
+of nested collections, making the process somewhat messy. Therefore, we split
+up the process using the `ZoteroCopy` and `ZoteroPost` functions. The 
+`change.library` argument will query `Zotero` and alter the location according
+to specified coordinates (the default location is the user library as defined in 
+`.Renviron`).
+
+Please see the [tutorial](articles/zotero_api.html) on how to set up user/group 
+id and API keys.
+
+```{r copy, eval = TRUE}
+# Access the group library (defined in .Renviron)
+group.library <- Zotero(
+  user = FALSE,
+  library = TRUE,
+  silent = FALSE
+)
+
+# Copy the library creating new keys 
+copy.library <- ZoteroCopy(
+  zotero = group.library,
+  change.library = TRUE,
+  silent = FALSE
+)
+
+# Find key for dog
+dog <- collections$collections |> 
+  dplyr::filter(name == "dog") |> 
+  dplyr::pull("key")
+
+# Change parent collection of top-level collection to dog
+copy.library$collections <- copy.library$collections |>
+  dplyr::mutate(
+    parentCollection = dplyr::case_when(
+      parentCollection == "FALSE" ~ dog,
+      TRUE ~ parentCollection
+    )
+  )
+
+# Copy the collection and items to the user library
+post.copy <- ZoteroPost(
+  zotero = copy.library,
+  silent = TRUE
+)
+
+# Select only names in index and print
+ZoteroIndex(post.copy$items) |>
+  dplyr::select(name) |>
+  print(width = 80)
+```
+
+# Bibliography
+
+It's a wrap! 
+
+Now it's time to harvest the bounty that we have created during the
+steps above. We could create separate bibliographies, but for the sake of 
+simplicity we are mashing it all together. That's friendship! 
+
+The arguments used in `Zotero` are somewhat self-explanatory, however, we are 
+also `csl.type` to access a 
+[style repository](https://github.com/citation-style-language/styles) in order 
+to create a Citation Style Language (CSL) file according to 
+[APA7](https://apastyle.apa.org/).
+
+```{r bibliography, eval = TRUE, cache = FALSE}
+# Create references.bib in biblatex format with style.csl according to APA7
+bibliography <- Zotero(
+  collection.names = "The",
+  recursive = TRUE,
+  library = TRUE,
+  export = TRUE,
+  format = "biblatex",
+  save.data = TRUE,
+  save.path = tempdir(),
+  bib.name = "references",
+  csl.type = "apa-single-spaced",
+  csl.name = "style",
+  silent = TRUE
+)
+
+# What do we got?
+sprintf(
+  "We now have %s collections, %s references, and %s attachments",
+  bibliography$n.collections,
+  bibliography$n.items,
+  bibliography$n.attachments
+)
+```
+
+# Deleting
+
+Housecleaning! We should clean up the mess in your library. You could set 
+[`ragnarok`](https://www.youtube.com/watch?v=iEV3mbS-HgY) and `force = TRUE`, 
+if you want to delete everything in your library.
+
+```{r deleting, eval = TRUE}
+# Delete all collections and items belonging to initial key
+delete <- ZoteroDelete(
+  bibliography, 
+  delete.collections = TRUE,
+  delete.items = TRUE
+)
+```
+
+
+# References
+
+We can now display the references that we have collected and created using 
+*`c2z`*.
+
+---
+nocite: '@*'
+---

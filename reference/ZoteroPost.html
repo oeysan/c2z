@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9004</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,7 +162,7 @@ Default: 50</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Searching 1 item using DOI </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Post a DOI to the public group "c2z_delete"</span></span></span>
-<span class="r-in"><span>  <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroPost</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">post.example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroPost</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">zotero</span>,</span></span>
 <span class="r-in"><span>    post.collections <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    post.items <span class="op">=</span> <span class="cn">TRUE</span></span></span>
@@ -173,7 +173,7 @@ Default: 50</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   status  key     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success ULTSR39W</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success KFADFZRR</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $post.summary.collections</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
@@ -188,7 +188,7 @@ Default: 50</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   status  key     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success EJ3JVV2S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success F4L8F4DM</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $post.summary.items</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
@@ -200,7 +200,7 @@ Default: 50</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Delete collections and items using `ZoteroDelete`</span></span></span>
 <span class="r-in"><span>  <span class="va">delete.example</span> <span class="op">&lt;-</span> <span class="fu"><a href="ZoteroDelete.html">ZoteroDelete</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">zotero</span>,</span></span>
+<span class="r-in"><span>    <span class="va">post.example</span>,</span></span>
 <span class="r-in"><span>    delete.collections <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    delete.items <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
@@ -210,8 +210,8 @@ Default: 50</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
-<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">post.example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">post.example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>

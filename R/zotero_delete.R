@@ -47,7 +47,8 @@ ZoteroDelete <- \(zotero,
     # Find latest Zotero version
     version <- ZoteroGet(
       zotero,
-      append.collections = TRUE,
+      use.collection = append.collections,
+      append.collections = append.collections,
       limit = 1,
       all.results = FALSE,
       silent = TRUE

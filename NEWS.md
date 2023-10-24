@@ -2,13 +2,14 @@
 
 #### Breaking
 
-
 * Moved `CristinMonthly` and `CristinUnits`, including several internal 
 functions (e.g., `CristinMail` and `CristinWeb` `Dict`) to `c2z4uni` to keep
 maintenance simpler.
 
-
 #### Minor
+
+* Exported the previously internal `ZoteroFormat`. It can now check the 
+structure of a provided tibble/dataframe using the `check.structure` argument. 
 
 * Fixed an error in `DoiCrossref` where sub.type was length > 1 and type 
 (e.g., "preprint") was not succesfully extracted with rvest.

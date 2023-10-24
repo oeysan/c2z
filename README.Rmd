@@ -273,7 +273,7 @@ API's (Alma has especially high latency), and that *`c2z`* uses exponential
 backoff depending on the API response.
 
 Please report any bugs/issues/requests
-[here](https://github.com/oeysan/c2z/issues/), and feel to make a 
+[here](https://github.com/oeysan/c2z/issues/), and feel free to make a 
 [pull request](https://github.com/oeysan/c2z/pulls).
 
 ## Coding conventions

@@ -8,6 +8,9 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed a bug in `ZoteroDelete` where the function failed to get the latest
+version of the library.
+
 * Exported the previously internal `ZoteroFormat`. It can now check the 
 structure of a provided tibble/dataframe using the `check.structure` argument. 
 

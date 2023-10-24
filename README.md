@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.10.24 @ 13:40:14-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.10.24 @ 14:57:24-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9002-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9003-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -218,7 +218,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 7LSPIYX8
+#> 1 success RRRJPGUB
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -235,8 +235,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 5AN8LQIU
-#> 2 success BQL8E26U
+#> 1 success 3UF2C5YR
+#> 2 success 3MC7R6RG
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -250,7 +250,7 @@ example <- Zotero(
 #> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
 #> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:02—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Deleting 2 items using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:03—————————————————
 #> Creating index for items

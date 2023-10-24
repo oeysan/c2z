@@ -39,7 +39,7 @@
 #'   # Define Zotero list according to default setings
 #'   zotero = Zotero(
 #'     user = FALSE,
-#'     id = "4827927",
+#'     id = "5250382",
 #'     api = "RqlAmlH5l1KPghfCseAq1sQ1"
 #'   )
 #'

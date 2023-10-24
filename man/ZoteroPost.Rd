@@ -68,7 +68,7 @@ Please see
   )
 
   # Post a DOI to the public group "c2z_delete"
-  example <- ZoteroPost(
+  post.example <- ZoteroPost(
     zotero,
     post.collections = TRUE,
     post.items = TRUE
@@ -76,14 +76,14 @@ Please see
 
   # Delete collections and items using `ZoteroDelete`
   delete.example <- ZoteroDelete(
-    zotero,
+    post.example,
     delete.collections = TRUE,
     delete.items = TRUE
   )
 
   # Print index using `ZoteroIndex`
-  if (any(nrow(example$items))) {
-    ZoteroIndex(example$items) |>
+  if (any(nrow(post.example$items))) {
+    ZoteroIndex(post.example$items) |>
       dplyr::select(name) |>
       print(width = 80)
   }

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,8 @@
 </ul></div>
 <div class="section level5">
 <h5 id="minor-development-version">Minor<a class="anchor" aria-label="anchor" href="#minor-development-version"></a></h5>
-<ul><li><p>Fixed an error in <code>DoiCrossref</code> where sub.type was length &gt; 1 and type (e.g., “preprint”) was not succesfully extracted with rvest.</p></li>
+<ul><li><p>Exported the previously internal <code>ZoteroFormat</code>. It can now check the structure of a provided tibble/dataframe using the <code>check.structure</code> argument.</p></li>
+<li><p>Fixed an error in <code>DoiCrossref</code> where sub.type was length &gt; 1 and type (e.g., “preprint”) was not succesfully extracted with rvest.</p></li>
 <li><p>Made <code>CristinWrangler</code> somewhat less cumbersome.</p></li>
 <li><p>Made a small adjustment to <code>ZoteroIsbn</code> where some edited books contained both 100 and 700 fields leading to an error where first editor was also listed as first author rather than only listing editors.</p></li>
 <li><p>Added the option to filter out non-nvi publication in <code>Cristin</code>, using the logical argument <code>nvi</code>, default FALSE.</p></li>

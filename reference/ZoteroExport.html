@@ -12,7 +12,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -155,12 +155,12 @@ Language (CSL), Default: NULL</p></dd>
 <span class="r-in"><span>    library <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Searching for collections </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Found 7 collections </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The Zotero list contains: 7 collections, 0 items, and 0 attachments </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Found 11 collections </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The Zotero list contains: 11 collections, 0 items, and 0 attachments </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Searching for all items in library </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Found 4 items </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Found 9 items </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The provided query is limited to 1 result </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The Zotero list contains: 7 collections, 1 item, and 0 attachments </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The Zotero list contains: 11 collections, 1 item, and 0 attachments </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Export 1 items from the default group</span></span></span>
 <span class="r-in"><span>  <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">ZoteroExport</span><span class="op">(</span></span></span>
@@ -170,22 +170,320 @@ Language (CSL), Default: NULL</p></dd>
 <span class="r-in"><span>  <span class="co"># Display exported</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">export</span>, fill <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> @incollection{faldet_vygotskys_2023,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	location = {Oslo},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	title = {Vygotskys defektologi - et perspektiv på inkluderende opplæring},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	isbn = {9788202811501},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	url = {https://doi.org/https://doi.org/10.23865/noasp.191},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	pages = {119--134},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	booktitle = {Læring i et Vygotsky-perspektiv: muligheter og konsekvenser for opplæringen},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	publisher = {Cappelen Damm akademisk},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	author = {Somby, Hege Merete and Vik, Stine},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	editor = {Faldet, Ann-Cathrin and Skrefsrud, Thor-André and Somby, Hege Merete},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	urldate = {2023-08-22},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	date = {2023},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	langid = {norsk},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	doi = {10.23865/noasp.191},</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	note = {{NVI}: 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cristin: 2160918},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @article{noauthor_bibliometrix_2017,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	title = {bibliometrix : An R-tool for comprehensive science mapping analysis},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	volume = {11},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	issn = {1751-1577},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	url = {https://doi.org/10.1016/j.joi.2017.08.007},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	doi = {https://doi.org/10.1016/j.joi.2017.08.007},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	abstract = {The use of bibliometrics is gradually extending to all disciplines. It is particularly suitable for science mapping at a time when the emphasis on empirical contributions is producing voluminous, fragmented, and controversial research streams. Science mapping is complex and unwieldly because it is multi-step and frequently requires numerous and diverse software tools, which are not all necessarily freeware. Although automated workflows that integrate these software tools into an organized data flow are emerging, in this paper we propose a unique open-source tool, designed by the authors, called bibliometrix, for performing comprehensive science mapping analysis. bibliometrix supports a recommended workflow to perform bibliometric analyses. As it is programmed in R, the proposed tool is flexible and can be rapidly upgraded and integrated with other statistical R-packages. It is therefore useful in a constantly changing science such as bibliometrics.},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	pages = {959--975},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	number = {4},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	journaltitle = {Journal of Informetrics},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	date = {2017-11-01},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	langid = {english},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	note = {grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W767067438</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W45233828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1799889357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W144424372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1963753783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W188202134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1966104031</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W1981780420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1966538856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2105666325</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1968283201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2182707996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1975107573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2885845152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1976620775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2964988449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1977714176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4240783740</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1981340255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4386031268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1981886524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W45233828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1989669128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W144424372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W1996229960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W188202134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2002117998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W1981780420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2017680781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2105666325</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2027998681</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2182707996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2034800299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2885845152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2042852414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2964988449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2045108252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4240783740</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2052710775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4386031268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2056147580</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W45233828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2066888021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W144424372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2069134922</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W188202134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2075220720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W1981780420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2094864959</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2105666325</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2097148950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2182707996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2098162425</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2885845152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2108680868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2964988449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2128438887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4240783740</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2135455887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4386031268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2146695321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W45233828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2150220236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W144424372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2171458572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W188202134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2225280195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W1981780420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2285085441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2105666325</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2408216567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2182707996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2472756135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2885845152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W2963453445</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W2964988449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W3014861942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4240783740</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W3103443220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W4386031268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W3125707221</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W45233828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:c(1215, 1131, 692, 294, 71, 20, 1, 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W4241271818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W144424372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> grants:{NA}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cited\_by\_count:3519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> counts\_by\_year:2023:2016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> referenced\_works:https://openalex.org/W4248252387</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> related\_works:https://openalex.org/W188202134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_paratext:{FALSE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is\_retracted:{FALSE}},</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	keywords = {Bibliometrics, Computer science, Data mining, Data science, Database, Programming language, Software, Software engineering, Software tool, Workflow},</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

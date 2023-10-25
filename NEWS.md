@@ -8,6 +8,8 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed minor bug in `CristinWrangler` with empty external.creators  
+
 * Fixed a bug in `ZoteroDelete` where the function failed to get the latest
 version of the library.
 

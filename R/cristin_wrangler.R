@@ -392,7 +392,7 @@ CristinWrangler <- \(data,
 
         # Set external.data as creator if nrow >= Cristin data
         ## Usually happens if Cristin metadata exclude editors
-        if (nrow(external.data$creators[[1]]) >= nrow(meta$creators)) {
+        if (any(nrow(external.data$creators[[1]]) >= nrow(meta$creators))) {
           creators <- external.data$creators[[1]]
         } else {
           creators <- meta$creators

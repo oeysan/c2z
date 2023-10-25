@@ -271,7 +271,7 @@ ZoteroGet <- \(zotero,
   # Set bibliography if include is defined
   if (!is.null(include) & !is.null(json.data)) {
     bibliography <- json.data |>
-      dplyr::select(any_of(c("key", "bib", "citation")))
+      dplyr::select(any_of(c("key", "version", "bib", "citation")))
   }
 
   # Set found.results to total.results if total.results > max.results
@@ -387,7 +387,7 @@ ZoteroGet <- \(zotero,
         bibliography <- AddAppend(
           bibliography,
           json.data |>
-            dplyr::select(any_of(c("key", "bib", "citation")))
+            dplyr::select(any_of(c("key", "version", "bib", "citation")))
         )
       }
 

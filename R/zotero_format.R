@@ -68,7 +68,7 @@ ZoteroFormat <- \(data = NULL,
                        "creators",
                        "relations")
   double.items <- c("version", "mtime")
-  list.items <- c("collections", "relations", "tags")
+  list.items <- c("creators", "collections", "relations", "tags")
 
   # Check if metadata and not in a data frame
   if (!is.data.frame(data) &
@@ -90,8 +90,11 @@ ZoteroFormat <- \(data = NULL,
       # Add to list if element is a data frame
       ## Make certain list.items is in a list
       if (is.data.frame(x) | names %in% list.items) {
-        x <- if (all(is.na(GoFish(as.character(unlist(x)))))) NA else list(x)
-
+        if (all(is.na(GoFish(as.character(unlist(x)))))) {
+          x <- NA
+        } else if (is.data.frame(x) | !is.list(x)) {
+          x <- list(x)
+        }
         # Make certain double.items are double
       } else if (names %in% double.items) {
         x <- as.double(x)

@@ -99,7 +99,7 @@ ZoteroAdd <- \(zotero,
     }
 
     # Add items to zotero list
-    zotero$items <- UpdateInsert(zotero$items, metadata)
+    zotero$items <- AddAppend(metadata, zotero$items)
 
   }
 

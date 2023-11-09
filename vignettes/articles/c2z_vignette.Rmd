@@ -184,6 +184,7 @@ cristin.filter <- c(
 cristin <- Cristin(
   title = "cheese",
   published_since = 2020,
+  published_before = 2021,
   filter = cristin.filter,
   zotero.import = TRUE,
   use.identifiers = TRUE,
@@ -227,6 +228,7 @@ to search the specified collection(s).
 cristin2 <- Cristin(
   title = "cheese",
   published_since = 2019,
+  published_before = 2021,
   filter = cristin.filter,
   zotero.import = TRUE,
   zotero.check = TRUE,

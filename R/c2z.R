@@ -35,6 +35,24 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title UpdateInsert
+#' @keywords internal
+#' @noRd
+UpdateInsert <- \(x, y, key = "key") {
+
+  if (!any(nrow(y))) return(x)
+  if (!any(nrow(x))) return(y)
+
+  x <- dplyr::bind_rows(x, y) |>
+    dplyr::rows_update(
+      y, by = key, unmatched = "ignore"
+    ) |>
+    dplyr::distinct(!!rlang::sym(key), .keep_all = TRUE)
+
+  return(x)
+
+}
+
 #' @title CheckDesc
 #' @keywords internal
 #' @noRd
@@ -1041,23 +1059,23 @@ Pluralis <- \(data, singular, plural = NULL, prefix = TRUE) {
 #' @title AddAppend
 #' @keywords internal
 #' @noRd
+#' @title AddAppend
+#' @keywords internal
+#' @noRd
 AddAppend <- \(data = NULL, old.data = NULL, sep = NULL) {
 
-  if (is.null(GoFish(data, NULL))) {
-    return (old.data)
-  }
+  data <- GoFish(data, NULL)
+  old.data <- GoFish(old.data, NULL)
 
-  if (is.null(GoFish(old.data, NULL))) {
-    return (old.data)
-  }
-
-  if (is.data.frame(data)) {
-    data <- dplyr::bind_rows(old.data, data) |>
-      dplyr::distinct()
-  } else if (is.double(data) | (is.list(data))) {
-    data <- c(old.data, data)
-  } else if(is.character(data)) {
-    data <- paste(old.data, data, sep = sep)
+  if (!is.null(old.data) & !is.null(data)) {
+    data <- if (is.data.frame(data)) {
+      dplyr::bind_rows(old.data, data) |>
+        dplyr::distinct()
+    } else if (is.double(data) | (is.list(data))) {
+      c(old.data, data)
+    } else if(is.character(data)) {
+      paste(old.data, data, sep = sep)
+    }
   }
 
   return (data)

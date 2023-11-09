@@ -8,6 +8,8 @@ maintenance simpler.
 
 #### Minor
 
+* Added a internal function `InsertUpdate` to update/insert zotero items by key.
+
 * Fixed minor bug in `CristinWrangler` with empty external.creators  
 
 * Fixed a bug in `ZoteroDelete` where the function failed to get the latest

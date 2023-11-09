@@ -1043,19 +1043,21 @@ Pluralis <- \(data, singular, plural = NULL, prefix = TRUE) {
 #' @noRd
 AddAppend <- \(data = NULL, old.data = NULL, sep = NULL) {
 
-  data <- GoFish(data, NULL)
+  if (is.null(GoFish(data, NULL))) {
+    return (old.data)
+  }
 
-  old.data <- GoFish(old.data, NULL)
+  if (is.null(GoFish(old.data, NULL))) {
+    return (old.data)
+  }
 
-  if (!is.null(old.data) & !is.null(data)) {
-    data <- if (is.data.frame(data)) {
-      dplyr::bind_rows(old.data, data) |>
-        dplyr::distinct()
-    } else if (is.double(data) | (is.list(data))) {
-      c(old.data, data)
-    } else if(is.character(data)) {
-      paste(old.data, data, sep = sep)
-    }
+  if (is.data.frame(data)) {
+    data <- dplyr::bind_rows(old.data, data) |>
+      dplyr::distinct()
+  } else if (is.double(data) | (is.list(data))) {
+    data <- c(old.data, data)
+  } else if(is.character(data)) {
+    data <- paste(old.data, data, sep = sep)
   }
 
   return (data)

@@ -27,7 +27,7 @@
 #' @param collections Predefined collections (as tibble), Default: NULL
 #' @param items Predefined metadata (as tibble), Default: NULL
 #' @param attachments Predefined attachments (as tibble), Default: NULL
-#' @param metadata Predefined metadata in Zoter-format, Default: NULL
+#' @param metadata Predefined metadata in Zotero-format, Default: NULL
 #' @param doi Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL
 #' @param isbn Use \code{\link{ZoteroIsbn}} to fetch ISBN metadata, Default:
 #'   NULL

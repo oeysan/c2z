@@ -31,9 +31,21 @@ ZoteroFormat <- \(data = NULL,
                   check.structure = FALSE,
                   silent = FALSE) {
 
+  # Visible bindings
+  relations <- NULL
+
   # Run if not empty
   if (all(is.na(GoFish(data)))) {
     return (NULL)
+  }
+
+  # Function to fix relations
+  FixRelations <- \(x) {
+    if (any(is.na(x))) {
+      return (data.frame())
+    } else {
+      return (purrr::map(x, ~ as.character(unlist(.x))))
+    }
   }
 
   # Return as tibble if format is keys/versions
@@ -140,6 +152,8 @@ ZoteroFormat <- \(data = NULL,
             if (all(!is.na(.x))) as.data.frame(.x)
           })
         ),
+        # Make certain relations is a data.frame within a list
+        relations = purrr::map(list(GoFish(relations)), ~ FixRelations(.x)),
         # Make certain that parentCollection is a character
         dplyr::across(dplyr::any_of("parentCollection"), as.character),
         # Add prefix if defined
@@ -149,6 +163,7 @@ ZoteroFormat <- \(data = NULL,
       ) |>
       # Remove empty columns
       dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0))
+
 
     # Check that each entry has the correct structure
     if (check.structure) {

@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.10.25 @ 14:52:23-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.11.09 @ 11:45:59-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9006-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9007-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -218,7 +218,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success PHNS4AKB
+#> 1 success KCNNXKC6
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -229,62 +229,19 @@ example <- Zotero(
 #> 
 #> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
-#> Adding 2 items to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> $post.status.items
-#> # A tibble: 2 × 2
-#>   status  key     
-#>   <fct>   <chr>   
-#> 1 success FM5HPW2H
-#> 2 success ST5VYNMA
-#> 
-#> $post.summary.items
-#> # A tibble: 1 × 2
-#>   status  summary
-#>   <fct>     <int>
-#> 1 success       2
-#> 
-#> 
 #> Searching for items using 1 collection 
-#> Found 2 items 
-#> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
-#> Found 2 `biblatex` references 
+#> Found 0 items 
+#> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
+#> The items list is empty 
 #> Deleting 1 collection using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> Deleting 2 items using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> Creating index for items
+#> There are no items to DELETE
 ```
 
 The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Imsen, G. (2020). <i>Elevens verden: innføring i pedagogisk
-psykologi</i> (6th ed.). Universitetsforlaget.
-
-</div>
-
-</div>
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Johannessen, A., Christoffersen, L., & Tufte, P. A. (2021).
-<i>Introduksjon til samfunnsvitenskapelig metode</i> (6th ed.). Abstrakt
-forlag.
-
-</div>
-
-</div>
 
 </div>
 

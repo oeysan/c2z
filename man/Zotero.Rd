@@ -117,7 +117,7 @@ Default: TRUE}
 
 \item{attachments}{Predefined attachments (as tibble), Default: NULL}
 
-\item{metadata}{Predefined metadata in Zoter-format, Default: NULL}
+\item{metadata}{Predefined metadata in Zotero-format, Default: NULL}
 
 \item{doi}{Use \code{\link{ZoteroDoi}} to fetch DOI metadata, Default: NULL}
 

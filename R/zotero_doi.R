@@ -166,7 +166,7 @@ ZoteroDoi <- \(doi,
 
     # Set abstractNote from Semantic Scholar if prefer.semantic
     if (prefer.semantic) {
-      semantic <- SemanticScholar(doi)
+      semantic <- SemanticScholar(doi[[i]])
       if (any(!is.na(GoFish(semantic$abstract)))) {
         meta$abstractNote <- semantic$abstract |>
           CleanText()
@@ -175,7 +175,7 @@ ZoteroDoi <- \(doi,
 
     # Check if retracted if check.retraction
     if (check.retraction) {
-      if (CrossrefRetracted(doi)) {
+      if (CrossrefRetracted(doi[[i]])) {
         meta$title <- paste("[RETRACTED]", meta$title)
       }
     }

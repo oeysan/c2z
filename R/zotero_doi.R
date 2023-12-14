@@ -3,6 +3,7 @@
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
 #' @param prefer.semantic Prefer metadata from Semantic Scholar, Default: FALSE
+#' @param check.retraction Check if marked as retracted, Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
@@ -32,6 +33,7 @@
 ZoteroDoi <- \(doi,
                meta = list(),
                prefer.semantic = FALSE,
+               check.retraction = TRUE,
                silent = TRUE,
                log = list()) {
 
@@ -168,6 +170,13 @@ ZoteroDoi <- \(doi,
       if (any(!is.na(GoFish(semantic$abstract)))) {
         meta$abstractNote <- semantic$abstract |>
           CleanText()
+      }
+    }
+
+    # Check if retracted if check.retraction
+    if (check.retraction) {
+      if (CrossrefRetracted(doi)) {
+        meta$title <- paste("[RETRACTED]", meta$title)
       }
     }
 

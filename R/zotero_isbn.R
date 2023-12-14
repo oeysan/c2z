@@ -173,7 +173,7 @@ ZoteroIsbn <- \(keys,
   ReadMarc <- \(marc, meta) {
 
     # Function to convert XML fields
-    Marc <- \(marc, tag, code = NULL, clean.text = TRUE) {
+    Marc <- \(marc, tag, code = NULL, clean.text = TRUE, collapse = FALSE) {
 
       # Run if extracting specific code tag within tags
       if (!is.null(code)) {
@@ -185,7 +185,7 @@ ZoteroIsbn <- \(keys,
         )
 
         # Extract text from specified tag
-        field <- ReadXpath(marc, x.path, clean.text)
+        field <- ReadXpath(marc, x.path, clean.text, collapse = collapse)
 
         # Else find all elements within specified tag
       } else {
@@ -335,8 +335,8 @@ ZoteroIsbn <- \(keys,
     }
 
     # Fetch abstract
-    meta$abstractNote <- meta$abstractNote <- ToString(
-      GoFish(Marc(marc, 520, "a"), ""),
+    meta$abstractNote <- ToString(
+      GoFish(Marc(marc, 520, "a", collapse = TRUE), ""),
       "\n"
     )
 

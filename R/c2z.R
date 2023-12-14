@@ -36,6 +36,64 @@ NULL
 ###############################Internal Functions###############################
 ################################################################################
 
+#' @title CrossrefRetracted
+#' @keywords internal
+#' @noRd
+CrossrefRetracted <- \(doi, email = NULL) {
+
+  # Visible bindings
+  retracted <- FALSE
+
+  # Ask user not to be unfriendly is email is missing
+  if (is.null(email) & is.null(Sys.getenv("CROSSREF_EMAIL"))) {
+    log <- LogCat(
+      "Sys.getenv(\"CROSSREF_EMAIL\") is empty.
+        Please specify email",
+      fatal = TRUE
+    )
+  }
+  if (is.null(email)) email <- Sys.getenv("CROSSREF_EMAIL")
+
+
+  # Try DOI key
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      sprintf("https://api.labs.crossref.org/works/%s", doi),
+      query = list(
+        mailto = email
+      ),
+      quiet = TRUE
+    ),
+    silent = TRUE,
+    message = "DOI",
+    reference = doi,
+  )
+
+  # Log and return error if status code != 200
+  if (httr.get$error) {
+    return (NULL)
+  }
+
+  # Format JSON
+  doi.json <- jsonlite::fromJSON(
+    ParseUrl(httr.get$data, "text")
+  )
+
+  doi.update <- GoFish(doi.json$message$`cr-labs-updates`$`update-nature`)
+
+  if (!any(is.na(doi.update))) {
+
+    if (doi.update == "Retraction") {
+      retracted <- TRUE
+    }
+
+  }
+
+  return (retracted)
+
+}
+
 #' @title SemanticScholar
 #' @keywords internal
 #' @noRd
@@ -1310,12 +1368,20 @@ UnescapeHtml <- \(x) {
 #' @title HtmlCollapse
 #' @keywords internal
 #' @noRd
-HtmlCollapse <- function(x, collapse = " "){
-  text <- rvest::html_text(
-    rvest::html_nodes(x, xpath = ".//text()[normalize-space()]")
-  )
+HtmlCollapse <- function(x, sep = " ", collapse = FALSE){
 
-  string <- UnescapeHtml(paste(Trim(text), collapse = collapse))
+  if (collapse) {
+
+    text <- rvest::html_text(
+      rvest::html_nodes(x, xpath = ".//text()[normalize-space()]")
+    )
+
+    string <- UnescapeHtml(paste(Trim(text), collapse = sep))
+
+  } else {
+
+    string <- rvest::html_text(x)
+  }
 
   return (string)
 }
@@ -1324,11 +1390,16 @@ HtmlCollapse <- function(x, collapse = " "){
 #' @title ReadXpath
 #' @keywords internal
 #' @noRd
-ReadXpath <- \(data, xpath, clean.text = FALSE, first = FALSE) {
+ReadXpath <- \(data,
+               xpath,
+               clean.text = FALSE,
+               first = FALSE,
+               collapse = FALSE,
+               sep = " ") {
 
   data <- data |>
     rvest::html_nodes(xpath = xpath)|>
-    HtmlCollapse()
+    HtmlCollapse(sep = sep, collapse = collapse)
 
   if (first) data <- head(data, 1)
   if (clean.text) data <- data |> CleanText()

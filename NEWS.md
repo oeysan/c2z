@@ -8,6 +8,10 @@ maintenance simpler.
 
 #### Minor
 
+* Added internal function `CrossrefRetracted` to check whether CrossRef 
+(Retraction Watch) has marked a publication/DOI as retracted in api.labs. If 
+true [RETRACTED] will be added as a prefix to the title of the publication.
+ 
 * Added internal functions `UnescapeHtml` and `HtmlCollapse` to improve fetching
 abstracts from XML.
 

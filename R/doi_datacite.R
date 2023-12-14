@@ -164,7 +164,7 @@ DoiDatacite <- \(data, meta = list(), silent = TRUE, log = list()) {
   }
 
   # Set abstract
-  meta$abstractNote <- ReadXpath(ref, "//descriptions")
+  meta$abstractNote <- ReadXpath(ref, "//descriptions", collapse = TRUE)
 
   # Find language
   meta$language <- GoFish(ReadXpath(ref, "//language"))

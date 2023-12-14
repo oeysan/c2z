@@ -158,7 +158,9 @@ DoiCrossref <- \(data,
     # Set itemType
     meta$itemType <- "journalArticle"
     # Fetch abstract
-    meta$abstractNote <- ReadXpath(ref, "//journal_article//abstract")
+    meta$abstractNote <- ReadXpath(
+      ref, "//journal_article//abstract", collapse = TRUE
+    )
     # Fetch title
     meta$title <- ReadXpath(ref, "//journal_article/titles/title")
     # Fetch subtitle
@@ -223,7 +225,7 @@ DoiCrossref <- \(data,
     }
     # Fetch abstract
     meta$abstractNote <- ReadXpath(
-      ref, paste0(book.metadata,"//abstract")
+      ref, paste0(book.metadata,"//abstract"), collapse = TRUE
     )
     # Set itemType
     meta$itemType <- ref.type
@@ -376,7 +378,9 @@ DoiCrossref <- \(data,
       if (length(url)) meta$url <- url
 
       # Fetch abstract
-      meta$abstractNote <- ReadXpath(ref, "//content_item//abstract")
+      meta$abstractNote <- ReadXpath(
+        ref, "//content_item//abstract", collapse = TRUE
+      )
 
     } else {
       # Set book pages if reference is book and not a chapter
@@ -401,7 +405,7 @@ DoiCrossref <- \(data,
 
     # Fetch abstract
     meta$abstractNote <- ReadXpath(
-      ref, "//conference_paper//abstract"
+      ref, "//conference_paper//abstract", collapse = TRUE
     )
 
     meta$creators <- CrossRefCreator(ref, "//contributors/person_name")
@@ -461,7 +465,9 @@ DoiCrossref <- \(data,
     # Fetch data
     meta$date <- CrossrefDate(ref, "//posted_content", "/posted_date")
     # Fetch abstract
-    meta$abstractNote <- ReadXpath(ref, "//posted_content//abstract")
+    meta$abstractNote <- ReadXpath(
+      ref, "//posted_content//abstract", collapse = TRUE
+    )
     # Fetch repository
     meta$repository <- ReadXpath(ref, "//posted_content/group_title")
     # Fetch DOI

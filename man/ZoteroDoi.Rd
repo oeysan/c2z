@@ -8,6 +8,7 @@ ZoteroDoi(
   doi,
   meta = list(),
   prefer.semantic = FALSE,
+  check.retraction = TRUE,
   silent = TRUE,
   log = list()
 )
@@ -18,6 +19,8 @@ ZoteroDoi(
 \item{meta}{A list collecting all metadata used to create , Default: list()}
 
 \item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
+
+\item{check.retraction}{Check if marked as retracted, Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
 

@@ -15,6 +15,7 @@
 #' @importFrom tibble add_column as_tibble remove_rownames tibble is_tibble
 #' @importFrom utils adist flush.console head tail write.csv
 #' @importFrom rlang :=
+#' @importFrom xml2 read_html xml_text
 NULL
 #> NULL
 
@@ -34,6 +35,37 @@ NULL
 ################################################################################
 ###############################Internal Functions###############################
 ################################################################################
+
+#' @title SemanticScholar
+#' @keywords internal
+#' @noRd
+SemanticScholar <- \(doi) {
+
+  # Try DOI key
+  httr.get <- Online(
+    httr::RETRY(
+      "GET",
+      sprintf("https://api.semanticscholar.org/v1/paper/DOI:%s", doi),
+      quiet = TRUE
+    ),
+    silent = TRUE,
+    message = "DOI",
+    reference = doi,
+  )
+
+  # Log and return error if status code != 200
+  if (httr.get$error) {
+    return (NULL)
+  }
+
+  # Format JSON
+  doi.json <- jsonlite::fromJSON(
+    ParseUrl(httr.get$data, "text")
+  )
+
+  return (doi.json)
+
+}
 
 #' @title UpdateInsert
 #' @keywords internal
@@ -957,7 +989,7 @@ GoFish <- \(data, type = NA) {
   data <- suppressWarnings(
     tryCatch(data, silent = TRUE, error=function(err) logical(0))
   )
-  if (!length(data) | all(is.na(data))) data <- type
+  if (!length(data) | all(is.na(data)) | !any(nzchar(data))) data <- type
 
   return (data)
 
@@ -1015,12 +1047,14 @@ AddMissing <- \(data,
 #' @title Trim
 #' @keywords internal
 #' @noRd
-Trim <- \(x, multi = TRUE) {
+Trim <- \(x, multi = TRUE, encoding = "UTF-8") {
 
   if (multi) {
-    x <- gsub("(?<=[\\s])\\s*|^\\s+|\\s+$", "", x, perl = TRUE)
+    x <- gsub("(?<=[\\s])\\s*|^\\s+|\\s+$", "", x, perl = TRUE) |>
+      suppressWarnings()
   } else {
-    x <- gsub("^\\s+|\\s+$", "", x)
+    x <- gsub("^\\s+|\\s+$", "", x) |>
+      suppressWarnings()
   }
 
   return(x)
@@ -1168,7 +1202,13 @@ SaveData <- \(data,
 CleanText <- \(x, multiline = FALSE) {
 
   # Trim original vector
-  x <- Trim(x)
+  x <- Trim(x) |>
+    GoFish()
+
+  # Return if NA
+  if (all(is.na(x))) {
+    return (x)
+  }
 
   # List of characters to remove
   character.vector <- c(",",":",";","-","--","\u2013","\u2014",
@@ -1209,7 +1249,8 @@ CleanText <- \(x, multiline = FALSE) {
   }
 
   # Remove NA
-  x <- x[! x %in% c("NANA")]
+  x <- x[! x %in% c("NANA")] |>
+    Trim()
 
   return (x)
 
@@ -1255,6 +1296,50 @@ Mime <- \(x, mime = FALSE, charset = FALSE) {
 
 }
 
+
+#' @title UnescapeHtml
+#' @keywords internal
+#' @noRd
+UnescapeHtml <- \(x) {
+  string <- xml2::read_html(paste0("<x>", x, "</x>")) |>
+    xml2::xml_text()
+
+  return (string)
+}
+
+#' @title HtmlCollapse
+#' @keywords internal
+#' @noRd
+HtmlCollapse <- function(x, collapse = " "){
+  text <- rvest::html_text(
+    rvest::html_nodes(x, xpath = ".//text()[normalize-space()]")
+  )
+
+  string <- UnescapeHtml(paste(Trim(text), collapse = collapse))
+
+  return (string)
+}
+
+
+#' @title ReadXpath
+#' @keywords internal
+#' @noRd
+ReadXpath <- \(data, xpath, clean.text = FALSE, first = FALSE) {
+
+  data <- data |>
+    rvest::html_nodes(xpath = xpath)|>
+    HtmlCollapse()
+
+  if (first) data <- head(data, 1)
+  if (clean.text) data <- data |> CleanText()
+
+  # Set data as character(0) if empty
+  data <- GoFish(data, character(0))
+
+  return (data)
+
+}
+
 #' @title ReadCss
 #' @keywords internal
 #' @noRd
@@ -1264,22 +1349,6 @@ ReadCss <- \(data, css, clean.text = TRUE) {
     rvest::html_nodes(css) |>
     rvest::html_text()
 
-  if (clean.text) data <- data |> CleanText()
-
-  return (data)
-
-}
-
-#' @title ReadXpath
-#' @keywords internal
-#' @noRd
-ReadXpath <- \(data, xpath, clean.text = TRUE, first = FALSE) {
-
-  data <- data |>
-    rvest::html_nodes(xpath = xpath) |>
-    rvest::html_text()
-
-  if (first) data <- head(data, 1)
   if (clean.text) data <- data |> CleanText()
 
   return (data)

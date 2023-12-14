@@ -8,6 +8,12 @@ maintenance simpler.
 
 #### Minor
 
+* Added internal functions `UnescapeHtml` and `HtmlCollapse` to improve fetching
+abstracts from XML.
+
+* Added internal function `SemanticScholar` to provide better abstracts for 
+ZoteroDoi (if using `prefer.semantic` is set to TRUE). 
+
 * Added a internal function `InsertUpdate` to update/insert zotero items by key.
 
 * Fixed minor bug in `CristinWrangler` with empty external.creators  

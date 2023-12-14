@@ -4,12 +4,20 @@
 \alias{ZoteroDoi}
 \title{Use DOI to acquire metadata}
 \usage{
-ZoteroDoi(doi, meta = list(), silent = TRUE, log = list())
+ZoteroDoi(
+  doi,
+  meta = list(),
+  prefer.semantic = FALSE,
+  silent = TRUE,
+  log = list()
+)
 }
 \arguments{
 \item{doi}{A digital object identifier}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
 

@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2023.11.09 @ 14:07:43-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2023.12.14 @ 11:21:47-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9009-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9010-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -218,7 +218,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success PVT9H69C
+#> 1 success GI82MC9I
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -232,26 +232,27 @@ example <- Zotero(
 #> Adding 2 items to library using 1 POST request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> $post.status.items
-#> # A tibble: 2 × 2
-#>   status  key     
-#>   <fct>   <chr>   
-#> 1 success KJ5YU2WE
-#> 2 success XILUIH6L
+#> # A tibble: 2 × 3
+#>   error                                                             status key  
+#>   <chr>                                                             <fct>  <chr>
+#> 1 Error 413: Tag 'pedagogisk psykologi lærevansker tilpasset opplæ… failed 36IE…
+#> 2 <NA>                                                              succe… C73Z…
 #> 
 #> $post.summary.items
-#> # A tibble: 1 × 2
+#> # A tibble: 2 × 2
 #>   status  summary
 #>   <fct>     <int>
-#> 1 success       2
+#> 1 success       1
+#> 2 failed        1
 #> 
 #> 
 #> Searching for items using 1 collection 
-#> Found 2 items 
-#> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
-#> Found 2 `biblatex` references 
+#> Found 1 item 
+#> The Zotero list contains: 1 collection, 1 item, and 0 attachments 
+#> Found 1 `biblatex` reference 
 #> Deleting 1 collection using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> Deleting 2 items using 1 DELETE request 
+#> Deleting 1 item using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Creating index for items
 ```
@@ -260,18 +261,6 @@ The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Imsen, G. (2020). <i>Elevens verden: innføring i pedagogisk
-psykologi</i> (6th ed.). Universitetsforlaget.
-
-</div>
-
-</div>
 
 <div class="csl-bib-body"
 style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">

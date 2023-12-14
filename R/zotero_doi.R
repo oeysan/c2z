@@ -2,6 +2,7 @@
 #' @description Connects with doi.org to create metadata
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
+#' @param prefer.semantic Prefer metadata from Semantic Scholar, Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
@@ -30,6 +31,7 @@
 #' @export
 ZoteroDoi <- \(doi,
                meta = list(),
+               prefer.semantic = FALSE,
                silent = TRUE,
                log = list()) {
 
@@ -159,6 +161,15 @@ ZoteroDoi <- \(doi,
 
     # Set abstractNote to string
     meta$abstractNote <- ToString(GoFish(meta$abstractNote,""),"\n")
+
+    # Set abstractNote from Semantic Scholar if prefer.semantic
+    if (prefer.semantic) {
+      semantic <- SemanticScholar(doi)
+      if (any(!is.na(GoFish(semantic$abstract)))) {
+        meta$abstractNote <- semantic$abstract |>
+          CleanText()
+      }
+    }
 
     # Set accessDate
     meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")

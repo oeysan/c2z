@@ -338,7 +338,7 @@ CristinWrangler <- \(data,
 
       # Use CrossRef if DOI is defined
       if (!is.na(meta$DOI)) {
-        doi <- ZoteroDoi(meta$DOI)
+        doi <- ZoteroDoi(meta$DOI, prefer.semantic = TRUE)
         external.data <- doi$data
         log <- append(log, doi$log)
         # Stop check function for running search again

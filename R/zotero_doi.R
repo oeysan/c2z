@@ -175,7 +175,7 @@ ZoteroDoi <- \(doi,
 
     # Check if retracted if check.retraction
     if (check.retraction) {
-      if (CrossrefRetracted(doi[[i]])) {
+      if (GoFish(CrossrefRetracted(doi[[i]]), FALSE)) {
         meta$title <- paste("[RETRACTED]", meta$title)
       }
     }

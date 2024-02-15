@@ -72,7 +72,7 @@ CrossrefRetracted <- \(doi, email = NULL) {
 
   # Log and return error if status code != 200
   if (httr.get$error) {
-    return (NULL)
+    return (FALSE)
   }
 
   # Format JSON
@@ -81,13 +81,8 @@ CrossrefRetracted <- \(doi, email = NULL) {
   )
 
   doi.update <- GoFish(doi.json$message$`cr-labs-updates`$`update-nature`)
-
-  if (!any(is.na(doi.update))) {
-
-    if (doi.update == "Retraction") {
-      retracted <- TRUE
-    }
-
+  if (GoFish(doi.update == "Retraction", FALSE)) {
+    retracted <- TRUE
   }
 
   return (retracted)

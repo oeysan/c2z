@@ -464,12 +464,11 @@ CristinWrangler <- \(data,
           })
         )
 
-        # Use cristin creators if external external contains no lastName
-        if (any(nrow(external.data$creators[[1]]))) {
-          if (!grepl("lastName", external.data$creators) &
-              grepl("lastName", meta$creators)) {
-            external.data$creators <- meta$creators
-          }
+        # Use cristin creators if external data contains no lastName/name
+        if (!any(grepl("lastName|name", GoFish(external.data$creators))) &
+            any(grepl("lastName|name", GoFish(meta$creators)))) {
+          external.data$creators <- meta$creators
+
         }
 
         # Find unique creators

@@ -8,6 +8,9 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed a bug in `CristinWrangler` where an empty creators field caused an error
+when deciding to use external data or Cristin data.
+
 * Added internal function `CrossrefRetracted` to check whether CrossRef 
 (Retraction Watch) has marked a publication/DOI as retracted in api.labs. If 
 true [RETRACTED] will be added as a prefix to the title of the publication.

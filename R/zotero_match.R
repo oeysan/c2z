@@ -315,7 +315,7 @@ ZoteroMatch <- \(title,
     if (!any(date.match)) {
       date.match <- unlist(lapply(haystack, \(x) {
         year <- as.numeric(x$date)
-        needle$date %in% c(year-2, year, year+2)
+        needle$date %in% c(year-1, year, year+1)
       }))
     }
 

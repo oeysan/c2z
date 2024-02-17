@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9014</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,7 +144,7 @@ last element in the vector (i.e., “dog”).</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VWNP5MWK dog   VJ4UJ5C3</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> B3VNP3XZ dog   ECZTTY5U</span></span></code></pre></div>
 <p>However, we often want access all, or some, nested collections. We
 can achieve this using two different approaches. 1) using
 <code>recursive = TRUE</code> to access the given element and then
@@ -176,15 +176,15 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> VWNP5MWK dog   VJ4UJ5C3        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> VJ4UJ5C3 lazy  852B97FR        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 852B97FR the   R6GYBSJD        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> L8USPTZN fox   YHVUSSIH        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> VZ8QYZ6M quick 5JI4WRBM        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 5JI4WRBM The   FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> R6GYBSJD over  T5X9LTTS        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> T5X9LTTS jumps L8USPTZN        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> YHVUSSIH brown VZ8QYZ6M</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ECZTTY5U lazy  IQU58265        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> IQU58265 the   GPAVTZHJ        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> GPAVTZHJ over  78PMGYSW        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> R5MEKL8Q quick 958VJG7U        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 958VJG7U The   FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> B3VNP3XZ dog   ECZTTY5U        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 78PMGYSW jumps 6NJ8CSAS        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> 6NJ8CSAS fox   B9BE7SWK        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> B9BE7SWK brown R5MEKL8Q</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="recursive-path">Recursive path<a class="anchor" aria-label="anchor" href="#recursive-path"></a>
@@ -204,12 +204,12 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 1</span></span></span>
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> dog  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lazy </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> the  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> over </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> jumps</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lazy </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> the  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> over </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> dog  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> jumps</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> fox  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> brown</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -230,9 +230,9 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 1</span></span></span>
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> quick</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> The  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> quick</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> The  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> fox  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> brown</span></span></code></pre></div>
 </div>
 </div>
@@ -308,12 +308,12 @@ collection to the Zotero list.</p>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Filtered out 9 results </span></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1879488.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>05——————</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1919520.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>09——————</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1912219.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>06——————</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1961743.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>06——————</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1920677.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>04——————</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>—————————————————Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">6</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span>17—————————————————</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1879488.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>05——————</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1919520.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">45</span><span class="sc">:</span>43——————</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1912219.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">45</span><span class="sc">:</span>15——————</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1961743.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">45</span><span class="sc">:</span>03——————</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1920677.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>56——————</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>—————————————————Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">6</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">01</span><span class="sc">:</span>00—————————————————</span>
 <span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the fox key</span></span>
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>fox <span class="ot">&lt;-</span> collections<span class="sc">$</span>collections <span class="sc">|&gt;</span> </span>
@@ -371,11 +371,11 @@ specified collection(s).</p>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Filtered out 9 results </span></span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1721342.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>07——————</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1678430.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>07——————</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1709922.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>07——————</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1668352.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>07——————</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1715026.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">15</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">36</span><span class="sc">:</span>07——————</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1721342.</span> Progress<span class="sc">:</span> <span class="fl">16.67</span>% (<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>53——————</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1678430.</span> Progress<span class="sc">:</span> <span class="fl">33.33</span>% (<span class="dv">2</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>53——————</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1709922.</span> Progress<span class="sc">:</span> <span class="fl">50.00</span>% (<span class="dv">3</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>53——————</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1668352.</span> Progress<span class="sc">:</span> <span class="fl">66.67</span>% (<span class="dv">4</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>53——————</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>——————Next ID<span class="sc">:</span> <span class="fl">1715026.</span> Progress<span class="sc">:</span> <span class="fl">83.33</span>% (<span class="dv">5</span><span class="sc">/</span><span class="dv">6</span>). ETA<span class="sc">:</span> <span class="dv">17</span>.<span class="fl">02.2024</span> <span class="sc">-</span> <span class="dv">06</span><span class="sc">:</span><span class="dv">44</span><span class="sc">:</span>53——————</span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>—————————————————Process<span class="sc">:</span> <span class="fl">100.00</span>% (<span class="dv">6</span><span class="sc">/</span><span class="dv">6</span>). Elapsed time<span class="sc">:</span> <span class="dv">00</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span>01—————————————————</span></code></pre></div>
 </div>
 <div class="section level3">
@@ -473,7 +473,7 @@ metadata from The Comprehensive R Archive Network (CRAN). The
 <code class="sourceCode R"><span><span class="va">lazy</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"lazy"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="st">"key"</span><span class="op">)</span></span></code></pre></div>
-<p>The key is “VJ4UJ5C3” and the argument <code>recursive = TRUE</code>,
+<p>The key is “ECZTTY5U” and the argument <code>recursive = TRUE</code>,
 thus the function is looking for the specified collection (i.e., “lazy”)
 and all its children (i.e., “dog”).</p>
 <p>It is often useful to link items to several (nested) collections. For
@@ -517,15 +517,15 @@ choose to access all items under “project”, including those in
 <span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;246m# A tibble: 9 × 2 [39m</span></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   status  key     </span></span>
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    [3m [38;5;246m&lt;fct&gt; [39m [23m    [3m [38;5;246m&lt;chr&gt; [39m [23m   </span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m1 [39m success VGCQTZCM</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m2 [39m success QFB3JIPS</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m3 [39m success RB59MMBX</span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m4 [39m success Q4TYW6G8</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m5 [39m success 4Y8SKFNE</span></span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m6 [39m success PDUTQFJ8</span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m7 [39m success RFVQGCX5</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m8 [39m success YG6RJD45</span></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m9 [39m success FJRF2RTH</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m1 [39m success XVJIMZ5P</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m2 [39m success S4Q6G36Z</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m3 [39m success 42T7WCTF</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m4 [39m success H7TANXB7</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m5 [39m success B4AMGT5J</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m6 [39m success 284LRL4B</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m7 [39m success EUVS7XBQ</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m8 [39m success 3ZWGVKEP</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;250m9 [39m success 6GBNA76U</span></span>
 <span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $post.summary.items</span></span>
 <span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [38;5;246m# A tibble: 1 × 2 [39m</span></span>
@@ -581,11 +581,11 @@ to set up user/group id and API keys.</p>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Searching for collections </span></span>
-<span><span class="co">#&gt; Found 7 collections </span></span>
-<span><span class="co">#&gt; The Zotero list contains: 7 collections, 0 items, and 0 attachments </span></span>
+<span><span class="co">#&gt; Found 5 collections </span></span>
+<span><span class="co">#&gt; The Zotero list contains: 5 collections, 0 items, and 0 attachments </span></span>
 <span><span class="co">#&gt; Searching for all items in library </span></span>
-<span><span class="co">#&gt; Found 5 items </span></span>
-<span><span class="co">#&gt; The Zotero list contains: 7 collections, 3 items, and 2 attachments</span></span>
+<span><span class="co">#&gt; Found 3 items </span></span>
+<span><span class="co">#&gt; The Zotero list contains: 5 collections, 3 items, and 0 attachments</span></span>
 <span></span>
 <span><span class="co"># Copy the library creating new keys </span></span>
 <span><span class="va">copy.library</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ZoteroCopy.html">ZoteroCopy</a></span><span class="op">(</span></span>
@@ -620,14 +620,12 @@ to set up user/group id and API keys.</p>
 <span><span class="fu"><a href="../reference/ZoteroIndex.html">ZoteroIndex</a></span><span class="op">(</span><span class="va">post.copy</span><span class="op">$</span><span class="va">items</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span></span>
 <span><span class="co">#&gt;   name                                                                          </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Frühholz et al. (2021) Neurocognitive processing efficiency for discriminatin…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Mishra et al. (2023) Exploring Active and Critical Engagement in Human-Robot …</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Somby &amp; Stalheim (2023) Vygotsky med VR-briller                               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Somby &amp; Vik (2023) Vygotskys defektologi - et perspektiv på inkluderende oppl…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Frühholz et al. (2021) Appendix #1: Full article (attachment)                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Frühholz et al. (2021) Appendix #2: These are some thoug... (note)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Somby &amp; Vik (2023) Vygotskys defektologi - et perspektiv på inkluderende oppl…</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>

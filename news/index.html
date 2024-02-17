@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9014</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,8 @@
 </ul></div>
 <div class="section level5">
 <h5 id="minor-development-version">Minor<a class="anchor" aria-label="anchor" href="#minor-development-version"></a></h5>
-<ul><li><p>Added internal function <code>CrossrefRetracted</code> to check whether CrossRef (Retraction Watch) has marked a publication/DOI as retracted in api.labs. If true [RETRACTED] will be added as a prefix to the title of the publication.</p></li>
+<ul><li><p>Fixed a bug in <code>CristinWrangler</code> where an empty creators field caused an error when deciding to use external data or Cristin data.</p></li>
+<li><p>Added internal function <code>CrossrefRetracted</code> to check whether CrossRef (Retraction Watch) has marked a publication/DOI as retracted in api.labs. If true [RETRACTED] will be added as a prefix to the title of the publication.</p></li>
 <li><p>Added internal functions <code>UnescapeHtml</code> and <code>HtmlCollapse</code> to improve fetching abstracts from XML.</p></li>
 <li><p>Added internal function <code>SemanticScholar</code> to provide better abstracts for ZoteroDoi (if using <code>prefer.semantic</code> is set to TRUE).</p></li>
 <li><p>Added a internal function <code>InsertUpdate</code> to update/insert zotero items by key.</p></li>

@@ -16,6 +16,7 @@ ZoteroMatch(
   external.data = NULL,
   polite = TRUE,
   silent = FALSE,
+  prefer.semantic = FALSE,
   log = list()
 )
 }
@@ -45,6 +46,8 @@ NULL}
 \item{polite}{Will use an email stored in `.Renviron`, Default: TRUE}
 
 \item{silent}{Running silent, running deep, Default: FALSE}
+
+\item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
 
 \item{log}{A list for storing log elements, Default: list()}
 }

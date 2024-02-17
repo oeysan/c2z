@@ -13,6 +13,7 @@ CristinWrangler(
   override = FALSE,
   silent = FALSE,
   polite = TRUE,
+  prefer.semantic = TRUE,
   log = list()
 )
 }
@@ -36,6 +37,8 @@ DOI/ISBN) and override what is reported in Cristin, Default: FALSE}
 
 \item{polite}{Please store you email in `.Renviron` to query Crossref,
 Default: TRUE}
+
+\item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: TRUE}
 
 \item{log}{A list for storing log elements, Default: list()}
 }

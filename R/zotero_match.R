@@ -16,6 +16,7 @@
 #'   NULL
 #' @param polite Will use an email stored in `.Renviron`, Default: TRUE
 #' @param silent Running silent, running deep, Default: FALSE
+#' @param prefer.semantic Prefer metadata from Semantic Scholar, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble) if match is found otherwise NULL
 #' @details Please see
@@ -59,6 +60,7 @@ ZoteroMatch <- \(title,
                  external.data = NULL,
                  polite = TRUE,
                  silent = FALSE,
+                 prefer.semantic = FALSE,
                  log = list()) {
 
   # Visual bindings
@@ -366,7 +368,7 @@ ZoteroMatch <- \(title,
 
     # Find metadata from Crossref using DOI
     doi <- haystack.data[best.match,"DOI"]
-    doi <- ZoteroDoi(doi)
+    doi <- ZoteroDoi(doi, prefer.semantic = prefer.semantic)
     result <- doi$data
     log <- append(log, doi$log)
     if (!is.null(result)) {

@@ -17,6 +17,7 @@
 #' @param silent Running silent, running deep, Default: FALSE
 #' @param polite Please store you email in `.Renviron` to query Crossref,
 #'   Default: TRUE
+#' @param prefer.semantic Prefer metadata from Semantic Scholar, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
 #' @details Please see
@@ -51,6 +52,7 @@ CristinWrangler <- \(data,
                      override = FALSE,
                      silent = FALSE,
                      polite = TRUE,
+                     prefer.semantic = TRUE,
                      log = list()) {
 
   # Visible bindings
@@ -338,7 +340,7 @@ CristinWrangler <- \(data,
 
       # Use CrossRef if DOI is defined
       if (!is.na(meta$DOI)) {
-        doi <- ZoteroDoi(meta$DOI, prefer.semantic = TRUE)
+        doi <- ZoteroDoi(meta$DOI, prefer.semantic = prefer.semantic)
         external.data <- doi$data
         log <- append(log, doi$log)
         # Stop check function for running search again
@@ -413,6 +415,7 @@ CristinWrangler <- \(data,
           external.data = external.data,
           polite = polite,
           silent = TRUE,
+          prefer.semantic = prefer.semantic,
           log = log
         )
 
@@ -528,6 +531,13 @@ CristinWrangler <- \(data,
       } # End combine external and Cristin data
 
     } # End use.identifiers
+
+    # Use abstract from Semantic Scholar if empty
+    if (any(is.na(GoFish(meta$abstractNote))) & use.identifiers) {
+      meta$abstractNote <- GoFish(
+        SemanticScholar(meta$DOI)$abstract
+      )
+    }
 
     # Set meta as Cristin if not defined by external data
     if (!is.data.frame(meta)) meta <- GoFish(ZoteroFormat(meta), NULL)

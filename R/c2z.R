@@ -1099,16 +1099,9 @@ AddMissing <- \(data,
 
 #' @title Trim
 #' @keywords internal
-#' @noRd
-Trim <- \(x, multi = TRUE, encoding = "UTF-8") {
-
-  if (multi) {
-    x <- gsub("(?<=[\\s])\\s*|^\\s+|\\s+$", "", x, perl = TRUE) |>
-      suppressWarnings()
-  } else {
-    x <- gsub("^\\s+|\\s+$", "", x) |>
-      suppressWarnings()
-  }
+Trim <- function(x, multi = TRUE) {
+  if (multi) x <- gsub("\\s+", " ", x)
+  x <- gsub("^\\s+|\\s+$", "", x)
 
   return(x)
 
@@ -1270,7 +1263,7 @@ CleanText <- \(x, multiline = FALSE) {
 
   # Remove first character if unwanted
   first.character <- gsub(remove.characters, "", substring(x, 1, 1))
-  # Put Humpty togheter again
+  # Put Humpty together again
   if (max(0,nchar(Trim(gsub("(\\s).*", "\\1", x)))) == 1) {
     x <- paste(first.character, Trim(substring(x, 2)))
   } else {
@@ -1387,7 +1380,7 @@ HtmlCollapse <- function(x, sep = " ", collapse = FALSE){
 #' @noRd
 ReadXpath <- \(data,
                xpath,
-               clean.text = FALSE,
+               clean.text = TRUE,
                first = FALSE,
                collapse = FALSE,
                sep = " ") {

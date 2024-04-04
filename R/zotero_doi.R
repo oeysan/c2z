@@ -168,10 +168,12 @@ ZoteroDoi <- \(doi,
     if (prefer.semantic) {
       semantic <- SemanticScholar(doi[[i]])
       if (any(!is.na(GoFish(semantic$abstract)))) {
-        meta$abstractNote <- semantic$abstract |>
-          CleanText()
+        meta$abstractNote <- semantic$abstract
       }
     }
+
+    # Clean Abstract
+    meta$abstractNote <- CleanText(meta$abstractNote)
 
     # Check if retracted if check.retraction
     if (check.retraction) {

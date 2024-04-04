@@ -138,7 +138,7 @@ CristinWrangler <- \(data,
     # Fetch number of pages
     meta$numPages <- as.character(GoFish(x$number_of_pages))
     # Fetch language
-    meta$language <- x$original_language
+    meta$language <- GoFish(x$original_language)
     # Fetch ISBN
     meta$ISBN <- GoFish(
       ToString(x$international_standard_numbers[[1]]$value)
@@ -261,8 +261,11 @@ CristinWrangler <- \(data,
       # Change itemType if book metadata is not empty
       if (any(nrow(external.data))) {
 
+
         # Change creator-type of external.data
-        if (any(!is.na(external.data$creators[[1]]))) {
+        if (GoFish(any(!is.na(external.data$creators[[1]])) &
+                   "author" %in% meta$creators$creatorType)) {
+
           external.data$creators[[1]] <- external.data$creators[[1]] |>
             dplyr::mutate(
               creatorType = dplyr::case_when(
@@ -308,6 +311,7 @@ CristinWrangler <- \(data,
     if (!is.na(nvi)) meta$extra <- AddAppend(
       sprintf("NVI: %s", nvi), meta$extra, "\n"
     )
+
     # Set Cristin reference in extra
     meta$extra <- AddAppend(
       sprintf("Cristin: %s", x$cristin_result_id), meta$extra, "\n"
@@ -392,17 +396,18 @@ CristinWrangler <- \(data,
           any(!is.na(meta$creators)) &
           !override) {
 
-        # Set external.data as creator if nrow >= Cristin data
-        ## Usually happens if Cristin metadata exclude editors
-        if (any(nrow(external.data$creators[[1]]) >= nrow(meta$creators))) {
-          creators <- external.data$creators[[1]]
-        } else {
-          creators <- meta$creators
-        }
+        add.creators <- external.data$creators[[1]] |>
+          filter(
+            creatorType %in% setdiff(
+              unique(external.data$creators[[1]]$creatorType),
+              unique(meta$creators$creatorType)
+            )
+          )
+        external.data$creators[[1]] <- bind_rows(meta$creators, add.creators)
 
         zotero.match <- ZoteroMatch(
           title = meta$title,
-          authors = creators,
+          authors = external.data$creators[[1]],
           date = meta$date,
           haystack = list(
             title = list(GoFish(external.data$title)),
@@ -551,6 +556,9 @@ CristinWrangler <- \(data,
 
     # Set accessDate
     meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
+
+    # Clean Abstract
+    meta$abstractNote <- CleanText(meta$abstractNote)
 
     # Remove any missing creators
     if (any(!is.na(GoFish(meta$creators[[1]])))) {

@@ -397,6 +397,9 @@ ZoteroIsbn <- \(keys,
     # Set accessDate
     meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
 
+    # Clean Abstract
+    meta$abstractNote <- CleanText(meta$abstractNote)
+
     # Create zotero-type matrix
     meta <- GoFish(ZoteroFormat(meta), NULL)
 

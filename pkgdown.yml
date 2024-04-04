@@ -1,11 +1,11 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   c2z_vignette: c2z_vignette.html
   zotero_api: zotero_api.html
   c2z_public: c2z_public.html
-last_built: 2024-02-17T21:30Z
+last_built: 2024-04-04T21:49Z
 urls:
   reference: https://oeysan.github.io/c2z/reference
   article: https://oeysan.github.io/c2z/articles

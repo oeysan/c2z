@@ -393,21 +393,26 @@ CristinWrangler <- \(data,
 
       # Test whether external data matches metadata from Cristin
       if (!is.null(external.data) &
-          any(!is.na(meta$creators)) &
+          any(!is.na(GoFish(meta$creators))) &
           !override) {
 
-        add.creators <- external.data$creators[[1]] |>
-          filter(
-            creatorType %in% setdiff(
-              unique(external.data$creators[[1]]$creatorType),
-              unique(meta$creators$creatorType)
+        if (any(!is.na(GoFish(meta$creators[[1]])))) {
+          add.creators <- external.data$creators[[1]] |>
+            filter(
+              creatorType %in% setdiff(
+                unique(external.data$creators[[1]]$creatorType),
+                unique(meta$creators$creatorType)
+              )
             )
-          )
-        external.data$creators[[1]] <- bind_rows(meta$creators, add.creators)
+          creators <- external.data$creators[[1]] <-
+            bind_rows(meta$creators, add.creators)
+        } else {
+          creators <- meta$creators
+        }
 
         zotero.match <- ZoteroMatch(
           title = meta$title,
-          authors = external.data$creators[[1]],
+          authors = creators,
           date = meta$date,
           haystack = list(
             title = list(GoFish(external.data$title)),

@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2024.04.05 @ 06:40:05-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2024.04.06 @ 08:01:28-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9018-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9019-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -211,7 +211,22 @@ example <- Zotero(
   index = TRUE
 )
 #> Searching for collections 
-#> Found 1 collection 
+#> Found 0 collections 
+#> Adding 1 collection to library using 1 POST request 
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> $post.status.collections
+#> # A tibble: 1 × 2
+#>   status  key     
+#>   <fct>   <chr>   
+#> 1 success 9WZLIJ7V
+#> 
+#> $post.summary.collections
+#> # A tibble: 1 × 2
+#>   status  summary
+#>   <fct>     <int>
+#> 1 success       1
+#> 
+#> 
 #> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
 #> Adding 2 items to library using 1 POST request 
@@ -220,8 +235,8 @@ example <- Zotero(
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success E4DALY9K
-#> 2 success 8R6NTIAS
+#> 1 success GPIGX5Y3
+#> 2 success PNUZ43WX
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2
@@ -231,12 +246,12 @@ example <- Zotero(
 #> 
 #> 
 #> Searching for items using 1 collection 
-#> Found 4 items 
-#> The Zotero list contains: 1 collection, 4 items, and 0 attachments 
-#> Found 4 `biblatex` references 
+#> Found 2 items 
+#> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
+#> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> Deleting 4 items using 1 DELETE request 
+#> Deleting 2 items using 1 DELETE request 
 #> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Creating index for items
 ```
@@ -253,31 +268,6 @@ style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
 
 Imsen, G. (2020). <i>Elevens verden: innføring i pedagogisk
 psykologi</i> (6th ed.). Universitetsforlaget.
-
-</div>
-
-</div>
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Imsen, G. (2020). <i>Elevens verden: innføring i pedagogisk
-psykologi</i> (6th ed.). Universitetsforlaget.
-
-</div>
-
-</div>
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Johannessen, A., Christoffersen, L., & Tufte, P. A. (2021).
-<i>Introduksjon til samfunnsvitenskapelig metode</i> (6th ed.). Abstrakt
-forlag.
 
 </div>
 

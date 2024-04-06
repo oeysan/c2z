@@ -396,7 +396,7 @@ CristinWrangler <- \(data,
           any(!is.na(GoFish(meta$creators))) &
           !override) {
 
-        if (any(!is.na(GoFish(meta$creators[[1]])))) {
+        if (any(!is.na(GoFish(external.data$creators[[1]])))) {
           add.creators <- external.data$creators[[1]] |>
             filter(
               creatorType %in% setdiff(

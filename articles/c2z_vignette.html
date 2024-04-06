@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9018</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9019</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,7 +144,7 @@ last element in the vector (i.e., “dog”).</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DML87MVV dog   6R8QTLVB</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SEED6D85 dog   UMIYBYXN</span></span></code></pre></div>
 <p>However, we often want access all, or some, nested collections. We
 can achieve this using two different approaches. 1) using
 <code>recursive = TRUE</code> to access the given element and then
@@ -176,15 +176,15 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DML87MVV dog   6R8QTLVB        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 6R8QTLVB lazy  H9JFGALC        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> S7V8H8JT over  WC428YPW        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> WC428YPW jumps 2RWJVXSV        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2RWJVXSV fox   HRHMFBMR        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> EG4LT8JT quick SU9CHMX6        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> SU9CHMX6 The   FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> H9JFGALC the   S7V8H8JT        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> HRHMFBMR brown EG4LT8JT</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SEED6D85 dog   UMIYBYXN        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NL98ESX9 the   27JU2CSX        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ICCY66AD fox   FQN6MLQ7        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FQN6MLQ7 brown KYDQHK2C        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> KYDQHK2C quick 6XNYYPVC        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6XNYYPVC The   FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> UMIYBYXN lazy  NL98ESX9        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> 27JU2CSX over  CTFK7TPJ        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> CTFK7TPJ jumps ICCY66AD</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="recursive-path">Recursive path<a class="anchor" aria-label="anchor" href="#recursive-path"></a>
@@ -205,12 +205,12 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> dog  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lazy </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> over </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> jumps</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> the  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> brown</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> the  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> fox  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> lazy </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> over </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> jumps</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="ancestor-path">Ancestor path<a class="anchor" aria-label="anchor" href="#ancestor-path"></a>
@@ -231,9 +231,9 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> quick</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> The  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> brown</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> quick</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> The</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -308,7 +308,7 @@ collection to the Zotero list.</p>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
 <span><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
-<span><span class="co">#&gt; ——————Next ID: 1879488. Progress: 16.67% (1/6). ETA: 05.04.2024 - 04:48:32————————————Next ID: 1919520. Progress: 33.33% (2/6). ETA: 05.04.2024 - 04:48:25————————————Next ID: 1912219. Progress: 50.00% (3/6). ETA: 05.04.2024 - 04:48:19————————————Next ID: 1961743. Progress: 66.67% (4/6). ETA: 05.04.2024 - 04:48:16————————————Next ID: 1920677. Progress: 83.33% (5/6). ETA: 05.04.2024 - 04:48:15———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:20—————————————————</span></span>
+<span><span class="co">#&gt; ——————Next ID: 1912219. Progress: 16.67% (1/6). ETA: 06.04.2024 - 06:09:05————————————Next ID: 1919520. Progress: 33.33% (2/6). ETA: 06.04.2024 - 06:09:04————————————Next ID: 1920677. Progress: 50.00% (3/6). ETA: 06.04.2024 - 06:09:07————————————Next ID: 1961743. Progress: 66.67% (4/6). ETA: 06.04.2024 - 06:09:08————————————Next ID: 1979685. Progress: 83.33% (5/6). ETA: 06.04.2024 - 06:09:07———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:19—————————————————</span></span>
 <span></span>
 <span><span class="co"># Get the fox key</span></span>
 <span><span class="va">fox</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
@@ -366,7 +366,7 @@ specified collection(s).</p>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
 <span><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
-<span><span class="co">#&gt; ——————Next ID: 1721342. Progress: 16.67% (1/6). ETA: 05.04.2024 - 04:48:19————————————Next ID: 1678430. Progress: 33.33% (2/6). ETA: 05.04.2024 - 04:48:18————————————Next ID: 1709922. Progress: 50.00% (3/6). ETA: 05.04.2024 - 04:48:18————————————Next ID: 1668352. Progress: 66.67% (4/6). ETA: 05.04.2024 - 04:48:18————————————Next ID: 1715026. Progress: 83.33% (5/6). ETA: 05.04.2024 - 04:48:18———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:01—————————————————</span></span></code></pre></div>
+<span><span class="co">#&gt; ——————Next ID: 1678430. Progress: 16.67% (1/6). ETA: 06.04.2024 - 06:09:14————————————Next ID: 1699701. Progress: 33.33% (2/6). ETA: 06.04.2024 - 06:09:14————————————Next ID: 1709922. Progress: 50.00% (3/6). ETA: 06.04.2024 - 06:09:14————————————Next ID: 1715026. Progress: 66.67% (4/6). ETA: 06.04.2024 - 06:09:14————————————Next ID: 1721342. Progress: 83.33% (5/6). ETA: 06.04.2024 - 06:09:14———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:01—————————————————</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-identifiers">Adding items from identifiers<a class="anchor" aria-label="anchor" href="#adding-items-from-identifiers"></a>
@@ -463,7 +463,7 @@ metadata from The Comprehensive R Archive Network (CRAN). The
 <code class="sourceCode R"><span><span class="va">lazy</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op">==</span> <span class="st">"lazy"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="st">"key"</span><span class="op">)</span></span></code></pre></div>
-<p>The key is “6R8QTLVB” and the argument <code>recursive = TRUE</code>,
+<p>The key is “UMIYBYXN” and the argument <code>recursive = TRUE</code>,
 thus the function is looking for the specified collection (i.e., “lazy”)
 and all its children (i.e., “dog”).</p>
 <p>It is often useful to link items to several (nested) collections. For
@@ -507,15 +507,15 @@ choose to access all items under “project”, including those in
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 2</span></span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success DL57LCHW</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success 9CEMUH7S</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success ILE7HNU6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success KCK5HPT5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success W9RC85D5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success WZVNEFTI</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success URZZ5Z95</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success BC29L3WM</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success L3NDF3J8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success 9PBVG7Q5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success 4L2R5R4Y</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success 6FXDYWPN</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success 6HZ453YC</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success 6SBT4JK7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success NSUR22DQ</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success ATBQTCL2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success HFN85TC3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success HPPH8T9F</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.items</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>

@@ -8,6 +8,12 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed some changes in `ZoteroGov` due to changes in the API of 
+regjeringen.no
+
+* Fixed a bug in internal function `CleanText` that failed to remove 
+dots. 
+
 * Fixed a bug in `ZoteroDoi` where a regex pattern caused error in some DOis.
 
 * Fixed a bug in `ZoteroGet` where Zotero now enforces a limit of 25 items per

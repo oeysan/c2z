@@ -58,12 +58,28 @@ ZoteroGov <- \(search,
   # Function to create zotero-type matrix from MeldSt
   GovSearch <- \(search, id, meta, log = list()) {
 
-    # Search data
+    # Find the redirected search page.
     httr.get <- Online(
       httr::RETRY(
         "GET",
         sprintf("https://www.regjeringen.no/%s/", id),
-        query = list(term = search, sortby = 0),
+        quiet = TRUE),
+      silent = silent,
+      message = "Searching Regjeringen.no for search page",
+      reference = search
+    )
+
+    # Return Null not found
+    if (httr.get$error) {
+      return (list(data = NULL, log = log))
+    }
+
+    # Search data
+    httr.get <- Online(
+      httr::RETRY(
+        "GET",
+        httr.get$data$url,
+        query = list(term = paste0('"', search, '"')),
         quiet = TRUE),
       silent = silent,
       message = "Searching Regjeringen.no",
@@ -77,11 +93,29 @@ ZoteroGov <- \(search,
       return (list(data = NULL, log = log))
     }
 
+    # Read the HTML content
+    html_doc <- httr.get$data |> rvest::read_html()
+
+    # Grab all title links from the results
+    links <- html_doc |> rvest::html_nodes(".results ul li .title a")
+
+    # Extract and clean the text from the links
+    link_texts <- links |> rvest::html_text() |> trimws()
+
+    clean_for_grepl <- function(x) {
+      # This pattern matches common regex metacharacters and escapes them.
+      gsub("([][{}()+*^$|\\\\?.])", "\\\\\\1", x)
+    }
+
+    clean_for_grepl(search)
+
+
     # Find id
     search.id <- httr.get$data |>
       rvest::read_html() |>
       rvest::html_nodes(".results ul li:first-child .title a") |>
       rvest::html_attr('href') |>
+      (\(x) sub("\\?.*$", "", x))() |>
       basename()
 
     # Return Null not found

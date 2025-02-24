@@ -1257,7 +1257,7 @@ CleanText <- \(x, multiline = FALSE) {
   }
 
   # List of characters to remove
-  character.vector <- c(",",":",";","-","--","\u2013","\u2014",
+  character.vector <- c(".",",",":",";","-","--","\u2013","\u2014",
                         "[","]","{","}","=","&","/")
   remove.characters <- paste0("\\", character.vector, collapse="|")
 

@@ -8,6 +8,11 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed a bug in `ZoteroDoi` where a regex pattern caused error in some DOis.
+
+* Fixed a bug in `ZoteroGet` where Zotero now enforces a limit of 25 items per
+query for bibliography and citation data.
+
 * Fixed a bug in `CristinWrangler` where an empty creators field caused an error
 when deciding to use external data or Cristin data.
 

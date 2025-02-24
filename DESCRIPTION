@@ -1,7 +1,7 @@
 Type: Package
 Package: c2z
 Title: A Reference Manager
-Version: 0.2.0.9019
+Version: 0.2.0.9020
 Authors@R: 
     person("Øystein Olav", "Skaar", , "oeysan@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5605-3492"))
@@ -44,4 +44,4 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

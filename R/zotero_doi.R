@@ -51,9 +51,10 @@ ZoteroDoi <- \(doi,
     }
 
     # Remove any https part
-    doi <- Trim(gsub("^.*(10\\..*)", "\\1", doi, perl = TRUE))
-    # Remove any excess white space
-    doi <- gsub("\\s", "", doi)
+    # Remove any https part
+    doi <- Trim(
+      sub(".*?(10\\.\\d{4,9}/[-._;()/:A-Za-z0-9]+).*", "\\1", doi, perl = TRUE)
+    )
 
     # Try DOI key
     httr.get <- Online(

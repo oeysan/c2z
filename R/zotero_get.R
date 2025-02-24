@@ -100,6 +100,10 @@ ZoteroGet <- \(zotero,
   # Set no limit if format is versions or keys
   if (format %in% c("versions", "keys")) {
     limit <- NULL
+  # Else if include contains bib or citation set to 25
+  } else if (!is.null(include) &&
+             grepl("bib|citation", include, ignore.case = TRUE)) {
+    limit <- 25
     # else if limit > zotero max limit
   } else if (limit > 100) {
     limit <- 100

@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2024.04.06 @ 08:01:28-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2025.02.24 @ 12:49:49-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9019-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9020-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -218,7 +218,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 9WZLIJ7V
+#> 1 success XEFT8B9D
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -230,13 +230,13 @@ example <- Zotero(
 #> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
 #> Adding 2 items to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
 #> $post.status.items
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success GPIGX5Y3
-#> 2 success PNUZ43WX
+#> 1 success 4ZI8EZ57
+#> 2 success TD7HCVAA
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2

@@ -39,31 +39,6 @@ ZoteroIsbn <- \(keys,
   # Visible bindings
   data <- log.eta <- NULL
 
-  # Function to check key format
-  CheckId <- \(key) {
-
-    # Trim and remove foreign characters from key
-    key <- GoFish(as.character(
-      Trim(gsub('[^[:alnum:] ]', "", key))
-    ), NULL)
-
-    if (!is.null((key))) {
-      # Convert to ISBN13 if ISBN10
-      if (nchar(key) == 10) {
-        isbn10 <- c(9,7,8, as.numeric(strsplit(key,"")[[1]][1:9]))
-        check <- sum(isbn10 * c(1,3)) %% 10
-        check <- if (check == 0) check else 10 - check
-        key <- paste0(ToString(isbn10, ""),check)
-      }
-      if (!(substr(key, 1, 2) == "97" & nchar(key) == 13 |
-            substr(key, 1, 2) == "99" & nchar(key) > 7)) {
-        key <- NULL
-      }
-    }
-
-    return (key)
-  }
-
   # Function to fetch metadata from ALMA/LoC using ISBN or MMS id
   Isbn <- \(key, meta = list(), log = list()) {
 
@@ -108,6 +83,9 @@ ZoteroIsbn <- \(keys,
 
         # MARCXML metadata
         metadata <- list(rvest::read_html(marc.json$xmlPresentation))
+
+        if (is.null(metadata)) return (list(log = httr.get$log))
+
         # Set libraryCatalog
         meta$libraryCatalog <- "Alma (47BIBSYS)"
 
@@ -142,7 +120,10 @@ ZoteroIsbn <- \(keys,
       if (!httr.get$error) {
 
         # MARCXML metadata
-        metadata <- list(rvest::read_html(httr.get$data))
+        metadata <- list(rvest::read_html(httr.get$data)) |>
+        GoFish()
+
+        if (is.null(metadata)) return (list(log = httr.get$log))
 
         # Number of results
         n.data <- suppressWarnings(as.numeric(
@@ -355,7 +336,7 @@ ZoteroIsbn <- \(keys,
     if (is.null(meta$meetingName)) meta$meetingName  <- Marc(marc, "711", "a")
 
     # Fetch edition
-    meta$edition <- EditionFix(Marc(marc, "250", "a", FALSE))
+    meta$edition <- FixEdition(Marc(marc, "250", "a", FALSE))
 
     # Fetch place of publication
     meta$place <- Marc(marc, "260", "a")
@@ -419,7 +400,7 @@ ZoteroIsbn <- \(keys,
   for (i in seq_along(keys)) {
 
     # Check key
-    key <- CheckId(keys[[i]])
+    key <- CheckIsbn(keys[[i]])
 
     # Skip if not valid key
     if (is.null(key)) {
@@ -450,3 +431,73 @@ ZoteroIsbn <- \(keys,
   return (list(data = data, log = log))
 
 }
+
+################################################################################
+################################################################################
+################################Helper Functions################################
+################################################################################
+################################################################################
+
+
+#' Check and Convert ISBN
+#'
+#' This function takes an input string that may contain an ISBN (or a compound string
+#' where the first component is the ISBN), cleans it by removing non-alphanumeric characters
+#' (except spaces) and spaces, and processes it with the \code{GoFish} function. If the cleaned
+#' ISBN is in the ISBN10 format, the function converts it to ISBN13. Finally, it validates the ISBN;
+#' valid ISBNs either start with "97" and are 13 characters long or start with "99" and are longer than 7 characters.
+#'
+#' @param key A character string that contains an ISBN or a compound string where the first element is the ISBN.
+#' @param split.key A delimiter used to split the \code{key}. Default is \code{","}.
+#'
+#' @return A cleaned and validated ISBN string. If the resulting ISBN does not meet the expected criteria,
+#'   the function returns \code{NULL}.
+#'
+#' @details The function performs the following steps:
+#' \enumerate{
+#'   \item Splits the input \code{key} using \code{split.key} and selects the first element.
+#'   \item Removes foreign (non-alphanumeric) characters and spaces using nested \code{gsub} calls.
+#'   \item Applies the \code{GoFish} function to the cleaned key (ensure that \code{GoFish} is defined in your environment).
+#'   \item If the key is in ISBN10 format (10 characters), converts it to ISBN13 by prepending \code{978},
+#'         recalculating the check digit, and concatenating the result.
+#'   \item Checks that the final key is valid by confirming that it either starts with "97" (and is 13 characters long)
+#'         or starts with "99" and has more than 7 characters.
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' # Example with a compound string where the first part is the ISBN:
+#' isbn_input <- "316148410X, some extra text"
+#' valid_isbn <- CheckIsbn(isbn_input)
+#'
+#' # Example converting an ISBN10 to ISBN13:
+#' isbn10 <- "316148410X"
+#' valid_isbn <- CheckIsbn(isbn10)
+#' }
+#'
+#' @export
+CheckIsbn <- \(key, split.key=",") {
+
+  key <- strsplit(key, split = split.key)[[1]][1]
+
+  # Trim and remove foreign characters from key
+  key <- as.character(gsub(" ", "", gsub("[^[:alnum:] ]", "", key))) |>
+    GoFish(NULL)
+
+  if (is.null(key)) return (NULL)
+
+  # Convert to ISBN13 if ISBN10
+  if (nchar(key) == 10) {
+    isbn10 <- c(9,7,8, as.numeric(strsplit(key, "")[[1]][1:9]))
+    check <- sum(isbn10 * c(1,3)) %% 10
+    check <- if (check == 0) check else 10 - check
+    key <- paste0(ToString(isbn10, ""), check)
+  }
+  if (!(substr(key, 1, 2) == "97" & nchar(key) == 13 |
+        substr(key, 1, 2) == "99" & nchar(key) > 7)) {
+    key <- NULL
+  }
+
+  return(key)
+}
+

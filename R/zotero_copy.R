@@ -256,7 +256,7 @@ ZoteroCopy <- \(zotero,
     n.missing.attachments <- max(0,sum(missing.attachments))
 
     # MORE POINTLESS ... you know
-    missing.parent.message <- Pluralis(
+    missing.parent.message <- Numerus(
       n.missing.parent, "attachment", prefix = FALSE
     )
 
@@ -272,7 +272,7 @@ ZoteroCopy <- \(zotero,
     )
 
     # MORE POINTLESS ... you know
-    missing.attachment.message <- Pluralis(
+    missing.attachment.message <- Numerus(
       n.missing.attachments, "attachment", prefix = FALSE
     )
 

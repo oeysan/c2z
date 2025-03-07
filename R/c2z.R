@@ -16,6 +16,8 @@
 #' @importFrom utils adist flush.console head tail write.csv
 #' @importFrom rlang :=
 #' @importFrom xml2 read_html xml_text
+#' @importFrom future plan
+#' @importFrom future.apply future_lapply
 NULL
 #> NULL
 
@@ -117,24 +119,6 @@ SemanticScholar <- \(doi) {
   )
 
   return (doi.json)
-
-}
-
-#' @title UpdateInsert
-#' @keywords internal
-#' @noRd
-UpdateInsert <- \(x, y, key = "key") {
-
-  if (!any(nrow(y))) return(x)
-  if (!any(nrow(x))) return(y)
-
-  x <- dplyr::bind_rows(x, y) |>
-    dplyr::rows_update(
-      y, by = key, unmatched = "ignore"
-    ) |>
-    dplyr::distinct(!!rlang::sym(key), .keep_all = TRUE)
-
-  return(x)
 
 }
 
@@ -700,9 +684,9 @@ FixCreators <- \(data = NULL) {
   }
 
   data <- AddMissing(
-    data, c("firstName", "lastName", "name"), na.type = ""
+    data, c("firstName", "lastName", "name"), na.type = NA_character_
   ) |>
-    dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
+    dplyr::mutate(across(where(is.character), ~ na_if(., ""))) |>
     dplyr::mutate(
       lastName = dplyr::case_when(
         !is.na(name) ~ NA_character_,
@@ -719,8 +703,9 @@ FixCreators <- \(data = NULL) {
         TRUE ~ NA_character_
       )
     ) |>
+    dplyr::filter(!(is.na(lastName) & is.na(firstName) & is.na(name))) |>
     dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0)) |>
-    dplyr::filter(!dplyr::if_all(dplyr::everything(), is.na))
+    dplyr::filter(!dplyr::if_all(everything(), is.na))
 
   return (data)
 
@@ -957,24 +942,24 @@ Eta <- \(start.time,
 #' @title SplitData
 #' @keywords internal
 #' @noRd
-SplitData <- \(data, limit) {
-
-  # Split metadata into acceptable chunks (k > 50)
-  if (nrow(data)>limit) {
-    data <- split(
-      data,
-      rep(
-        seq_len(ceiling(nrow(data)/limit)),
-        each=limit,
-        length.out=nrow(data)
-      )
-    )
+SplitData <- function(data, limit = NULL, chunks = NULL) {
+  # If 'chunks' is provided, split the data into exactly that many pieces
+  if (!is.null(chunks)) {
+    data <- split(data, rep(seq_len(chunks), length.out = nrow(data)))
   } else {
-    data <- list(data)
+    # Otherwise, split into chunks of size 'limit' if necessary
+    if (nrow(data) > limit) {
+      data <- split(
+        data,
+        rep(seq_len(ceiling(nrow(data) / limit)),
+            each = limit,
+            length.out = nrow(data))
+      )
+    } else {
+      data <- list(data)
+    }
   }
-
-  return (data)
-
+  return(data)
 }
 
 #' @title ComputerFriendly
@@ -1061,24 +1046,6 @@ ToString <- \(x, sep = ", ") {
 
 }
 
-#' @title UpdateInsert
-#' @keywords internal
-#' @noRd
-UpdateInsert <- \(x, y, key = "key") {
-
-  if (!any(nrow(y))) return(NULL)
-  if (!any(nrow(x))) x <- y
-
-  x <- dplyr::bind_rows(x, y) |>
-    dplyr::rows_update(
-      y, by = key, unmatched = "ignore"
-    ) |>
-    dplyr::distinct(!!rlang::sym(key), .keep_all = TRUE)
-
-  return(x)
-
-}
-
 #' @title AddMissing
 #' @keywords internal
 #' @noRd
@@ -1122,17 +1089,19 @@ TrimSplit <- \(x,
 
 }
 
-#' @title Pluralis
+#' @title Numerus
 #' @keywords internal
 #' @noRd
-Pluralis <- \(data, singular, plural = NULL, prefix = TRUE) {
+Numerus <- \(count, singularis, pluralis = NULL, prefix = TRUE) {
 
-  if (is.null(plural)) plural <- paste0(singular, "s")
-  word <- if (data==1) singular else plural
+  if (any(is.na(GoFish(count)))) count = 0
 
-  if (prefix) word <- paste(data, word)
+  if (is.null(pluralis)) pluralis <- paste0(singularis, "s")
+  string <- if (count == 1) singularis else pluralis
 
-  return (word)
+  if (prefix) string <- paste(count, string)
+
+  return (string)
 
 }
 
@@ -1242,12 +1211,35 @@ SaveData <- \(data,
 
 }
 
+#' @title RemoveHtml
+#' @keywords internal
+#' @noRd
+RemoveHtml  <- \(x) {
+  # First pass: decode HTML entities
+  x.decoded <- xml2::xml_text(xml2::read_html(x)) |> GoFish()
+
+  # Second pass: remove any remaining HTML tags
+  x.reparsed <- xml2::xml_text(xml2::read_html(x.decoded)) |> GoFish()
+
+  # If the second pass produces non-missing output, use it
+  if (any(!is.na(x.reparsed))) {
+    return(x.reparsed)
+  } else if (any(!is.na(x.decoded))) {
+    return(x.decoded)
+  } else {
+    return(x)
+  }
+}
+
 #' @title CleanText
 #' @keywords internal
 #' @noRd
 CleanText <- \(x, multiline = FALSE) {
 
-  # Trim original vector
+  # Remove HTML
+  x <- RemoveHtml(x)
+
+  # Trim string
   x <- Trim(x) |>
     GoFish()
 
@@ -1280,9 +1272,6 @@ CleanText <- \(x, multiline = FALSE) {
 
   # Remove \r\n if multiline is set to FALSE
   if (!multiline) x <- Trim(gsub("\r?\n|\r", " ", x))
-
-  # Remove HTML/XML tags
-  x <- Trim(gsub("<.*?>|\ufffd|&lt;|&gt", "", x))
 
   # Remove any abstract from beginning of string
   if (any(grepl("abstract", tolower(substr(x, 1, 8))))) {
@@ -1477,16 +1466,16 @@ ParseUrl <- \(x,
 
 }
 
-#' @title EditionFix
+#' @title FixEdition
 #' @keywords internal
 #' @noRd
-EditionFix <- \(edition) {
+FixEdition <- \(edition) {
 
   # Some ISBN lists two edtions (e.g., 2nd ed. and global ed.)
   if (length(edition)>1) {
     edition <-   edition <- GoFish(
       sort(unique(unlist(lapply(edition, \(x) {
-        x[grepl("\\d", EditionFix(x))]
+        x[grepl("\\d", FixEdition(x))]
       }))))[[1]]
     )
   }

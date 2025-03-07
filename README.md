@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2025.02.24 @ 15:05:06-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2025.03.07 @ 13:17:01-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.2.0.9021-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.3.0.9000-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -45,7 +45,8 @@ including attachments and collections, and export references to BibLaTeX
 
 <p align="center">
 <a href="https://oeysan.github.io/c2z/reference/figures/flowchart.svg">
-<img src="man/figures/flowchart.svg" alt = "c2z flowchart" /></a>
+<img src="man/figures/flowchart.svg" alt="c2z flowchart" style="background-color: white;" />
+</a>
 </p>
 
 *Figure 1.* *c2z* flowchart.
@@ -218,7 +219,7 @@ example <- Zotero(
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success 9WZLIJ7V
+#> 1 success UHR8RJ6N
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -230,13 +231,13 @@ example <- Zotero(
 #> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
 #> Adding 2 items to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> $post.status.items
 #> # A tibble: 2 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success GPIGX5Y3
-#> 2 success PNUZ43WX
+#> 1 success NUZ43WXY
+#> 2 success X6UAX3ZA
 #> 
 #> $post.summary.items
 #> # A tibble: 1 × 2

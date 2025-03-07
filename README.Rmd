@@ -67,8 +67,10 @@ attachments and collections, and export references to BibLaTeX
 
 <p align="center">
 <a href="https://oeysan.github.io/c2z/reference/figures/flowchart.svg">
-<img src="man/figures/flowchart.svg" alt = "c2z flowchart" /></a>
+<img src="man/figures/flowchart.svg" alt="c2z flowchart" style="background-color: white;" />
+</a>
 </p>
+
 
 *Figure 1.* *c2z* flowchart.
 

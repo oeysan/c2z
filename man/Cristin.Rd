@@ -36,12 +36,14 @@ Cristin(
   all.results = TRUE,
   force = FALSE,
   remove.duplicates = TRUE,
-  silent = FALSE,
   base.url = "https://api.cristin.no/v2/results",
   custom.url = NULL,
   use.identifiers = TRUE,
-  crossref.search = FALSE,
-  autosearch = TRUE,
+  use.multisession = FALSE,
+  n.workers = NULL,
+  n.chunks = NULL,
+  handler = NULL,
+  restore.defaults = TRUE,
   zotero = NULL,
   zotero.import = TRUE,
   zotero.check = TRUE,
@@ -49,8 +51,7 @@ Cristin(
   remove.na = TRUE,
   replace.na = "book",
   force.type = NULL,
-  override = FALSE,
-  polite = TRUE,
+  silent = FALSE,
   log = list()
 )
 }
@@ -142,8 +143,6 @@ with fewer fields will be returned, Default: all}
 
 \item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
 
-\item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
-
 \item{base.url}{The base url for the Cristin API, Default:
 https://api.cristin.no/v2/results}
 
@@ -151,11 +150,24 @@ https://api.cristin.no/v2/results}
 
 \item{use.identifiers}{Use if ISBN/DOI identifiers if enabled, Default: TRUE}
 
-\item{crossref.search}{Query Crossref database based on title, authors, and
-date if enabled, Default: FALSE}
+\item{use.multisession}{Logical. If \code{TRUE} (default), parallel
+processing using multisession is employed; otherwise, processing is sequential.}
 
-\item{autosearch}{Results could be automatically evaluated (based on some
-logic) or you could inspect them manually if set to FALSE, Default: TRUE}
+\item{n.workers}{Optional integer for the number of workers to be used in
+multisession mode. If \code{NULL}, it defaults to the number of available
+cores minus one (with a minimum of one).}
+
+\item{n.chunks}{Optional integer for the number of chunks to process.
+If \code{NULL}, it defaults to the number of workers.}
+
+\item{handler}{The progress handler to be used by the \code{progressr}
+package. If \code{NULL} and
+  \code{silent} is \code{FALSE}, it defaults to \code{"txtprogressbar"}.
+  When \code{silent} is \code{TRUE},
+  the handler is set to \code{"void"}.}
+
+\item{restore.defaults}{Logical. If \code{TRUE} (default), the current
+\code{future} plan is saved and restored upon exit.}
 
 \item{zotero}{A list with information on the specified Zotero library (e.g.,
 id, API key, collections, and items), Default: NULL}
@@ -179,11 +191,7 @@ Default: 'book'}
 
 \item{force.type}{Force all items to a predefined itemType, Default: NULL}
 
-\item{override}{Put your faith in the algorithms and the identifiers (i.e.,
-DOI/ISBN) and override what is reported in Cristin, Default: FALSE}
-
-\item{polite}{Please store you email in `.Renviron` to query Crossref,
-Default: TRUE}
+\item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 
 \item{log}{A list for storing log elements, Default: list()}
 }

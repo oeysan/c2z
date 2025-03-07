@@ -162,7 +162,7 @@ CristinSupported <- \(data = NULL,
       unsupported.message <- sprintf(
         "Removed %s unsupported %s",
         nrow(unsupported.data),
-        Pluralis(nrow(unsupported.data), "reference", "references", FALSE)
+        Numerus(nrow(unsupported.data), "reference", "references", FALSE)
       )
 
       # Else replace with replace.na
@@ -180,7 +180,7 @@ CristinSupported <- \(data = NULL,
       unsupported.message <- sprintf(
         "Set %s unsupported %s to `%s`",
         nrow(unsupported.data),
-        Pluralis(
+        Numerus(
           nrow(unsupported.data), "reference", "references", FALSE
         ),
         replace.na
@@ -225,7 +225,7 @@ CristinSupported <- \(data = NULL,
     log <-  LogCat(
       sprintf(
         "Removed %s with missing data. See `$missing.id`",
-        Pluralis(nrow(data)-nrow(missing.data), "item", "items")
+        Numerus(nrow(data)-nrow(missing.data), "item", "items")
       ),
       silent = silent,
       log = log

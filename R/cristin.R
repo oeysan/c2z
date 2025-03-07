@@ -57,15 +57,24 @@
 #' @param all.results Find all results in query, Default: TRUE
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
-#' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param base.url The base url for the Cristin API, Default:
 #'   https://api.cristin.no/v2/results
 #' @param custom.url Define your own Cristin API url, Default: NULL
 #' @param use.identifiers Use if ISBN/DOI identifiers if enabled, Default: TRUE
-#' @param crossref.search Query Crossref database based on title, authors, and
-#'   date if enabled, Default: FALSE
-#' @param autosearch Results could be automatically evaluated (based on some
-#'   logic) or you could inspect them manually if set to FALSE, Default: TRUE
+#' @param use.multisession Logical. If \code{TRUE} (default), parallel
+#' processing using multisession is employed; otherwise, processing is sequential.
+#' @param n.workers Optional integer for the number of workers to be used in
+#' multisession mode. If \code{NULL}, it defaults to the number of available
+#' cores minus one (with a minimum of one).
+#' @param n.chunks Optional integer for the number of chunks to process.
+#' If \code{NULL}, it defaults to the number of workers.
+#' @param handler The progress handler to be used by the \code{progressr}
+#' package. If \code{NULL} and
+#'   \code{silent} is \code{FALSE}, it defaults to \code{"txtprogressbar"}.
+#'   When \code{silent} is \code{TRUE},
+#'   the handler is set to \code{"void"}.
+#' @param restore.defaults Logical. If \code{TRUE} (default), the current
+#' \code{future} plan is saved and restored upon exit.
 #' @param zotero A list with information on the specified Zotero library (e.g.,
 #'   id, API key, collections, and items), Default: NULL
 #' @param zotero.import Use \code{\link{CristinWrangler}} to wrangle metadata
@@ -81,10 +90,7 @@
 #'   categories with a predefined itemType if remove.na is set to false,
 #'   Default: 'book'
 #' @param force.type Force all items to a predefined itemType, Default: NULL
-#' @param override Put your faith in the algorithms and the identifiers (i.e.,
-#'   DOI/ISBN) and override what is reported in Cristin, Default: FALSE
-#' @param polite Please store you email in `.Renviron` to query Crossref,
-#'   Default: TRUE
+#' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return A list with (exported) items from Cristin
 #' @details Please see
@@ -139,12 +145,14 @@ Cristin <- function (id  = NULL,
                      all.results = TRUE,
                      force = FALSE,
                      remove.duplicates = TRUE,
-                     silent = FALSE,
                      base.url = "https://api.cristin.no/v2/results",
                      custom.url = NULL,
                      use.identifiers = TRUE,
-                     crossref.search = FALSE,
-                     autosearch = TRUE,
+                     use.multisession = FALSE,
+                     n.workers = NULL,
+                     n.chunks = NULL,
+                     handler = NULL,
+                     restore.defaults = TRUE,
                      zotero = NULL,
                      zotero.import = TRUE,
                      zotero.check = TRUE,
@@ -152,8 +160,7 @@ Cristin <- function (id  = NULL,
                      remove.na = TRUE,
                      replace.na = "book",
                      force.type = NULL,
-                     override = FALSE,
-                     polite = TRUE,
+                     silent = FALSE,
                      log = list()) {
 
   # Visible bindings
@@ -247,7 +254,7 @@ Cristin <- function (id  = NULL,
   # Log number of results
   log <-  LogCat(
     sprintf(
-      "Found %s", Pluralis(total.results, "result")
+      "Found %s", Numerus(total.results, "result")
     ),
     silent = silent,
     log = log
@@ -301,7 +308,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "The current query contains only %s",
-        Pluralis(max(pages), "page")
+        Numerus(max(pages), "page")
       ),
       silent = silent,
       fatal = TRUE,
@@ -359,7 +366,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "The provided query is limited to a maximum of %s" ,
-        Pluralis(max.results, "result")
+        Numerus(max.results, "result")
       ),
       silent = silent,
       log = log
@@ -384,7 +391,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "Conducting remaining %s" ,
-        Pluralis(k.remaining.pages, "query", "queries")
+        Numerus(k.remaining.pages, "query", "queries")
       ),
       silent = silent,
       log = log
@@ -490,7 +497,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "Filtered out %s" ,
-        Pluralis(n.filter, "result")
+        Numerus(n.filter, "result")
       ),
       silent = silent,
       log = log
@@ -502,7 +509,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "Filtered out %s. See `$unsupported.id`" ,
-        Pluralis(length(unsupported.id), "result")
+        Numerus(length(unsupported.id), "result")
       ),
       silent = silent,
       log = log
@@ -514,7 +521,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "Filtered out %s. See `$missing.id`" ,
-        Pluralis(length(missing.id), "result")
+        Numerus(length(missing.id), "result")
       ),
       silent = silent,
       log = log
@@ -548,7 +555,7 @@ Cristin <- function (id  = NULL,
       log <-  LogCat(
         sprintf(
           "Filtered out %s. See `$non.nvi.id`" ,
-          Pluralis(length(non.nvi.id), "non-NVI publication")
+          Numerus(length(non.nvi.id), "non-NVI publication")
         ),
         silent = silent,
         log = log
@@ -564,7 +571,7 @@ Cristin <- function (id  = NULL,
     log <-  LogCat(
       sprintf(
         "You have %s" ,
-        Pluralis(nrow(results), "result")
+        Numerus(nrow(results), "result")
       ),
       silent = silent,
       log = log
@@ -582,18 +589,34 @@ Cristin <- function (id  = NULL,
 
   # Convert to Zotero-format if zotero.import is TRUE
   if (zotero.import & any(nrow(results))) {
-    zotero.data <- CristinWrangler(
-      data = results,
-      use.identifiers = use.identifiers,
-      crossref.search = crossref.search,
-      autosearch = autosearch,
-      override = override,
+    if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
+    if (is.null(n.chunks)) n.chunks <- n.workers
+    cristin.chunks <- SplitData(results, chunks = n.chunks)
+    zotero.data <- ProcessData(
+      {
+        p <- progressr::progressor(steps = length(cristin.chunks))
+        run <- future_lapply(cristin.chunks, \(chunk) {
+
+          chunk <- CristinWrangler(
+            data = chunk,
+            use.identifiers = use.identifiers
+          )
+
+          p(message = "Processing data...")
+
+          return (chunk)
+        },
+        future.seed = TRUE)
+      dplyr::bind_rows(run)
+      },
+      n = nrow(results),
+      use.multisession = use.multisession,
+      restore.defaults = restore.defaults,
+      handler = handler,
       silent = silent,
-      polite = polite,
-      log = log
     )
     results <- zotero.data$results
-    log <- zotero.data$log
+    log <- c(log, zotero.data$log)
   }
 
   return (

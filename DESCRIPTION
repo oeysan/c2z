@@ -1,7 +1,7 @@
 Type: Package
 Package: c2z
 Title: A Reference Manager
-Version: 0.2.0.9021
+Version: 0.3.0.9000
 Authors@R: 
     person("Øystein Olav", "Skaar", , "oeysan@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5605-3492"))
@@ -21,8 +21,11 @@ Depends:
     R (>= 4.1)
 Imports: 
     dplyr,
+    future,
+    future.apply,
     httr,
     jsonlite,
+    progressr,
     purrr,
     rlang,
     rvest,

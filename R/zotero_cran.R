@@ -58,6 +58,9 @@ ZoteroCran <- \(id,
     data <- httr.get$data |>
       rvest::read_html() |>
       rvest::html_nodes("meta")
+      GoFish(NULL)
+
+    if (is.null(data)) return (list(log = log))
 
     # Set itemType
     meta$itemType <- "computerProgram"
@@ -65,7 +68,7 @@ ZoteroCran <- \(id,
     meta$programmingLanguage <- "R"
     # Fetch title
     meta$title <- ReadAttr(
-      data, "//meta[@name='og:title']", "content"
+      data, "//meta[@property='og:title']", "content"
     )
     # id as short title
     meta$shortTitle <- id
@@ -86,7 +89,7 @@ ZoteroCran <- \(id,
     meta$archiveLocation <- id
     # Fetch abstract
     meta$abstractNote <- ReadAttr(
-      data, "//meta[@name='og:description']", "content"
+      data, "//meta[@property='og:description']", "content"
     )
     # Fetch creator(s)
     n.creators <- sum(grepl("citation_author", data))

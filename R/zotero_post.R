@@ -132,11 +132,11 @@ ZoteroPost <- \(zotero,
 
     # JUST SOME MORE POINTLESS LINGUISTICS
     if (post.collections) {
-      items <- Pluralis(total.data, "collection")
+      items <- Numerus(total.data, "collection")
     } else {
-      items <- Pluralis(total.data, "item")
+      items <- Numerus(total.data, "item")
     }
-    posts <- Pluralis(length(metadata), "POST request")
+    posts <- Numerus(length(metadata), "POST request")
 
     # Create message
     upload.message <- sprintf("Adding %s to library using %s", items, posts)
@@ -314,7 +314,7 @@ ZoteroPost <- \(zotero,
     key <- status <- log.eta <- NULL
 
     # MORE...
-    n.attachments <- Pluralis(nrow(zotero$attachments),
+    n.attachments <- Numerus(nrow(zotero$attachments),
                               "attachment")
 
     # Add message to log

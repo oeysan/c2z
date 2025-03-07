@@ -99,6 +99,9 @@ ZoteroFormat <- \(data = NULL,
       # Make certain fields not in multiline are strings
       if (!names %in% multiline.items) x <- ToString(x)
 
+      # Remove numbering from title
+      if (names %in% c("title")) x <- gsub("^\\d+\\.\\s*", "", x)
+
       # Add to list if element is a data frame
       ## Make certain list.items is in a list
       if (is.data.frame(x) | names %in% list.items) {
@@ -143,9 +146,15 @@ ZoteroFormat <- \(data = NULL,
   if (is.data.frame(data)) {
 
     data <- tibble::as_tibble(data) |>
+      AddMissing(
+        missing.names = c("dateModified"),
+        na.type = NA_character_,
+        location = NULL
+      ) |>
       # Replace empty string with NA
       dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
       dplyr::mutate(
+        dateModified = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
         # Make certain tags is a data.frame within a list
         dplyr::across(
           dplyr::any_of("tags"), ~ purrr::map(tags, ~ {
@@ -163,7 +172,6 @@ ZoteroFormat <- \(data = NULL,
       ) |>
       # Remove empty columns
       dplyr::select(dplyr::where(~sum(!is.na(.x)) > 0))
-
 
     # Check that each entry has the correct structure
     if (check.structure) {

@@ -150,7 +150,7 @@ ZoteroLibrary <- \(zotero,
                 "Found %s new %s. Please set `create` to TRUE if you want
                 to create new collections",
                 nrow(new.collections),
-                Pluralis(nrow(new.collections), "collection", prefix = FALSE)
+                Numerus(nrow(new.collections), "collection", prefix = FALSE)
               ),
               fatal = TRUE,
               silent = silent,
@@ -215,7 +215,7 @@ ZoteroLibrary <- \(zotero,
     if (!is.null(zotero$collection.path)) {
       message <- sprintf(
         "Searching for items using %s",
-        Pluralis(length(zotero$collection.path), "collection")
+        Numerus(length(zotero$collection.path), "collection")
       )
     } else {
       message <- "Searching for all items in library"
@@ -302,9 +302,9 @@ ZoteroLibrary <- \(zotero,
     zotero$log <- LogCat(
       sprintf(
         "The Zotero list contains: %s, %s, and %s",
-        Pluralis(zotero$n.collections, "collection"),
-        Pluralis(zotero$n.items, "item"),
-        Pluralis(zotero$n.attachments, "attachment")
+        Numerus(zotero$n.collections, "collection"),
+        Numerus(zotero$n.items, "item"),
+        Numerus(zotero$n.attachments, "attachment")
       ),
       silent = silent,
       log = zotero$log

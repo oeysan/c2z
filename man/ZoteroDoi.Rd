@@ -7,8 +7,9 @@
 ZoteroDoi(
   doi,
   meta = list(),
-  prefer.semantic = FALSE,
+  prefer.semantic = TRUE,
   check.retraction = TRUE,
+  use.json = TRUE,
   silent = TRUE,
   log = list()
 )
@@ -21,6 +22,8 @@ ZoteroDoi(
 \item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
 
 \item{check.retraction}{Check if marked as retracted, Default: TRUE}
+
+\item{use.json}{Use either json (TRUE) or XML (FALSE), Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
 

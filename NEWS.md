@@ -1,5 +1,10 @@
 # c2z (development version)
 
+#### Major
+
+* `Cristin` can now use the `futureverse` package (with `progressr`) for 
+parallel processing. This can greatly reduce runtime.
+
 #### Breaking
 
 * Moved `CristinMonthly` and `CristinUnits`, including several internal 
@@ -7,6 +12,12 @@ functions (e.g., `CristinMail` and `CristinWeb` `Dict`) to `c2z4uni` to keep
 maintenance simpler.
 
 #### Minor
+
+* Slimmed down `ZoteroWrangler`, in preperation for adding the new Cris/NVA.
+Added several functions to aid the process of enhancing metadata using 
+`ZoteroEnhancer` and `ProcessData` for parallel processing. 
+
+* Fixed a bug in `ZoteroIndex` where items use shortTitle and not title.
 
 * Fixed some changes in `ZoteroGov` due to changes in the API of 
 regjeringen.no

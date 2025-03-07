@@ -167,7 +167,8 @@ ZoteroIndex <- \(data) {
                           "creators",
                           "note",
                           "date",
-                          "title"),
+                          "title",
+                          "shortTitle"),
                         na.type = "") |>
       # Replace empty string with NA
       dplyr::mutate_if(is.character, list(~na_if(.,""))) |>
@@ -183,7 +184,9 @@ ZoteroIndex <- \(data) {
           # Create title from note content
           itemType == "note" ~ purrr::pmap_chr(list(note), NoteContent),
           # Else run TitleOrder function
-          TRUE ~ purrr::pmap_chr(list(title), TitleOrder)
+          TRUE ~ purrr::pmap_chr(
+            list(dplyr::coalesce(title, shortTitle)), TitleOrder
+            )
         ),
         # Extract year (four digits) from date field
         date = sub('.*?(\\d{4}).*', '\\1', date)

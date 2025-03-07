@@ -70,11 +70,11 @@ ZoteroDelete <- \(zotero,
 
     # JUST SOME MORE POINTLESS LINGUISTICS
     if (append.collections) {
-      items <- Pluralis(total.data, "collection")
+      items <- Numerus(total.data, "collection")
     } else {
-      items <- Pluralis(total.data, "item")
+      items <- Numerus(total.data, "item")
     }
-    delete <- Pluralis(length(metadata), "DELETE request")
+    delete <- Numerus(length(metadata), "DELETE request")
 
     # Create message
     delete.message <- sprintf("Deleting %s using %s", items, delete)
@@ -93,13 +93,13 @@ ZoteroDelete <- \(zotero,
 
       # Define either collections or items
       if (append.collections) {
-        items <- Pluralis(
+        items <- Numerus(
           length(metadata[[i]]$key),
           "collection"
         )
         query.type <- "collectionKey"
       } else {
-        items <- Pluralis(
+        items <- Numerus(
           length(metadata[[i]]$key),
           "item"
         )

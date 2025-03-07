@@ -94,7 +94,14 @@ ZoteroGov <- \(search,
     }
 
     # Read the HTML content
-    html_doc <- httr.get$data |> rvest::read_html()
+    html_doc <- httr.get$data |>
+    rvest::read_html() |>
+    GoFish(NULL)
+
+    # Return Null if emtpy
+    if (is.null(html_doc)) {
+      return (list(data = NULL, log = log))
+    }
 
     # Grab all title links from the results
     links <- html_doc |> rvest::html_nodes(".results ul li .title a")
@@ -116,7 +123,13 @@ ZoteroGov <- \(search,
       rvest::html_nodes(".results ul li:first-child .title a") |>
       rvest::html_attr('href') |>
       (\(x) sub("\\?.*$", "", x))() |>
-      basename()
+      basename() |>
+      GoFish(NULL)
+
+    # Return Null if emtpy
+    if (is.null(search.id)) {
+      return (list(data = NULL, log = log))
+    }
 
     # Return Null not found
     if (!length(search.id)) {
@@ -144,6 +157,11 @@ ZoteroGov <- \(search,
     # Define html
     search.html <- httr.get$data$url |>
       rvest::read_html()
+
+   # Return Null if emtpy
+    if (is.null(search.html)) {
+      return (list(data = NULL, log = log))
+    }
 
     # Set itemType
     meta$itemType <- "document"

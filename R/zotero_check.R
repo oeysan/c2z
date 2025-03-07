@@ -117,7 +117,7 @@ ZoteroCheck <- \(data,
     # Send message
     log <-  LogCat(sprintf(
       "Removed %s",
-      Pluralis(nrow(data) - nrow(unique.data), "duplicate")
+      Numerus(nrow(data) - nrow(unique.data), "duplicate")
     ),
     silent = silent,
     log = log)
@@ -126,7 +126,7 @@ ZoteroCheck <- \(data,
       # Send message
       log <-  LogCat(sprintf(
         "Modified %s",
-        Pluralis(sum(modified), "item")
+        Numerus(sum(modified), "item")
       ),
       silent = silent,
       log = log)

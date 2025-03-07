@@ -249,7 +249,7 @@ ZoteroGet <- \(zotero,
   zotero$log <-  LogCat(
     sprintf(
       "Found %s",
-      Pluralis(total.results, result.type[1], result.type[2])
+      Numerus(total.results, result.type[1], result.type[2])
     ),
     silent = silent,
     log = zotero$log
@@ -285,7 +285,7 @@ ZoteroGet <- \(zotero,
     zotero$log <-  LogCat(
       sprintf(
         "The current query contains %s" ,
-        Pluralis(max(0,(max.results-1)), "page")
+        Numerus(max(0,(max.results-1)), "page")
       ),
       silent = silent,
       fatal = TRUE,
@@ -298,7 +298,7 @@ ZoteroGet <- \(zotero,
     zotero$log <-  LogCat(
       sprintf(
         "The provided query is limited to %s",
-        Pluralis(max.results, "result")
+        Numerus(max.results, "result")
       ),
       silent = silent,
       log = zotero$log
@@ -333,7 +333,7 @@ ZoteroGet <- \(zotero,
       sprintf(
         "Need %s addtional %s to gather %s" ,
         k.remaining.pages,
-        Pluralis(k.remaining.pages, "query", "queries", FALSE),
+        Numerus(k.remaining.pages, "query", "queries", FALSE),
         result.type[2]
       ),
       silent = silent,
@@ -432,7 +432,8 @@ ZoteroGet <- \(zotero,
           unlist()
       ) |>
       # arrange by author
-      dplyr::arrange(bib.item)
+      dplyr::arrange(bib.item) |>
+      GoFish()
   }
 
   # Add zotero version to zotero list

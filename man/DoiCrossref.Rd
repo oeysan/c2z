@@ -4,12 +4,14 @@
 \alias{DoiCrossref}
 \title{Wrangle CrossRef metadata into Zotero-type format}
 \usage{
-DoiCrossref(data, meta = list(), silent = TRUE, log = list())
+DoiCrossref(data, meta = list(), use.json = TRUE, silent = TRUE, log = list())
 }
 \arguments{
 \item{data}{XML data from CrossRef containing metadata}
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
+
+\item{use.json}{Use either json (TRUE) or XML (FALSE), Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
 

@@ -2,6 +2,7 @@
 #' @description Query CrossRef by DOI and fetch metadata
 #' @param data XML data from CrossRef containing metadata
 #' @param meta A list collecting all metadata used to create , Default: list()
+#' @param use.json Use either json (TRUE) or XML (FALSE), Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
 #' @param log A list for storing log elements, Default: list()
 #' @return A Zotero-type matrix (tibble)
@@ -26,8 +27,142 @@
 #' @export
 DoiCrossref <- \(data,
                  meta = list(),
+                 use.json = TRUE,
                  silent = TRUE,
                  log = list()) {
+
+################################################################################
+################################################################################
+#################################JSON Version###################################
+################################################################################
+################################################################################
+
+  if (use.json) {
+
+    # Parse the input JSON into a list
+    crossref <- jsonlite::fromJSON(ParseUrl(data, "text")) |>
+      GoFish(NULL)
+    if (is.null(crossref)) return (list(data = NULL, log = log))
+    msg <- crossref$message
+
+    # Map the Crossref "type" to a Zotero itemType.
+    if (msg$type == "journal-article") {
+      itemType <- "journalArticle"
+    } else if (msg$type == "proceedings-article") {
+      itemType <- "conferencePaper"
+    } else if (msg$type == "posted-content" &&
+               !is.null(msg$subtype) && msg$subtype == "preprint") {
+      itemType <- "preprint"
+    } else if (msg$type == "book-chapter") {
+      itemType <- "bookSection"
+    } else if (msg$type == "edited-book") {
+      itemType <- "book"
+    } else {
+      itemType <- "document"
+    }
+
+    # Initialize meta list to store Zotero fields.
+    meta$itemType <- itemType
+
+    # Title (first element if multiple exist)
+    meta$title  <- GoFish(msg$title[[1]])
+    # Combine title and subtitle if subtitle exist
+    subtitle <- GoFish(msg$subtitle[[1]])
+    if (!any(is.na(subtitle))) {
+      # Set short-title
+      meta$shortTitle <- meta$title
+      meta$title <- paste0(meta$title,": ", subtitle)
+    }
+
+    # Initialize creators as an empty list.
+    creators <- list()
+    # Define the contributor roles to process.
+    roles <- c("author", "editor", "translator")
+    for (role in roles) {
+      current.role <- msg[[role]]
+      if (any(nrow(current.role))) {
+        for (row in seq_len(nrow(current.role))) {
+          names <- current.role[row, ]
+          # Combine names
+          name <- c(names$family, names$given)
+          new.names <- list(type = role, name = name)
+          creators <- c(creators, list(new.names))
+        }
+      } else if (is.list(current.role)) {
+        for (el in seq_along(current.role)) {
+          names <- current.role[[el]]
+          new.names <- list(type = role, name = name)
+          creators <- c(creators, list(new.names))
+        }
+      }
+    }
+
+    # If item is not a book chapter remove authors if editors are present.
+    if (itemType != "bookSection") {
+      has.editor <- any(sapply(creators, \(x) x$type == "editor"))
+      if (has.editor) {
+        # Remove creators with type "author"
+        creators <- Filter(\(x) x$type != "author", creators)
+      }
+    }
+
+    # Create a Zotero-type creator tibble
+    meta$creators <- ZoteroCreator(creators)
+
+    # Publication title and journal abbreviation.
+    meta$publicationTitle    <- GoFish(msg$`container-title`[1])
+    meta$journalAbbreviation <- GoFish(msg$`short-container-title`[1])
+
+    # Volume, issue, and pages.
+    meta$volume <- GoFish(msg$volume)
+    meta$issue  <- GoFish(msg$issue)
+    meta$pages  <- GoFish(msg$page)
+
+    # Construct a publication date from available date parts.
+    dateParts <- GoFish(msg$`published-print`$`date-parts`)
+    if (any(is.na(dateParts))) dateParts <- GoFish(msg$issued$`date-parts`)
+    if (any(is.na(dateParts))) dateParts <- GoFish(msg$posted$`date-parts`)
+    if (any(!is.na(dateParts))) {
+      year <- GoFish(dateParts[1], NULL)
+      month <- GoFish(dateParts[2], NULL)
+      day <- GoFish(dateParts[3], NULL)
+      meta$date <- paste(c(year, month, day), collapse="-")
+      if (meta$date == "") date <- NA
+    }
+
+    # Other common fields.
+    meta$DOI       <- GoFish(msg$DOI)
+    meta$ISSN      <- GoFish(paste(msg$ISSN, collapse = ", "))
+    meta$ISBN      <- GoFish(paste(msg$ISBN, collapse = ", "))
+    meta$url       <- GoFish(msg$URL)
+    meta$language  <- GoFish(msg$language)
+    meta$publisher <- GoFish(msg$publisher)
+
+    # Abstrac
+    meta$abstractNote <- GoFish(msg$abstract)
+
+    # Additional fields.
+    meta$series       <- GoFish(msg$series)
+    meta$shortTitle   <- GoFish(msg$`short-title`[1])
+    meta$edition      <- GoFish(FixEdition(msg$edition))
+    if (any(is.na(meta$edition))) {
+      meta$edition    <- GoFish(FixEdition(msg$`edition-number`))
+    }
+    meta$place          <- GoFish(msg$`publisher-location`)
+    meta$conferenceName <- GoFish(msg$event$name)
+    meta$notes          <- GoFish(msg$notes, list())
+    meta$tags           <- GoFish(msg$tags, list())
+    meta$repository <- GoFish(msg$`group-title`)
+
+    # Return the meta list
+    return (list(data = meta, log = log))
+
+  }
+################################################################################
+################################################################################
+##################################XML Version###################################
+################################################################################
+################################################################################
 
   # Function to extract date from Crossref
   CrossrefDate <- \(ref, type, date.type = "/publication_date") {
@@ -128,7 +263,12 @@ DoiCrossref <- \(data,
   # Find crossref metadata
   ref <- rvest::read_html(data) |>
     rvest::html_nodes(xpath = "//doi_record//crossref") |>
-    rvest::html_children()
+    rvest::html_children() |>
+    GoFish(NULL)
+
+  # Return NULL is data is empty
+  if (is.null(ref)) return (list(data = NULL, log = log))
+
   # Type of metadata (e.g., journal, book)
   ref.type <- ref |>
     rvest::html_name()
@@ -191,6 +331,7 @@ DoiCrossref <- \(data,
     # Fetch publication title
     meta$publicationTitle <- ReadXpath(
       ref, "//journal_metadata/full_title",
+
       first = TRUE
     )
     # Fecth short title for journal
@@ -274,7 +415,7 @@ DoiCrossref <- \(data,
     # Fetch language
     meta$language <- ReadAttr(ref, book.metadata, "language")
     # Fetch edition
-    meta$edition <- EditionFix(
+    meta$edition <- FixEdition(
       ReadXpath(ref, paste0(book.metadata,"//edition_number"), FALSE
       ))
     # Check if there are series editors

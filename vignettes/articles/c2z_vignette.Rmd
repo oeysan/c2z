@@ -85,6 +85,7 @@ letter case, and if this is important set `case.insensitive = FALSE`.
 # Find collections
 collections <- Zotero(
   collection.names = "The",
+  case.insensitive = TRUE,
   recursive = TRUE,
   library = TRUE,
   silent = TRUE
@@ -142,15 +143,9 @@ gather all publications containing the word "cheese", published since 2020
 The `zotero.import` is set to `TRUE`, indicating that the function will use 
 `CristinWrangler` to convert Cristin metadata into an acceptable format for
 Zotero. `use.identifiers = TRUE` and the function will therefore use any
-identifiers (i.e., ISBN or DOI) to augment the metadata. Furthermore, 
-`crossref.search = TRUE`, meaning that the function will search CrossRef for 
-metadata if identifiers are missing. Also, `autosearch = TRUE` and the process 
-is consequently conducted automatically. The items are posted to the Zotero 
-library using `Zotero`, where items are uploaded using the `items` argument. 
-The `index = TRUE`, creating an index of the items.
-
-Please note that `crossref.search` should normally not be used (see the 
-[README](https://oeysan.github.io/c2z/)). 
+identifiers (i.e., ISBN or DOI) to augment the metadata. The items are posted 
+to the Zotero library using `Zotero`, where items are uploaded using the 
+`items` argument. The `index = TRUE`, creating an index of the items.
 
 Rather than finicking over h-indexes and impact factors, Norwegians have a 
 weird obsession with NVI (Norwegian Science Index), which is a two-level
@@ -188,8 +183,6 @@ cristin <- Cristin(
   filter = cristin.filter,
   zotero.import = TRUE,
   use.identifiers = TRUE,
-  crossref.search = TRUE,
-  autosearch = TRUE,
   silent = FALSE
 )
 

@@ -40,7 +40,7 @@ ZoteroAdd <- \(zotero,
 
     zotero$log <- LogCat(
       sprintf("Searching %s using DOI",
-              Pluralis(length(doi), "item")),
+              Numerus(length(doi), "item")),
       log = zotero$log,
       silent = silent
     )
@@ -59,7 +59,7 @@ ZoteroAdd <- \(zotero,
 
     zotero$log <- LogCat(
       sprintf("Searching %s using ISBN",
-              Pluralis(length(isbn), "item")),
+              Numerus(length(isbn), "item")),
       log = zotero$log,
       silent = silent
     )
@@ -79,7 +79,7 @@ ZoteroAdd <- \(zotero,
     zotero$log <- LogCat(
       sprintf("Adding %s formated %s to Zotero list",
               nrow(metadata),
-              Pluralis(nrow(metadata), "item", prefix = FALSE)),
+              Numerus(nrow(metadata), "item", prefix = FALSE)),
       log = zotero$log,
       silent = TRUE
     )

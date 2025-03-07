@@ -218,7 +218,7 @@ ZoteroMatch <- \(title,
     log <-  LogCat(
       sprintf(
         "Found %s" ,
-        Pluralis(length(haystack), "potential match", "potential matches")
+        Numerus(length(haystack), "potential match", "potential matches")
       ),
       silent = silent,
       log = log

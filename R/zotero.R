@@ -67,6 +67,8 @@
 #'   notes)?, Default: TRUE
 #' @param post.limit Number of collections/items to post per request (max 50),
 #'   Default: 50
+#' @param post.token Use Zotero-Write-Token (TRUE) or
+#' If-Unmodified-Since-Version (FALSE), Default: FALSE
 #' @param delete Use `ZoteroDelete` to delete collections and/or items, Default:
 #'   FALSE
 #' @param delete.collections Try to delete specified collections, Default: TRUE
@@ -153,6 +155,7 @@ Zotero <- \(collection.names = NULL,
             post.items = TRUE,
             post.attachments = TRUE,
             post.limit = 50,
+            post.token = FALSE,
             delete = FALSE,
             delete.collections = FALSE,
             delete.items = FALSE,
@@ -296,12 +299,13 @@ Zotero <- \(collection.names = NULL,
   if (post) {
     zotero <- ZoteroPost(
       zotero,
-      post.collections,
-      post.items,
-      post.attachments,
-      post.limit,
-      force,
-      silent
+      post.collections = post.collections,
+      post.items = post.items,
+      post.attachments = post.attachments,
+      post.limit = post.limit,
+      post.token = post.token,
+      force = force,
+      silent = silent
     )
   }
   # Fetch items / bibliography

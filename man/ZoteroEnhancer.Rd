@@ -8,6 +8,7 @@ ZoteroEnhancer(
   zotero.data,
   external.data = NULL,
   use.doi = TRUE,
+  use.semantic = TRUE,
   use.isbn = TRUE
 )
 }
@@ -22,6 +23,9 @@ instead of querying the external APIs. Defaults to \code{NULL}.}
 
 \item{use.doi}{Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
 using DOI information. Defaults to \code{TRUE}.}
+
+\item{use.semantic}{Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
+from Semantic Scholar using DOI information. Defaults to \code{TRUE}.}
 
 \item{use.isbn}{Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
 using ISBN information when DOI retrieval is not successful. Defaults to \code{TRUE}.}

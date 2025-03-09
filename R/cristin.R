@@ -591,7 +591,13 @@ Cristin <- function (id  = NULL,
   if (zotero.import & any(nrow(results))) {
     if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
     if (is.null(n.chunks)) n.chunks <- n.workers
-    cristin.chunks <- SplitData(results, chunks = n.chunks)
+
+    limit <- 1000
+    if ((nrow(results) / limit) <= n.workers) {
+      cristin.chunks <- SplitData(results, chunks = n.workers)
+    } else {
+      cristin.chunks <- SplitData(results, limit)
+    }
     zotero.data <- ProcessData(
       {
         p <- progressr::progressor(steps = length(cristin.chunks))
@@ -606,7 +612,7 @@ Cristin <- function (id  = NULL,
 
           return (chunk)
         },
-        future.seed = TRUE)
+        future.seed = NULL)
       dplyr::bind_rows(run)
       },
       n = nrow(results),

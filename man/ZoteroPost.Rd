@@ -10,6 +10,7 @@ ZoteroPost(
   post.items = TRUE,
   post.attachments = TRUE,
   post.limit = 50,
+  post.token = FALSE,
   force = FALSE,
   silent = FALSE
 )
@@ -27,6 +28,9 @@ notes)?, Default: TRUE}
 
 \item{post.limit}{Number of collections/items to post per request (max 50),
 Default: 50}
+
+\item{post.token}{Use Zotero-Write-Token (TRUE) or
+If-Unmodified-Since-Version (FALSE), Default: FALSE}
 
 \item{force}{Force is seldom wise, but sometimes..., Default: FALSE}
 

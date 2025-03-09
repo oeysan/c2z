@@ -3,7 +3,7 @@
 #### Major
 
 * `Cristin` can now use the `futureverse` package (with `progressr`) for 
-parallel processing. This can greatly reduce runtime.
+parallel processing. This can greatly reduce runtime. 
 
 #### Breaking
 
@@ -12,6 +12,11 @@ functions (e.g., `CristinMail` and `CristinWeb` `Dict`) to `c2z4uni` to keep
 maintenance simpler.
 
 #### Minor
+
+* added the options ot use `post.token`, Zotero-Write-Token (TRUE) or 
+If-Unmodified-Since-Version (FALSE), in `ZoteroPost`
+
+* Made `zotero.types` globally available.
 
 * Slimmed down `ZoteroWrangler`, in preperation for adding the new Cris/NVA.
 Added several functions to aid the process of enhancing metadata using 
@@ -41,7 +46,7 @@ true [RETRACTED] will be added as a prefix to the title of the publication.
 abstracts from XML.
 
 * Added internal function `SemanticScholar` to provide better abstracts for 
-ZoteroDoi (if using `prefer.semantic` is set to TRUE). 
+ZoteroDoi (if using `use.semantic` is set to TRUE). 
 
 * Added a internal function `InsertUpdate` to update/insert zotero items by key.
 

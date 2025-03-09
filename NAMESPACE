@@ -3,7 +3,6 @@
 export(CheckDoi)
 export(CheckIsbn)
 export(Cristin)
-export(CristinEnhancer)
 export(CristinSupported)
 export(CristinWrangler)
 export(DoiCrossref)

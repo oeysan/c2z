@@ -13,6 +13,8 @@
 #'   instead of querying the external APIs. Defaults to \code{NULL}.
 #' @param use.doi Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
 #'   using DOI information. Defaults to \code{TRUE}.
+#' @param use.semantic Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
+#'   from Semantic Scholar using DOI information. Defaults to \code{TRUE}.
 #' @param use.isbn Logical; if \code{TRUE} (default), the function will attempt to retrieve external metadata
 #'   using ISBN information when DOI retrieval is not successful. Defaults to \code{TRUE}.
 #'
@@ -48,6 +50,7 @@
 ZoteroEnhancer <- \(zotero.data,
                     external.data = NULL,
                     use.doi = TRUE,
+                    use.semantic = TRUE,
                     use.isbn = TRUE) {
 
   # Internal helper to merge a single Zotero record with external metadata.
@@ -70,6 +73,7 @@ ZoteroEnhancer <- \(zotero.data,
     if (book.section) {
       external.data$pages <- GoFish(x$pages)
       external.data$bookTitle <- GoFish(external.data$title)
+      external.data$title <- GoFish(x$title)
 
       if (any(nrow(x$creators[[1]]))) {
         x$creators[[1]] <- x$creators[[1]] |>
@@ -128,10 +132,16 @@ ZoteroEnhancer <- \(zotero.data,
     # If an abstract is already present (redundant check), skip the record.
     if (!any(is.na(GoFish(x$abstractNote)))) {
       next
-    } else if (!is.null(doi) && use.doi) {
-      external.data <- c2z::ZoteroDoi(doi)$data
-    } else if (!is.null(isbn) && use.isbn) {
+    }
+
+    # Check if item has isbn
+    if (!is.null(isbn) && use.isbn) {
       external.data <- c2z::ZoteroIsbn(isbn)$data
+    }
+
+    # Check if item has doi and external data is still empty
+    if (is.null(external.data) && (!is.null(doi) && use.doi)) {
+      external.data <- c2z::ZoteroDoi(doi, use.semantic = use.semantic)$data
     }
 
     # If no external metadata was retrieved, skip the record.
@@ -215,6 +225,7 @@ ZoteroEnhancer <- \(zotero.data,
 #'
 #' @importFrom dplyr mutate select rows_upsert bind_rows filter
 #' @export
+
 UpdateInsert <- function(x, y, key = "key", check.missing = FALSE) {
 
   AddColumns <- function(x, y) {
@@ -291,6 +302,8 @@ UpdateInsert <- function(x, y, key = "key", check.missing = FALSE) {
         y[[col]] <- as.character(y[[col]])
       } else if (is.factor(x[[col]])) {
         y[[col]] <- factor(y[[col]], levels = levels(x[[col]]))
+      } else if (is.list(x[[col]])) {
+        y[[col]] <- as.list(y[[col]])
       }
     }
   }

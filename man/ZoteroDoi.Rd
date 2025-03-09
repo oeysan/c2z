@@ -7,7 +7,7 @@
 ZoteroDoi(
   doi,
   meta = list(),
-  prefer.semantic = TRUE,
+  use.semantic = TRUE,
   check.retraction = TRUE,
   use.json = TRUE,
   silent = TRUE,
@@ -19,7 +19,7 @@ ZoteroDoi(
 
 \item{meta}{A list collecting all metadata used to create , Default: list()}
 
-\item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
+\item{use.semantic}{Get metadata (abstract) from Semantic Scholar, Default: FALSE}
 
 \item{check.retraction}{Check if marked as retracted, Default: TRUE}
 

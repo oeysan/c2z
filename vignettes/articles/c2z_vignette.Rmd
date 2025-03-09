@@ -254,6 +254,7 @@ identifiers <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
+  post.token = FALSE,
   silent = TRUE,
   get.items = FALSE
 )
@@ -289,6 +290,7 @@ the.man <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
+  post.token = FALSE,
   silent = TRUE,
   get.items = FALSE
 )
@@ -347,6 +349,7 @@ cran <- Zotero(
   post = TRUE,
   post.collections = FALSE,
   post.items = TRUE,
+  post.token = FALSE,
   silent = FALSE,
   get.items = FALSE
 )

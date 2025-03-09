@@ -2,7 +2,7 @@
 #' @description Connects with doi.org to create metadata
 #' @param doi A digital object identifier
 #' @param meta A list collecting all metadata used to create , Default: list()
-#' @param prefer.semantic Prefer metadata from Semantic Scholar, Default: FALSE
+#' @param use.semantic Get metadata (abstract) from Semantic Scholar, Default: FALSE
 #' @param check.retraction Check if marked as retracted, Default: TRUE
 #' @param use.json Use either json (TRUE) or XML (FALSE), Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
@@ -33,7 +33,7 @@
 #' @export
 ZoteroDoi <- \(doi,
                meta = list(),
-               prefer.semantic = TRUE,
+               use.semantic = TRUE,
                check.retraction = TRUE,
                use.json = TRUE,
                silent = TRUE,
@@ -159,8 +159,8 @@ ZoteroDoi <- \(doi,
     # Set abstractNote to string
     meta$abstractNote <- ToString(GoFish(meta$abstractNote,""),"\n")
 
-    # Set abstractNote from Semantic Scholar if prefer.semantic
-    if (prefer.semantic & any(is.na(meta$abstractNote))) {
+    # Set abstractNote from Semantic Scholar if use.semantic
+    if (use.semantic && any(is.na(GoFish(meta$abstractNote)))) {
       semantic <- SemanticScholar(meta$DOI)
       if (any(!is.na(GoFish(semantic$abstract)))) {
         meta$abstractNote <- semantic$abstract
@@ -248,13 +248,6 @@ ZoteroDoi <- \(doi,
 #' }
 #'
 #' @export
-
-
-################################################################################
-################################################################################
-################################Helper Functions################################
-################################################################################
-################################################################################
 
 
 CheckDoi <- function(url, doi.only = FALSE) {

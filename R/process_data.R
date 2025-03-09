@@ -75,7 +75,9 @@ ProcessData <- function(func = substitute(NULL),
   if (is.null(start.message)) {
     start.message <- sprintf("Conducting %s processing", process.type)
     if (!is.null(n)) {
-      start.message <- paste(start.message, sprintf("of %s items", n))
+      start.message <- paste(
+        start.message, sprintf("of %s", Numerus(n, "item"))
+      )
     }
   }
 

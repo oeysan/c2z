@@ -8,6 +8,8 @@
 #'   notes)?, Default: TRUE
 #' @param post.limit Number of collections/items to post per request (max 50),
 #'   Default: 50
+#' @param post.token Use Zotero-Write-Token (TRUE) or
+#' If-Unmodified-Since-Version (FALSE), Default: FALSE
 #' @param force Force is seldom wise, but sometimes..., Default: FALSE
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @return A list with information on the specified Zotero library (e.g., posted
@@ -74,6 +76,7 @@ ZoteroPost <- \(zotero,
                 post.items = TRUE,
                 post.attachments = TRUE,
                 post.limit = 50,
+                post.token = FALSE,
                 force = FALSE,
                 silent = FALSE) {
 
@@ -152,14 +155,22 @@ ZoteroPost <- \(zotero,
 
     # Start time for query
     query.start <- Sys.time()
+
+
     # Cycle through metadata
     for (i in seq_along(metadata)) {
 
-      # Create header for JSON with token
-      json.header <- httr::add_headers(
-        "Content-Type" = "application/json",
-        "Zotero-Write-Token" = ZoteroKey(TRUE)
-      )
+      if (post.token) {
+        json.header <- httr::add_headers(
+          "Content-Type" = "application/json",
+          "Zotero-Write-Token" = ZoteroKey(TRUE)
+        )
+      } else {
+        json.header <- httr::add_headers(
+          "Content-Type" = "application/json",
+          "If-Unmodified-Since-Version" = zotero$version
+        )
+      }
 
       # Convert to JSON
       json.body <- ZoteroToJson(metadata[[i]])
@@ -252,7 +263,7 @@ ZoteroPost <- \(zotero,
               length(metadata)),
           silent = silent,
           flush = TRUE,
-          log = log,
+          log = zotero$log,
           append.log = FALSE
         )
     }
@@ -293,7 +304,7 @@ ZoteroPost <- \(zotero,
       summary.list,
       silent = silent,
       trim = FALSE,
-      log = zotero$log,
+      log = zotero$log
     )
 
     # Add data
@@ -387,7 +398,7 @@ ZoteroPost <- \(zotero,
               nrow(zotero$attachments)),
           silent = silent,
           flush = TRUE,
-          log = log,
+          log = zotero$log,
           append.log = FALSE
         )
 

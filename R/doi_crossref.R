@@ -55,7 +55,8 @@ DoiCrossref <- \(data,
       itemType <- "preprint"
     } else if (msg$type == "book-chapter") {
       itemType <- "bookSection"
-    } else if (msg$type == "edited-book") {
+    } else if (msg$type == "edited-book" ||
+               msg$type == "book") {
       itemType <- "book"
     } else {
       itemType <- "document"
@@ -104,6 +105,9 @@ DoiCrossref <- \(data,
         # Remove creators with type "author"
         creators <- Filter(\(x) x$type != "author", creators)
       }
+    } else {
+      # Book title
+      meta$bookTitle <- GoFish(msg$`container-title`[[1]])
     }
 
     # Create a Zotero-type creator tibble

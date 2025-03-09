@@ -11,12 +11,12 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2025.03.07 @ 13:17:01-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2025.03.09 @ 23:46:41-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
 <a href="https://github.com/oeysan/c2z" id="github" 
-title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.3.0.9000-orange.svg" alt="GitHub Version" /></a>
+title="GitHub Version"><img src="https://img.shields.io/badge/GitHub-0.3.0.9001-orange.svg" alt="GitHub Version" /></a>
 <br/><a href="https://oeysan.github.io/c2z/LICENSE.html" id="license" 
 title="License">
 <img src="https://img.shields.io/badge/Licence-MIT-blue.svg" 
@@ -204,7 +204,6 @@ example <- Zotero(
   isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
-  export = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,
@@ -214,12 +213,12 @@ example <- Zotero(
 #> Searching for collections 
 #> Found 0 collections 
 #> Adding 1 collection to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
 #> $post.status.collections
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success UHR8RJ6N
+#> 1 success A7S3L87E
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -231,29 +230,15 @@ example <- Zotero(
 #> The Zotero list contains: 1 collection, 0 items, and 0 attachments 
 #> Searching 2 items using ISBN 
 #> Adding 2 items to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
-#> $post.status.items
-#> # A tibble: 2 × 2
-#>   status  key     
-#>   <fct>   <chr>   
-#> 1 success NUZ43WXY
-#> 2 success X6UAX3ZA
-#> 
-#> $post.summary.items
-#> # A tibble: 1 × 2
-#>   status  summary
-#>   <fct>     <int>
-#> 1 success       2
-#> 
+#> NULL
 #> 
 #> Searching for items using 1 collection 
-#> Found 2 items 
+#> Found 0 items 
 #> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
-#> Found 2 `biblatex` references 
 #> Deleting 1 collection using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
 #> Deleting 2 items using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
 #> Creating index for items
 ```
 
@@ -261,31 +246,6 @@ The example will yield the following HTML output:
 
 <div style="font-size:80%; width: 80%; margin: 10px auto; border: 2px solid green; 
 padding: 5px;">
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Imsen, G. (2020). <i>Elevens verden: innføring i pedagogisk
-psykologi</i> (6th ed.). Universitetsforlaget.
-
-</div>
-
-</div>
-
-<div class="csl-bib-body"
-style="line-height: 1.35; padding-left: 1em; text-indent:-1em;">
-
-<div class="csl-entry">
-
-Johannessen, A., Christoffersen, L., & Tufte, P. A. (2021).
-<i>Introduksjon til samfunnsvitenskapelig metode</i> (6th ed.). Abstrakt
-forlag.
-
-</div>
-
-</div>
 
 </div>
 

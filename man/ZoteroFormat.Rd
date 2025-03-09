@@ -9,6 +9,7 @@ ZoteroFormat(
   format = NULL,
   prefix = NULL,
   check.structure = FALSE,
+  fix.columns = TRUE,
   silent = FALSE
 )
 }
@@ -22,6 +23,8 @@ ZoteroFormat(
 
 \item{check.structure}{Check that the structure of a data frame is correct
 according to the Zotero type, Default: FALSE}
+
+\item{fix.columns}{Remove columns not part of the Zotero type, Default: TRUE}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: TRUE}
 }

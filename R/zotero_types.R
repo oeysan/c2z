@@ -12,18 +12,32 @@
 #' ZoteroTypes("book")
 #' @rdname ZoteroTypes
 #' @export
-ZoteroTypes <- \(type = NULL, names = TRUE) {
+ZoteroTypes <- function(type = NULL, names = TRUE) {
 
-  # Visible bindings
-  zotero.types <- zotero.types
-
-  # Set specified zotero-item if type is specified
-  if (!is.null(type)) {
-    zotero.types <- zotero.types[[type]]
-    # Return only names if names is TRUE
-    if (names) zotero.types <- names(zotero.types)
+  # Get the full file path from the package installation directory
+  data.file <- system.file("extdata", "zotero_types.rda", package = "c2z")
+  if (data.file == "") {
+    stop("The zotero_types.rda file was not found in the package extdata folder.")
   }
 
-  return (zotero.types)
+  # Create a temporary environment to load the data
+  temp.env <- new.env()
+  load(data.file, envir = temp.env)
 
+  # Assume the .rda file contains an object named `zotero.types`
+  zotero.types <- temp.env$zotero.types
+
+  # Set specified zotero-item if type is provided
+  if (!is.null(type)) {
+    if (! type %in% names(zotero.types)) {
+      stop("Invalid zotero-item type specified.")
+    }
+    zotero.types <- zotero.types[[type]]
+    # Return only names if names is TRUE
+    if (names) {
+      zotero.types <- names(zotero.types)
+    }
+  }
+
+  return(zotero.types)
 }

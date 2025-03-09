@@ -214,7 +214,6 @@ example <- Zotero(
   isbn = c("9788215040561", "9788279354048"),
   post = TRUE,
   post.collections = FALSE,
-  export = TRUE,
   style = "apa-single-spaced",
   delete = TRUE,
   delete.collections = TRUE,

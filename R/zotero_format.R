@@ -7,6 +7,7 @@
 #' @param prefix Add a prefix to the metadata (e.g., user/userID), Default: NULL
 #' @param check.structure Check that the structure of a data frame is correct
 #' according to the Zotero type, Default: FALSE
+#' @param fix.columns Remove columns not part of the Zotero type, Default: TRUE
 #' @param silent c2z is noisy, tell it to be quiet, Default: TRUE
 #' @return A zotero friendly tibble if requested otherwise format the data
 #' according to format.
@@ -29,6 +30,7 @@ ZoteroFormat <- \(data = NULL,
                   format = NULL,
                   prefix = NULL,
                   check.structure = FALSE,
+                  fix.columns = TRUE,
                   silent = FALSE) {
 
   # Visible bindings
@@ -131,7 +133,7 @@ ZoteroFormat <- \(data = NULL,
       data.list <- c(key = ZoteroKey(), version = 0, data.list)
     }
     # Remove elements not in category if item
-    if (!"parentCollection" %in% names(data.list)) {
+    if (!"parentCollection" %in% names(data.list) && fix.columns) {
       data.list <- data.list[
         names(data.list) %in%
           c("key", "version", ZoteroTypes(data.list$itemType))]

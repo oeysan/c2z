@@ -25,14 +25,7 @@ NULL
 #################################Internal Data##################################
 ################################################################################
 
-#' @title List with empty zotero-items
-#' @description Each tibble in the list represents a zotero-item
-#' @format A list with 36 tibbles with zero rows and various columns
-#' @details Used to create Zotero-items from list of metadata
-#' @rdname zotero.types
-#' @keywords internal
-"zotero.types"
-#> NULL
+
 
 ################################################################################
 ###############################Internal Functions###############################
@@ -664,6 +657,7 @@ Online <- \(query,
   return (
     list(
       error = error,
+      url =  query$url,
       code = query$status_code,
       data = data,
       log = log
@@ -678,6 +672,8 @@ Online <- \(query,
 #' @noRd
 FixCreators <- \(data = NULL) {
 
+  # Visible bindings
+  across <- everything <- firstName <- lastName <- name <- where <- NULL
 
   if (all(is.na(GoFish(data)))) {
     return (NULL)

@@ -156,6 +156,35 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
       "\n"
     )
 
+    # Record the access date
+    meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
+
+    # Create zotero-type matrix
+    meta <- GoFish(ZoteroFormat(meta, fix.columns = FALSE), NULL)
+
+    # if use.identifiers try to enhance metadata using isbn/doi
+    if (any(nrow(meta)) && use.identifiers) {
+      meta <- ZoteroEnhancer(meta)
+    }
+
+    # Fallback: Do a part-of check if it the item is part of (a book) and the
+    # Above is not enabled or did not find the book.
+    if (any(nrow(meta)) && !is.na(GoFish(x$part_of$url))) {
+      if (any(is.na(GoFish(meta$bookTitle))) && meta$itemType == "bookSection") {
+
+      # If the item is part of a whole, fetch the external reference
+        external.data <- Cristin(
+          id = basename(x$part_of$url), silent = TRUE
+          )$results |>
+          GoFish(NULL)
+
+        # Update metadata
+        if (!is.null(external.data)) {
+          meta <- ZoteroEnhancer(meta, external.data)
+        }
+      }
+    }
+
     # Fix mismatch between creatorType and itemType
     if ("editor" %in% GoFish(meta$creators$creatorType)) {
       editor.items <- c("book", "bookSection", "conferencePaper",
@@ -173,38 +202,18 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
       }
     }
 
-    # Record the access date
-    meta$accessDate <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%S%z")
-
     # Create zotero-type matrix
-    meta <- GoFish(ZoteroFormat(meta), NULL)
-
-    # Check if the item is part of (a book)
-    if (any(nrow(meta)) & !is.na(GoFish(x$part_of$url))) {
-      # If the item is part of a whole, fetch the external reference
-      external.data <- Cristin(
-        id = basename(x$part_of$url),
-        silent = TRUE
-      )$results |>
-        GoFish(NULL)
-      # Update metadata
-      if (!is.null(external.data)) {
-         meta <- ZoteroEnhancer(meta, external.data)
-      }
-    }
-
-    # if use.identifiers try to enhance metadata using isbn/doi
-    if (any(nrow(meta)) && use.identifiers) {
-      meta <- ZoteroEnhancer(meta)
-    }
+    meta <- GoFish(ZoteroFormat(meta, check.structure = TRUE), NULL)
 
     return(meta)
   }
 
   # Process the Cristin results
-  metadata <- purrr::map(seq_len(nrow(data)), \(i) Wrangler(data[i, ]))
+  metadata <- purrr::map(seq_len(nrow(data)), \(i) Wrangler(data[i, ])) |>
+    GoFish(NULL)
   # Combine the results: bind all the tibbles together.
-  results <- bind_rows(purrr::map(metadata, "results"))
+  results <- dplyr::bind_rows(purrr::map(metadata, "results")) |>
+    GoFish(NULL)
 
   return(metadata)
 }

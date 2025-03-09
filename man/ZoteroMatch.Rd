@@ -16,7 +16,7 @@ ZoteroMatch(
   external.data = NULL,
   polite = TRUE,
   silent = FALSE,
-  prefer.semantic = FALSE,
+  use.semantic = FALSE,
   log = list()
 )
 }
@@ -47,7 +47,7 @@ NULL}
 
 \item{silent}{Running silent, running deep, Default: FALSE}
 
-\item{prefer.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
+\item{use.semantic}{Prefer metadata from Semantic Scholar, Default: FALSE}
 
 \item{log}{A list for storing log elements, Default: list()}
 }

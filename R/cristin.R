@@ -589,12 +589,20 @@ Cristin <- function (id  = NULL,
 
   # Convert to Zotero-format if zotero.import is TRUE
   if (zotero.import & any(nrow(results))) {
+
+    # Define workers and future session
+    process.type <- if (use.multisession) "multisession" else "sequential"
     if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
     if (is.null(n.chunks)) n.chunks <- n.workers
+    if (use.multisession && !inherits(future::plan(), process.type)) {
+      future::plan(process.type, workers = n.workers)
+    } else {
+      future::plan(process.type)
+    }
 
     limit <- 1000
     if ((nrow(results) / limit) <= n.workers) {
-      cristin.chunks <- SplitData(results, chunks = n.workers)
+      cristin.chunks <- SplitData(results, chunks = n.chunks)
     } else {
       cristin.chunks <- SplitData(results, limit)
     }
@@ -612,17 +620,31 @@ Cristin <- function (id  = NULL,
 
           return (chunk)
         },
-        future.seed = NULL)
+        future.seed = TRUE)
       dplyr::bind_rows(run)
       },
       n = nrow(results),
       use.multisession = use.multisession,
       restore.defaults = restore.defaults,
+      n.workers = n.workers,
+      n.chunks = n.chunks,
       handler = handler,
       silent = silent,
     )
     results <- zotero.data$results
     log <- c(log, zotero.data$log)
+  }
+
+  if (any(nrow(results)) && zotero.import) {
+    # Make sure that new items has a unique key.
+    results <- results |>
+      dplyr::mutate(
+        key = replace(
+          key,
+          version == 0,
+          purrr::map_chr(which(version == 0), ~ZoteroKey())
+        )
+      )
   }
 
   return (

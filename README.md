@@ -11,7 +11,7 @@ id="logo" title="Logo">
 </p>
 <p align="center">
 <a href="https://oeysan.github.io/c2z/news/index.html" id="news" 
-title="News"><img src="https://img.shields.io/badge/News-2025.03.09 @ 23:53:28-purple.svg" alt="News"/></a><br/><a 
+title="News"><img src="https://img.shields.io/badge/News-2025.03.10 @ 09:44:40-purple.svg" alt="News"/></a><br/><a 
 href="https://cran.r-project.org/package=c2z" id="cran" 
 title="CRAN Version"><img src="https://www.r-pkg.org/badges/version/c2z" 
 alt="CRAN Version"/></a>
@@ -188,11 +188,12 @@ The following example of *`c2z`* addresses this issue, and the `Zotero`
 function act as a wrapper by 1) connecting to the Zotero API, 2)
 creating a collection called “c2z-example”, 3) search for items using
 two ISBN identifiers (i.e. Imsen, 2020; Johannessen et al., 2021), 4)
-posting the items to the defined collection, 5) exporting the items as
-BibLaTeX and creating a bibliography in HTML format using the APA7
-reference style, and 6) cleaning up the example by deleting the
-collection and the two items. The *R* output is rather noisy and can be
-disabled by adding `silent = TRUE`.
+posting the items to the defined collection, 5) and creating a
+bibliography in HTML format using the APA7 reference style (could also
+be exported) to any supported Zotero export (e.g., BibLaTeX), and 6)
+cleaning up the example by deleting the collection and the two items.
+The *R* output is rather noisy and can be disabled by adding
+`silent = TRUE`.
 
 ``` r
 library(c2z)
@@ -213,12 +214,12 @@ example <- Zotero(
 #> Searching for collections 
 #> Found 0 collections 
 #> Adding 1 collection to library using 1 POST request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> $post.status.collections
 #> # A tibble: 1 × 2
 #>   status  key     
 #>   <fct>   <chr>   
-#> 1 success EF4N2IXT
+#> 1 success HARIMH4Z
 #> 
 #> $post.summary.collections
 #> # A tibble: 1 × 2
@@ -236,9 +237,9 @@ example <- Zotero(
 #> Found 0 items 
 #> The Zotero list contains: 1 collection, 2 items, and 0 attachments 
 #> Deleting 1 collection using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Deleting 2 items using 1 DELETE request 
-#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————
+#> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————
 #> Creating index for items
 ```
 

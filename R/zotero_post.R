@@ -156,6 +156,12 @@ ZoteroPost <- \(zotero,
     # Start time for query
     query.start <- Sys.time()
 
+    # Create tokens if post.token
+    if (post.token) {
+      tokens <- lapply(seq_along(metadata), \(i) {
+      ZoteroKey(TRUE)
+      })
+    }
 
     # Cycle through metadata
     for (i in seq_along(metadata)) {
@@ -163,7 +169,7 @@ ZoteroPost <- \(zotero,
       if (post.token) {
         json.header <- httr::add_headers(
           "Content-Type" = "application/json",
-          "Zotero-Write-Token" = ZoteroKey(TRUE)
+          "Zotero-Write-Token" = tokens[[i]]
         )
       } else {
         json.header <- httr::add_headers(

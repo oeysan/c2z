@@ -14,8 +14,11 @@
 #'   a runtime message is generated showing the elapsed time.
 #' @param use.multisession Logical. If \code{TRUE} (default), parallel processing using multisession
 #'   is employed; otherwise, processing is sequential.
-#' @param n.workers Optional integer for the number of workers to be used in multisession mode. If \code{NULL},
-#'   it defaults to the number of available cores minus one (with a minimum of one).
+#' @param n.workers Optional integer for the number of workers to be used in
+#' multisession mode. If \code{NULL}, it defaults to the number of available
+#' cores minus one (with a minimum of one).
+#' @param n.chunks Optional integer for the number of chunks to process.
+#' If \code{NULL}, it defaults to the number of workers.
 #' @param handler The progress handler to be used by the \code{progressr} package. If \code{NULL} and
 #'   \code{silent} is \code{FALSE}, it defaults to \code{"txtprogressbar"}. When \code{silent} is \code{TRUE},
 #'   the handler is set to \code{"void"}.
@@ -63,14 +66,24 @@ ProcessData <- function(func = substitute(NULL),
                         end.message = NULL,
                         use.multisession = TRUE,
                         n.workers = NULL,
+                        n.chunks = NULL,
                         handler = NULL,
                         restore.defaults = TRUE,
                         silent = FALSE,
                         log = list()) {
 
-  # Determine processing type and log start time
-  process.type <- if (use.multisession) "multisession" else "sequential"
+  # Process start time
   process.start <- Sys.time()
+
+  # Define workers and future session
+  process.type <- if (use.multisession) "multisession" else "sequential"
+  if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
+  if (is.null(n.chunks)) n.chunks <- n.workers
+  if (use.multisession && !inherits(future::plan(), process.type)) {
+    future::plan(process.type, workers = n.workers)
+  } else {
+    future::plan(process.type)
+  }
 
   if (is.null(start.message)) {
     start.message <- sprintf("Conducting %s processing", process.type)
@@ -91,22 +104,6 @@ ProcessData <- function(func = substitute(NULL),
     log = log
   )
 
-  # Store the current future plan if restore.defaults is TRUE
-  if (restore.defaults) {
-    original_plan <- future::plan()
-    on.exit(future::plan(original_plan), add = TRUE)
-  }
-
-  # Setup future plan
-  if (use.multisession) {
-    if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
-    if (!inherits(future::plan(), process.type)) {
-      future::plan(process.type, workers = n.workers)
-    }
-  } else {
-    future::plan(process.type)
-  }
-
   # Setup progress handler
   if (silent) {
     handler <- "void"
@@ -118,7 +115,7 @@ ProcessData <- function(func = substitute(NULL),
   # Execute the process with progress reporting
   results <- progressr::with_progress(eval(func, envir = parent.frame()))
 
-  # Compute end time and runtime message (including ms)
+  # Compute end time and runtime message
   process.end <- Sys.time()
   if (is.null(end.message)) {
     time.diff <- process.end - process.start
@@ -141,8 +138,12 @@ ProcessData <- function(func = substitute(NULL),
     log = log
   )
 
-  # Restore progress handlers on exit
-  on.exit(handlers(handlers), add = TRUE)
+  # Store the current future plan and handlers if restore.defaults is TRUE
+  if (restore.defaults) {
+    original_plan <- future::plan()
+    on.exit(future::plan(original_plan), add = TRUE)
+    on.exit(handlers(handlers), add = TRUE)
+  }
 
   return(list(results = results, log = log))
 }

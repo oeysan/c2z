@@ -199,8 +199,9 @@ The following example of  *`c2z`* addresses this issue, and the `Zotero`
 function act as a wrapper by 1) connecting to the Zotero API, 2) creating a 
 collection called "c2z-example", 3) search for items using two ISBN identifiers 
 (i.e. Imsen, 2020; Johannessen et al., 2021), 4) posting the items to the 
-defined collection, 5) exporting the items as BibLaTeX and creating a 
-bibliography in HTML format using the APA7 reference style, and 6) cleaning up 
+defined collection, 5) and creating a 
+bibliography in HTML format using the APA7 reference style (could also be exported)
+to any supported Zotero export (e.g., BibLaTeX), and 6) cleaning up 
 the example by deleting the collection and the two items. The *R* output is
 rather noisy and can be disabled by adding `silent = TRUE`.
 

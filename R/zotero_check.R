@@ -104,8 +104,14 @@ ZoteroCheck <- \(data,
     }
 
     # Add zotero key, version and collection to modified data
-    data.duplicates[modified, c("key", "version", "collections")] <-
-      zotero.duplicates[modified, c("key", "version", "collections")]
+    desired.cols <- c("key", "version", "collections")
+
+    # Determine which desired columns exist in zotero.duplicates
+    cols.to.copy <- intersect(desired.cols, names(zotero.duplicates))
+
+    # Copy the matching columns from zotero.duplicates to data.duplicates
+    data.duplicates[modified, cols.to.copy] <-
+      zotero.duplicates[modified, cols.to.copy]
 
     # Remove duplicates
     if (remove.duplicates) {

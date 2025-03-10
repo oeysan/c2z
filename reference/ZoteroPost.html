@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.attachments <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.limit <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  post.token <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -81,6 +82,11 @@ notes)?, Default: TRUE</p></dd>
 <dt id="arg-post-limit">post.limit<a class="anchor" aria-label="anchor" href="#arg-post-limit"></a></dt>
 <dd><p>Number of collections/items to post per request (max 50),
 Default: 50</p></dd>
+
+
+<dt id="arg-post-token">post.token<a class="anchor" aria-label="anchor" href="#arg-post-token"></a></dt>
+<dd><p>Use Zotero-Write-Token (TRUE) or
+If-Unmodified-Since-Version (FALSE), Default: FALSE</p></dd>
 
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
@@ -145,34 +151,10 @@ Default: 50</p></dd>
 <span class="r-in"><span>    post.items <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Adding 1 collection to library using 1 POST request </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post.status.collections</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   status  key     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success 6UDRVUIZ</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post.summary.collections</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   status  summary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Adding 1 item to library using 1 POST request </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post.status.items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   status  key     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success JPYPCS87</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $post.summary.items</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   status  summary</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> success       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Delete collections and items using `ZoteroDelete`</span></span></span>
@@ -182,9 +164,9 @@ Default: 50</p></dd>
 <span class="r-in"><span>    delete.items <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Deleting 1 collection using 1 DELETE request </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:04—————————————————</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Deleting 1 item using 1 DELETE request </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:03—————————————————</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
 <span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">post.example</span><span class="op">$</span><span class="va">items</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>

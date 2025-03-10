@@ -11,12 +11,16 @@
 <url><loc>https://oeysan.github.io/c2z/authors.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/index.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/news/index.html</loc></url>
+<url><loc>https://oeysan.github.io/c2z/reference/CheckDoi.html</loc></url>
+<url><loc>https://oeysan.github.io/c2z/reference/CheckIsbn.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/Cristin.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/CristinSupported.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/CristinWrangler.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/DoiCrossref.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/DoiDatacite.html</loc></url>
+<url><loc>https://oeysan.github.io/c2z/reference/ProcessData.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/Trim.html</loc></url>
+<url><loc>https://oeysan.github.io/c2z/reference/UpdateInsert.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/Zotero.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroAdd.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroCheck.html</loc></url>
@@ -24,6 +28,7 @@
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroCran.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroDelete.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroDoi.html</loc></url>
+<url><loc>https://oeysan.github.io/c2z/reference/ZoteroEnhancer.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroExport.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroFormat.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroGet.html</loc></url>
@@ -36,6 +41,5 @@
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroPost.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/ZoteroTypes.html</loc></url>
 <url><loc>https://oeysan.github.io/c2z/reference/index.html</loc></url>
-<url><loc>https://oeysan.github.io/c2z/reference/zotero.types.html</loc></url>
 </urlset>
 

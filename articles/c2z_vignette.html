@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,6 +140,7 @@ regardless of letter case, and if this is important set
 <code class="sourceCode R"><span><span class="co"># Find collections</span></span>
 <span><span class="va">collections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Zotero.html">Zotero</a></span><span class="op">(</span></span>
 <span>  collection.names <span class="op">=</span> <span class="st">"The"</span>,</span>
+<span>  case.insensitive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  library <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -151,15 +152,15 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 3</span></span></span>
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Y6CZ8PQ9 dog   6DIEZZEJ        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 6DIEZZEJ lazy  2UZ8D3SF        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2UZ8D3SF the   P4527NK3        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ZYKUUCS3 jumps INX272R9        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> INX272R9 fox   N8Y7ANBY        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> GE36M75R quick PDX5A66Q        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> PDX5A66Q The   FALSE           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> P4527NK3 over  ZYKUUCS3        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> N8Y7ANBY brown GE36M75R</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2UZ8D3SF the   P4527NK3        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P4527NK3 over  ZYKUUCS3        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ZYKUUCS3 jumps INX272R9        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> INX272R9 fox   N8Y7ANBY        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> N8Y7ANBY brown GE36M75R        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Y6CZ8PQ9 dog   6DIEZZEJ        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 6DIEZZEJ lazy  2UZ8D3SF        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> GE36M75R quick PDX5A66Q        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> PDX5A66Q The   FALSE</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="recursive-path">Recursive path<a class="anchor" aria-label="anchor" href="#recursive-path"></a>
@@ -179,13 +180,13 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 1</span></span></span>
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> dog  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lazy </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> the  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> jumps</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> over </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> brown</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> the  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> over </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> jumps</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> fox  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> dog  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> lazy</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="ancestor-path">Ancestor path<a class="anchor" aria-label="anchor" href="#ancestor-path"></a>
@@ -206,9 +207,9 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> fox  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> quick</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> The  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> brown</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> quick</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> The</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -230,16 +231,10 @@ for cheese, probably).</p>
 indicating that the function will use <code>CristinWrangler</code> to
 convert Cristin metadata into an acceptable format for Zotero.
 <code>use.identifiers = TRUE</code> and the function will therefore use
-any identifiers (i.e., ISBN or DOI) to augment the metadata.
-Furthermore, <code>crossref.search = TRUE</code>, meaning that the
-function will search CrossRef for metadata if identifiers are missing.
-Also, <code>autosearch = TRUE</code> and the process is consequently
-conducted automatically. The items are posted to the Zotero library
-using <code>Zotero</code>, where items are uploaded using the
-<code>items</code> argument. The <code>index = TRUE</code>, creating an
-index of the items.</p>
-<p>Please note that <code>crossref.search</code> should normally not be
-used (see the <a href="https://oeysan.github.io/c2z/">README</a>).</p>
+any identifiers (i.e., ISBN or DOI) to augment the metadata. The items
+are posted to the Zotero library using <code>Zotero</code>, where items
+are uploaded using the <code>items</code> argument. The
+<code>index = TRUE</code>, creating an index of the items.</p>
 <p>Rather than finicking over h-indexes and impact factors, Norwegians
 have a weird obsession with NVI (Norwegian Science Index), which is a
 two-level index where level one publications are ordinary and level two
@@ -274,16 +269,14 @@ collection to the Zotero list.</p>
 <span>  filter <span class="op">=</span> <span class="va">cristin.filter</span>,</span>
 <span>  zotero.import <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  use.identifiers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  crossref.search <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  autosearch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found 15 results </span></span>
 <span><span class="co">#&gt; Checking whether references are supported. See `CristinSupported()` </span></span>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
-<span><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
-<span><span class="co">#&gt; ——————Next ID: 1912219. Progress: 16.67% (1/6). ETA: 24.02.2025 - 12:05:19————————————Next ID: 1919520. Progress: 33.33% (2/6). ETA: 24.02.2025 - 12:05:18————————————Next ID: 1920677. Progress: 50.00% (3/6). ETA: 24.02.2025 - 12:05:18————————————Next ID: 1961743. Progress: 66.67% (4/6). ETA: 24.02.2025 - 12:05:20————————————Next ID: 1979685. Progress: 83.33% (5/6). ETA: 24.02.2025 - 12:05:20———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:24—————————————————</span></span>
+<span><span class="co">#&gt; Conducting sequential processing of 6 items (began 10.03.2025 - 09:41:51) </span></span>
+<span><span class="co">#&gt; Runtime: 00:00:08.015 (ended 10.03.2025 - 09:41:59)</span></span>
 <span></span>
 <span><span class="co"># Get the fox key</span></span>
 <span><span class="va">fox</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
@@ -312,8 +305,8 @@ collection to the Zotero list.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Lundberg et al. (2021) Determination of maintenance Jarlsberg® cheese dose to…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Olsen et al. (2021) Feeding concentrates with different protein sources to hi…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Lundberg et al. (2020) Increased serum osteocalcin levels and vitamin K statu…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Henriquez Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Mohamed et al. (2021) Manufacture and characterization of acid-coagulated fre…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Gaber et al. (2021) Manufacture and characterization of acid-coagulated fresh…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Wolka et al. (2021) Soil organic carbon and associated soil properties in Ens…</span></span></code></pre></div>
 <p>In this second example we have decided that 2019 was an even better
 year for cheese and change the <code>published_since</code> argument to
@@ -340,8 +333,8 @@ specified collection(s).</p>
 <span><span class="co">#&gt; Checking whether references are supported. See `CristinSupported()` </span></span>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
-<span><span class="co">#&gt; Converting 6 references from Cristin to Zotero format </span></span>
-<span><span class="co">#&gt; ——————Next ID: 1678430. Progress: 16.67% (1/6). ETA: 24.02.2025 - 12:05:32————————————Next ID: 1699701. Progress: 33.33% (2/6). ETA: 24.02.2025 - 12:05:32————————————Next ID: 1709922. Progress: 50.00% (3/6). ETA: 24.02.2025 - 12:05:32————————————Next ID: 1715026. Progress: 66.67% (4/6). ETA: 24.02.2025 - 12:05:32————————————Next ID: 1721342. Progress: 83.33% (5/6). ETA: 24.02.2025 - 12:05:32———————————————————————Process: 100.00% (6/6). Elapsed time: 00:00:01—————————————————</span></span></code></pre></div>
+<span><span class="co">#&gt; Conducting sequential processing of 6 items (began 10.03.2025 - 09:42:02) </span></span>
+<span><span class="co">#&gt; Runtime: 00:00:02.561 (ended 10.03.2025 - 09:42:05)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-identifiers">Adding items from identifiers<a class="anchor" aria-label="anchor" href="#adding-items-from-identifiers"></a>
@@ -368,6 +361,7 @@ collection “quick”.</p>
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  post.token <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -376,13 +370,12 @@ collection “quick”.</p>
 <span><span class="va">identifiers</span><span class="op">$</span><span class="va">index</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span></span>
 <span><span class="co">#&gt;   name                                                                          </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Ong-Dean et al. (2011) Challenges and Dilemmas in Implementing Random Assignm…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Wijeakumar et al. (2020) Home assessment of visual working memory in pre-scho…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Field &amp; Hole (n.d.) How to design and report experiments                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Grøholt et al. (2022) Lærebok i barne- og ungdomspsykiatri</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Grøholt et al. (2022) Lærebok i barne- og ungdomspsykiatri</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-the-man">Adding items from the Man<a class="anchor" aria-label="anchor" href="#adding-items-from-the-man"></a>
@@ -410,6 +403,7 @@ official reports using <code>ZoteroGov</code>.</p>
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  post.token <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -419,12 +413,12 @@ official reports using <code>ZoteroGov</code>.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 1</span></span></span>
-<span><span class="co">#&gt;   name                                                                          </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NOU 2025: 1 (2025a) Felles ansvar, felles gevinst — Partssamarbeid for kompet…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NOU 2025: 1 (2025b) Felles ansvar, felles gevinst — Partssamarbeid for kompet…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Meld. St. 9 (2024–2025) Totalberedskapsmeldingen — Forberedt på kriser og krig</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Meld. St. 9 (2024–2025) Totalberedskapsmeldingen — Forberedt på kriser og krig</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                                                           </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> St.meld. nr. 26 (2001-2002) Bedre kollektivtransport           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NOU 2014: 4 (2014) Enklere regler – bedre anskaffelser         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NOU 2018: 2 (2018) Fremtidige kompetansebehovI                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Meld. St. 31 (2014–2015) Garden som ressurs – marknaden som mål</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-cran">Adding items from CRAN<a class="anchor" aria-label="anchor" href="#adding-items-from-cran"></a>
@@ -470,6 +464,7 @@ choose to access all items under “project”, including those in
 <span>  post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  post.collections <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  post.items <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  post.token <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  get.items <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -482,15 +477,15 @@ choose to access all items under “project”, including those in
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 2</span></span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success 8TM3Q65Z</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success PZNPKPIB</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success VYCFBLQ9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success VEPZJFWW</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success 9KJTL6Z2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success KR2NE3Z8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success YIPKUP8G</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success FXN2WCCB</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success 3RAC2KHD</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success PYPCS87M</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success QDBBT8EU</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success S3AD73ZI</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success 2UZHXDE9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success 2LJFGM78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success B8CERAIB</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success FEB6YC86</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success 7GU66E2M</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success AS5CYNSX</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.items</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
@@ -507,17 +502,17 @@ choose to access all items under “project”, including those in
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 1</span></span></span>
-<span><span class="co">#&gt;   name              </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Wickham (2023a) NA</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Wickham (2023b) NA</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Ooms (2025) NA    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Wickham (2025) NA </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Wickham (2024a) NA</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Henry (2025) NA   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> Müller (2023) NA  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> Wickham (2024b) NA</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> Henry (2024) NA</span></span></code></pre></div>
+<span><span class="co">#&gt;   name                                                                          </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Wickham (2023a) dplyr: A Grammar of Data Manipulation                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Wickham (2023b) httr: Tools for Working with URLs and HTTP                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Ooms (2025) jsonlite: A Simple and Robust JSON Parser and Generator for R     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Wickham (2025) purrr: Functional Programming Tools                            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Henry (2025) rlang: Functions for Base Types and Core R and 'Tidyverse' Featu…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Wickham (2024a) rvest: Easily Harvest (Scrape) Web Pages                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> Müller (2023) tibble: Simple Data Frames                                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> Wickham (2024b) tidyr: Tidy Messy Data                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> Henry (2024) tidyselect: Select from a Set of Strings</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -627,7 +622,7 @@ according to <a href="https://apastyle.apa.org/" class="external-link">APA7</a>.
 <span>  <span class="va">bibliography</span><span class="op">$</span><span class="va">n.items</span>,</span>
 <span>  <span class="va">bibliography</span><span class="op">$</span><span class="va">n.attachments</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "We now have 9 collections, 23 references, and 0 attachments"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "We now have 9 collections, 31 references, and 0 attachments"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="deleting">Deleting<a class="anchor" aria-label="anchor" href="#deleting"></a>
@@ -645,7 +640,7 @@ library.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Deleting 9 collections using 1 DELETE request </span></span>
 <span><span class="co">#&gt; —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span></span>
-<span><span class="co">#&gt; Deleting 23 items using 1 DELETE request </span></span>
+<span><span class="co">#&gt; Deleting 31 items using 1 DELETE request </span></span>
 <span><span class="co">#&gt; —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -654,27 +649,24 @@ library.</p>
 <p>We can now display the references that we have collected and created
 using <em><code>c2z</code></em>.</p>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-field_how_nodate" class="csl-entry">
-Field, A. P., &amp; Hole, G. (n.d.). <em>How to design and report
-experiments</em>. Sage publications Ltd.
+<div id="ref-gaber_manufacture_2021" class="csl-entry">
+Gaber, S. M., Johansen, A.-G., Devold, T. G., Rukke, E.-O., &amp; Skeie,
+S. B. (2021). Manufacture and characterization of acid-coagulated fresh
+cheese made from casein concentrates obtained by acid diafiltration.
+<em>Journal of Dairy Science</em>, <em>104</em>(6), 6598–6608. <a href="https://doi.org/10.3168/jds.2020-19917" class="external-link">https://doi.org/10.3168/jds.2020-19917</a>
 </div>
 <div id="ref-groholt_laerebok_2022" class="csl-entry">
 Grøholt, B., Weidle, B., Garløv, I., &amp; Ramleth, R.-K. (2022).
 <em>Lærebok i barne- og ungdomspsykiatri</em> (6th ed.).
 Universitetsforlaget.
 </div>
-<div id="ref-chavan_kavli_2021" class="csl-entry">
-Henriquez Parodi, M. C., Lankut, E., &amp; Alon, I. (2021). Kavli
-selling cheese in a tube to the world. In M. Chavan &amp; L. Taksa
-(Eds.), <em>Intercultural management in practice: Learning to lead
-diverse global organizations</em> (p. 27). Emerald Group Publishing
-Limited. <a href="https://doi.org/10.1108/978-1-83982-826-320211004" class="external-link">https://doi.org/10.1108/978-1-83982-826-320211004</a>
+<div id="ref-henry_tidyselect_2024" class="csl-entry">
+Henry, L. (2024). <em>Tidyselect: Select from a set of strings</em>
+(Version 1.2.1) [Computer software]. <a href="https://cran.r-project.org/package=tidyselect" class="external-link">https://cran.r-project.org/package=tidyselect</a>
 </div>
-<div id="ref-henry_notitle_2024" class="csl-entry">
-Henry, L. (2024). [Computer software] (Version 1.2.1). <a href="https://cran.r-project.org/package=tidyselect" class="external-link">https://cran.r-project.org/package=tidyselect</a>
-</div>
-<div id="ref-henry_notitle_2025" class="csl-entry">
-Henry, L. (2025). [Computer software] (Version 1.1.5). <a href="https://cran.r-project.org/package=rlang" class="external-link">https://cran.r-project.org/package=rlang</a>
+<div id="ref-henry_rlang_2025" class="csl-entry">
+Henry, L. (2025). <em>Rlang: Functions for base types and core r and
+’tidyverse’ features</em> (Version 1.1.5) [Computer software]. <a href="https://cran.r-project.org/package=rlang" class="external-link">https://cran.r-project.org/package=rlang</a>
 </div>
 <div id="ref-lundberg_increased_2020" class="csl-entry">
 Lundberg, H. E., Holand, T., Holo, H., &amp; Larsen, S. (2020).
@@ -687,34 +679,24 @@ Lundberg, H. E., Holo, H., Holand, T., Fagertun, H. E., &amp; Larsen, S.
 (2021). Determination of maintenance jarlsberg® cheese dose to keep the
 obtained serum osteocalcin level; a response surface pathway designed
 de-escalation dose study with individual starting values.
-<em>International Journal of Clinical Trials</em>, <em>8</em>(3), 174.
-<a href="https://doi.org/10.18203/2349-3259.ijct20212841" class="external-link">https://doi.org/10.18203/2349-3259.ijct20212841</a>
+<em>International Journal of Clinical Trials (<span>IJCT</span>)</em>,
+<em>8</em>(3), 174. https://doi.org/<a href="https://doi.org/10.18203/2349-3259.ijct20212841" class="external-link">https://doi.org/10.18203/2349-3259.ijct20212841</a>
 </div>
-<div id="ref-meld_st_9_20242025_totalberedskapsmeldingen_2025" class="csl-entry">
-Meld. St. 9 (2024–2025). (2025a). <em>Totalberedskapsmeldingen —
-Forberedt på kriser og krig</em>. Justis- og beredskapsdepartementet. <a href="https://www.regjeringen.no/id3082364" class="external-link">https://www.regjeringen.no/id3082364</a>
+<div id="ref-meld_st_31_20142015_garden_2015" class="csl-entry">
+Meld. St. 31 (2014–2015). (2015). <em>Garden som ressurs – marknaden som
+mål</em>. Landbruks- og matdepartementet. <a href="https://www.regjeringen.no/id2415017" class="external-link">https://www.regjeringen.no/id2415017</a>
 </div>
-<div id="ref-meld_st_9_20242025_totalberedskapsmeldingen_2025-1" class="csl-entry">
-Meld. St. 9 (2024–2025). (2025b). <em>Totalberedskapsmeldingen —
-Forberedt på kriser og krig</em>. Justis- og beredskapsdepartementet. <a href="https://www.regjeringen.no/id3082364" class="external-link">https://www.regjeringen.no/id3082364</a>
+<div id="ref-muller_tibble_2023" class="csl-entry">
+Müller, K. (2023). <em>Tibble: Simple data frames</em> (Version 3.2.1)
+[Computer software]. <a href="https://cran.r-project.org/package=tibble" class="external-link">https://cran.r-project.org/package=tibble</a>
 </div>
-<div id="ref-mohamed_manufacture_2021" class="csl-entry">
-Mohamed, S. M. G., Johansen, A.-G., Devold, T. G., Rukke, E.-O., &amp;
-Skeie, S. B. (2021). Manufacture and characterization of acid-coagulated
-fresh cheese made from casein concentrates obtained by acid
-diafiltration. <em>Journal of Dairy Science</em>, <em>104</em>(6),
-6598–6608. <a href="https://doi.org/10.3168/jds.2020-19917" class="external-link">https://doi.org/10.3168/jds.2020-19917</a>
+<div id="ref-nou_2014_4_enklere_2014" class="csl-entry">
+NOU 2014: 4. (2014). <em>Enklere regler – bedre anskaffelser</em>.
+Nærings- og fiskeridepartementet. <a href="https://www.regjeringen.no/id761768" class="external-link">https://www.regjeringen.no/id761768</a>
 </div>
-<div id="ref-muller_notitle_2023" class="csl-entry">
-Müller, K. (2023). [Computer software] (Version 3.2.1). <a href="https://cran.r-project.org/package=tibble" class="external-link">https://cran.r-project.org/package=tibble</a>
-</div>
-<div id="ref-nou_2025_1_felles_2025" class="csl-entry">
-NOU 2025: 1. (2025a). <em>Felles ansvar, felles gevinst — Partssamarbeid
-for kompetanseutvikling i arbeidslivet</em>. Kunnskapsdepartementet. <a href="https://www.regjeringen.no/id3083356" class="external-link">https://www.regjeringen.no/id3083356</a>
-</div>
-<div id="ref-nou_2025_1_felles_2025-1" class="csl-entry">
-NOU 2025: 1. (2025b). <em>Felles ansvar, felles gevinst — Partssamarbeid
-for kompetanseutvikling i arbeidslivet</em>. Kunnskapsdepartementet. <a href="https://www.regjeringen.no/id3083356" class="external-link">https://www.regjeringen.no/id3083356</a>
+<div id="ref-nou_2018_2_fremtidige_2018" class="csl-entry">
+NOU 2018: 2. (2018). <em>Fremtidige <span>kompetansebehovI</span></em>.
+Kunnskapsdepartementet. <a href="https://www.regjeringen.no/id2588070" class="external-link">https://www.regjeringen.no/id2588070</a>
 </div>
 <div id="ref-olsen_feeding_2021" class="csl-entry">
 Olsen, M. A., Vhile, S. G., Porcellato, D., Kidane, A., &amp; Skeie, S.
@@ -729,23 +711,38 @@ Challenges and dilemmas in implementing random assignment in educational
 research. <em>American Journal of Evaluation</em>, <em>32</em>(1),
 29–49. <a href="https://doi.org/10.1177/1098214010376532" class="external-link">https://doi.org/10.1177/1098214010376532</a>
 </div>
-<div id="ref-ooms_notitle_2025" class="csl-entry">
-Ooms, J. (2025). [Computer software] (Version 1.9.0). <a href="https://cran.r-project.org/package=jsonlite" class="external-link">https://cran.r-project.org/package=jsonlite</a>
+<div id="ref-ooms_jsonlite_2025" class="csl-entry">
+Ooms, J. (2025). <em>Jsonlite: A simple and robust <span>JSON</span>
+parser and generator for r</em> (Version 1.9.1) [Computer software]. <a href="https://cran.r-project.org/package=jsonlite" class="external-link">https://cran.r-project.org/package=jsonlite</a>
 </div>
-<div id="ref-wickham_notitle_2023-1" class="csl-entry">
-Wickham, H. (2023a). [Computer software] (Version 1.4.7). <a href="https://cran.r-project.org/package=httr" class="external-link">https://cran.r-project.org/package=httr</a>
+<div id="ref-parodi_kavli_2021" class="csl-entry">
+Parodi, M. C. H., Lankut, E., &amp; Alon, I. (2021). Kavli selling
+cheese in a tube to the world. In <em>Intercultural management in
+practice</em> (pp. 27–33). Emerald Publishing Limited. <a href="https://doi.org/10.1108/978-1-83982-826-320211004" class="external-link">https://doi.org/10.1108/978-1-83982-826-320211004</a>
 </div>
-<div id="ref-wickham_notitle_2023" class="csl-entry">
-Wickham, H. (2023b). [Computer software] (Version 1.1.4). <a href="https://cran.r-project.org/package=dplyr" class="external-link">https://cran.r-project.org/package=dplyr</a>
+<div id="ref-stmeld_nr_26_2001-2002_bedre_2002" class="csl-entry">
+St.meld. nr. 26 (2001-2002). (2002). <em>Bedre kollektivtransport</em>.
+Samferdselsdepartementet. <a href="https://www.regjeringen.no/id196149" class="external-link">https://www.regjeringen.no/id196149</a>
 </div>
-<div id="ref-wickham_notitle_2024" class="csl-entry">
-Wickham, H. (2024a). [Computer software] (Version 1.3.1). <a href="https://cran.r-project.org/package=tidyr" class="external-link">https://cran.r-project.org/package=tidyr</a>
+<div id="ref-wickham_httr_2023" class="csl-entry">
+Wickham, H. (2023a). <em>Httr: Tools for working with <span>URLs</span>
+and <span>HTTP</span></em> (Version 1.4.7) [Computer software]. <a href="https://cran.r-project.org/package=httr" class="external-link">https://cran.r-project.org/package=httr</a>
 </div>
-<div id="ref-wickham_notitle_2024-1" class="csl-entry">
-Wickham, H. (2024b). [Computer software] (Version 1.0.4). <a href="https://cran.r-project.org/package=rvest" class="external-link">https://cran.r-project.org/package=rvest</a>
+<div id="ref-wickham_dplyr_2023" class="csl-entry">
+Wickham, H. (2023b). <em>Dplyr: A grammar of data manipulation</em>
+(Version 1.1.4) [Computer software]. <a href="https://cran.r-project.org/package=dplyr" class="external-link">https://cran.r-project.org/package=dplyr</a>
 </div>
-<div id="ref-wickham_notitle_2025" class="csl-entry">
-Wickham, H. (2025). [Computer software] (Version 1.0.4). <a href="https://cran.r-project.org/package=purrr" class="external-link">https://cran.r-project.org/package=purrr</a>
+<div id="ref-wickham_tidyr_2024" class="csl-entry">
+Wickham, H. (2024a). <em>Tidyr: Tidy messy data</em> (Version 1.3.1)
+[Computer software]. <a href="https://cran.r-project.org/package=tidyr" class="external-link">https://cran.r-project.org/package=tidyr</a>
+</div>
+<div id="ref-wickham_rvest_2024" class="csl-entry">
+Wickham, H. (2024b). <em>Rvest: Easily harvest (scrape) web pages</em>
+(Version 1.0.4) [Computer software]. <a href="https://cran.r-project.org/package=rvest" class="external-link">https://cran.r-project.org/package=rvest</a>
+</div>
+<div id="ref-wickham_purrr_2025" class="csl-entry">
+Wickham, H. (2025). <em>Purrr: Functional programming tools</em>
+(Version 1.0.4) [Computer software]. <a href="https://cran.r-project.org/package=purrr" class="external-link">https://cran.r-project.org/package=purrr</a>
 </div>
 <div id="ref-wijeakumar_home_2020" class="csl-entry">
 Wijeakumar, S., Rafetseder, E., Shing, Y. L., &amp; McKay, C. (2020).
@@ -757,7 +754,7 @@ measures.</em> <span>PsyArXiv</span>. <a href="https://doi.org/10.31234/osf.io/v
 Wolka, K., Biazin, B., Martinsen, V., &amp; Mulder, J. (2021). Soil
 organic carbon and associated soil properties in enset (ensete
 ventricosum welw. Cheesman)-based homegardens in ethiopia. <em>Soil and
-Tillage Research</em>, <em>205</em>, 104791. <a href="https://doi.org/10.1016/j.still.2020.104791" class="external-link">https://doi.org/10.1016/j.still.2020.104791</a>
+Tillage Research</em>, <em>205</em>(2021), 104791. <a href="https://doi.org/10.1016/j.still.2020.104791" class="external-link">https://doi.org/10.1016/j.still.2020.104791</a>
 </div>
 </div>
 </div>

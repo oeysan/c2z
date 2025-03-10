@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,12 +80,14 @@
 <span>  all.results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove.duplicates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  base.url <span class="op">=</span> <span class="st">"https://api.cristin.no/v2/results"</span>,</span>
 <span>  custom.url <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use.identifiers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  crossref.search <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  autosearch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  use.multisession <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  n.workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n.chunks <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  handler <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  restore.defaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  zotero <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  zotero.import <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  zotero.check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -93,8 +95,7 @@
 <span>  remove.na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  replace.na <span class="op">=</span> <span class="st">"book"</span>,</span>
 <span>  force.type <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  override <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  polite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  log <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -252,10 +253,6 @@ with fewer fields will be returned, Default: all</p></dd>
 <dd><p>Remove duplicates if TRUE, Default: TRUE</p></dd>
 
 
-<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
-<dd><p>c2z is noisy, tell it to be quiet, Default: FALSE</p></dd>
-
-
 <dt id="arg-base-url">base.url<a class="anchor" aria-label="anchor" href="#arg-base-url"></a></dt>
 <dd><p>The base url for the Cristin API, Default:
 https://api.cristin.no/v2/results</p></dd>
@@ -269,14 +266,33 @@ https://api.cristin.no/v2/results</p></dd>
 <dd><p>Use if ISBN/DOI identifiers if enabled, Default: TRUE</p></dd>
 
 
-<dt id="arg-crossref-search">crossref.search<a class="anchor" aria-label="anchor" href="#arg-crossref-search"></a></dt>
-<dd><p>Query Crossref database based on title, authors, and
-date if enabled, Default: FALSE</p></dd>
+<dt id="arg-use-multisession">use.multisession<a class="anchor" aria-label="anchor" href="#arg-use-multisession"></a></dt>
+<dd><p>Logical. If <code>TRUE</code> (default), parallel
+processing using multisession is employed; otherwise, processing is sequential.</p></dd>
 
 
-<dt id="arg-autosearch">autosearch<a class="anchor" aria-label="anchor" href="#arg-autosearch"></a></dt>
-<dd><p>Results could be automatically evaluated (based on some
-logic) or you could inspect them manually if set to FALSE, Default: TRUE</p></dd>
+<dt id="arg-n-workers">n.workers<a class="anchor" aria-label="anchor" href="#arg-n-workers"></a></dt>
+<dd><p>Optional integer for the number of workers to be used in
+multisession mode. If <code>NULL</code>, it defaults to the number of available
+cores minus one (with a minimum of one).</p></dd>
+
+
+<dt id="arg-n-chunks">n.chunks<a class="anchor" aria-label="anchor" href="#arg-n-chunks"></a></dt>
+<dd><p>Optional integer for the number of chunks to process.
+If <code>NULL</code>, it defaults to the number of workers.</p></dd>
+
+
+<dt id="arg-handler">handler<a class="anchor" aria-label="anchor" href="#arg-handler"></a></dt>
+<dd><p>The progress handler to be used by the <code>progressr</code>
+package. If <code>NULL</code> and
+  <code>silent</code> is <code>FALSE</code>, it defaults to <code>"txtprogressbar"</code>.
+  When <code>silent</code> is <code>TRUE</code>,
+  the handler is set to <code>"void"</code>.</p></dd>
+
+
+<dt id="arg-restore-defaults">restore.defaults<a class="anchor" aria-label="anchor" href="#arg-restore-defaults"></a></dt>
+<dd><p>Logical. If <code>TRUE</code> (default), the current
+<code>future</code> plan is saved and restored upon exit.</p></dd>
 
 
 <dt id="arg-zotero">zotero<a class="anchor" aria-label="anchor" href="#arg-zotero"></a></dt>
@@ -315,14 +331,8 @@ Default: 'book'</p></dd>
 <dd><p>Force all items to a predefined itemType, Default: NULL</p></dd>
 
 
-<dt id="arg-override">override<a class="anchor" aria-label="anchor" href="#arg-override"></a></dt>
-<dd><p>Put your faith in the algorithms and the identifiers (i.e.,
-DOI/ISBN) and override what is reported in Cristin, Default: FALSE</p></dd>
-
-
-<dt id="arg-polite">polite<a class="anchor" aria-label="anchor" href="#arg-polite"></a></dt>
-<dd><p>Please store you email in `.Renviron` to query Crossref,
-Default: TRUE</p></dd>
+<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
+<dd><p>c2z is noisy, tell it to be quiet, Default: FALSE</p></dd>
 
 
 <dt id="arg-log">log<a class="anchor" aria-label="anchor" href="#arg-log"></a></dt>
@@ -354,8 +364,8 @@ Default: TRUE</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Found 1 result </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Checking whether references are supported. See `CristinSupported()` </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Looking for missing data </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Converting 1 reference from Cristin to Zotero format </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:02—————————————————</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Conducting sequential processing of 1 item (began 10.03.2025 - 09:39:59) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Runtime: 00:00:02.145 (ended 10.03.2025 - 09:40:01) </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Print index using `ZoteroIndex`</span></span></span>
 <span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">results</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>

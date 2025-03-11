@@ -89,6 +89,9 @@ CrossrefRetracted <- \(doi, email = NULL) {
 #' @noRd
 SemanticScholar <- \(doi) {
 
+  doi <- c2z::CheckDoi(doi, doi.only = TRUE)
+  if (is.null(doi)) return (NULL)
+
   # Try DOI key
   httr.get <- Online(
     httr::RETRY(

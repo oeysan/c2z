@@ -53,15 +53,21 @@ ZoteroEnhancer <- \(zotero.data,
                     use.semantic = TRUE,
                     use.isbn = TRUE) {
 
+  if (!any(nrow(GoFish(zotero.data))) || !any(nrow(GoFish(zotero.data)))) {
+    return (zotero.data)
+  }
+
   # Internal helper to merge a single Zotero record with external metadata.
   UpdateTibble <- \(x, external.data) {
 
     # Visible bindings
     creatorType <- NULL
 
-    # Update the external metadata with the Zotero record key.
-    external.data$key <- x$key
-    external.data$extra <- x$extra
+    # Update the external metadata with essentials from the original data
+    external.data$key <- GoFish(x$key)
+    external.data$version <- GoFish(x$version)
+    external.data$collections <- GoFish(x$collections)
+    external.data$extra <- GoFish(x$extra)
 
     # Determine if the record is a book section by checking if the original record's
     # itemType is "bookSection" while the external metadata indicates a "book".
@@ -75,7 +81,7 @@ ZoteroEnhancer <- \(zotero.data,
       external.data$bookTitle <- GoFish(external.data$title)
       external.data$title <- GoFish(x$title)
 
-      if (any(nrow(x$creators[[1]]))) {
+      if (any(nrow(GoFish(x$creators[[1]])))) {
         x$creators[[1]] <- x$creators[[1]] |>
           dplyr::filter(creatorType != "editor")
       }
@@ -88,7 +94,8 @@ ZoteroEnhancer <- \(zotero.data,
 
     # If the external metadata's creator list is shorter than the Zotero record's,
     # then use the longer list from the Zotero record.
-    if (any(nrow(x$creators[[1]]) && any(nrow(external.data$creators[[1]])))) {
+    if (any(nrow(GoFish(x$creators[[1]])) &&
+            any(nrow(GoFish(external.data$creators[[1]]))))) {
       if (nrow(external.data$creators[[1]]) < nrow(x$creators[[1]])) {
         external.data$creators[[1]] <- x$creators[[1]]
       }

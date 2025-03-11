@@ -15,6 +15,12 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
 
   # Inner function to wrangle one reference
   Wrangler <- function(x) {
+
+    # Set key, version and collections if present
+    meta$key <- GoFish(x$key, NULL)
+    meta$version <- GoFish(x$version, NULL)
+    meta$collections <- GoFish(x$collections, NULL)
+
     # Set item type
     meta$itemType <- x$category
 

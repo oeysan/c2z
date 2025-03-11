@@ -72,9 +72,11 @@ ZoteroCheck <- function(data,
   }
 
   # Log the checking process
-  log <- LogCat("Checking whether references exist in library",
-                silent = silent,
-                log = log)
+  log <- LogCat(
+    "Checking whether references exist in library",
+    silent = silent,
+    log = log
+  )
 
   # Extract the identifier column from data using tidy evaluation
   data.ids <- dplyr::pull(data, !!rlang::sym(id))
@@ -95,7 +97,12 @@ ZoteroCheck <- function(data,
     zotero.duplicates <- items |>
       dplyr::filter(zotero.ids %in% data.ids) |>
       dplyr::arrange(match(ZoteroId(id.type, extra), data.ids)) |>
-      dplyr::distinct(extra, .keep_all = TRUE)
+      dplyr::distinct(extra, .keep_all = TRUE) |>
+      AddMissing(
+        missing.names = "dateModified",
+        na.type = NA_character_,
+        location = NULL
+      )
 
     # Get modification dates, using 'last.modified' with a fallback to 'created'
     data.modified <- dplyr::coalesce(
@@ -103,9 +110,14 @@ ZoteroCheck <- function(data,
       dplyr::pull(data.duplicates, !!rlang::sym(created))
     )
 
+    zotero.modified <- dplyr::coalesce(
+      dplyr::pull(zotero.duplicates, "dateModified"),
+      dplyr::pull(zotero.duplicates, "dateAdded")
+    )
+
     # Determine which duplicates have been modified since addition to Zotero
     if (remove.duplicates) {
-      modified <- data.modified > zotero.duplicates$dateModified
+      modified <- data.modified > zotero.modified
     } else {
       modified <- rep(TRUE, length(data.modified))
     }

@@ -156,7 +156,6 @@ ZoteroFormat <- \(data = NULL,
       # Replace empty string with NA
       dplyr::mutate_if(is.character, list(~dplyr::na_if(., ""))) |>
       dplyr::mutate(
-        dateModified = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
         # Make certain tags is a data.frame within a list
         dplyr::across(
           dplyr::any_of("tags"), ~ purrr::map(tags, ~ {

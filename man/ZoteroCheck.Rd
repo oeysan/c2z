@@ -2,7 +2,7 @@
 % Please edit documentation in R/zotero_check.R
 \name{ZoteroCheck}
 \alias{ZoteroCheck}
-\title{Check Zotero library for duplicates}
+\title{Check Zotero Library for Duplicates}
 \usage{
 ZoteroCheck(
   data,
@@ -17,48 +17,55 @@ ZoteroCheck(
 )
 }
 \arguments{
-\item{data}{Tibble containing metadata (from Cristin)}
+\item{data}{A tibble containing metadata (e.g., from Cristin)}
 
-\item{id}{column containing identifier (e.g., cristin_result_id)}
+\item{id}{A string specifying the column name in \code{data} that contains
+the unique identifier (e.g., \code{"cristin_result_id"})}
 
-\item{id.type}{Type of metadata as found in the Zotero extra field ("e.g.,
-Cristin)}
+\item{id.type}{A string specifying the type of metadata as stored in the
+Zotero extra field (e.g., "Cristin")}
 
-\item{created}{column containing creation date in UNIX timestamp format
-(e.g., created)}
+\item{created}{A string specifying the column name in \code{data} containing
+the creation date in UNIX timestamp format (e.g., \code{"created"})}
 
-\item{last.modified}{column containing modification date in UNIX timestamp
-format (e.g., last_modified)}
+\item{last.modified}{A string specifying the column name in \code{data}
+containing the last modification date in UNIX timestamp format
+(e.g., \code{"last_modified"})}
 
-\item{items}{Items in library to check for}
+\item{items}{A data frame or tibble representing items in the Zotero library
+to check against}
 
-\item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
+\item{remove.duplicates}{Logical. If \code{TRUE}, duplicates that have not
+been modified are removed. Default is \code{TRUE}.}
 
-\item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
+\item{silent}{Logical. If \code{TRUE}, suppresses verbose output. Default
+is \code{FALSE}.}
 
-\item{log}{A list for storing log elements, Default: list()}
+\item{log}{A list for storing log messages. Default is an empty list.}
 }
 \value{
-Returns non-duplicated data in a Zotero-type matrix (tibble)
+A list with two elements: \code{data}, a tibble containing
+non-duplicated items, and \code{log}, the updated log list.
 }
 \description{
-Remove references that are not modified since last added to
-  Zotero
+Removes references from the input dataset that are duplicates
+already added to Zotero,
+preserving only those references that have been modified since their addition.
 }
 \details{
-Please see
-  \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+For more details,
+see \href{https://oeysan.github.io/c2z/}{c2z documentation}.
 }
 \examples{
-\donttest{
-  # Simple `Cristin` search by id
+\dontrun{
+  # Simple Cristin search by id
   cristin.data <- Cristin(
     id = "840998",
     zotero.import = FALSE
   )
 
-  # Simple `ZoteroCheck`
-  example <- ZoteroCheck(
+  # Checking Zotero library for duplicates
+  result <- ZoteroCheck(
     data = cristin.data$result,
     id = "cristin_result_id",
     id.type = "Cristin",
@@ -76,7 +83,7 @@ Please see
 }
 \seealso{
 \code{\link[dplyr]{arrange}},
- \code{\link[dplyr]{coalesce}},
- \code{\link[dplyr]{bind_rows}},
- \code{\link[dplyr]{filter}}
+  \code{\link[dplyr]{coalesce}},
+  \code{\link[dplyr]{bind_rows}},
+  \code{\link[dplyr]{filter}}
 }

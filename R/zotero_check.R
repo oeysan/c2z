@@ -1,31 +1,38 @@
-#' @title Check Zotero library for duplicates
-#' @description Remove references that are not modified since last added to
-#'   Zotero
-#' @param data Tibble containing metadata (from Cristin)
-#' @param id column containing identifier (e.g., cristin_result_id)
-#' @param id.type Type of metadata as found in the Zotero extra field ("e.g.,
-#'   Cristin)
-#' @param created column containing creation date in UNIX timestamp format
-#'   (e.g., created)
-#' @param last.modified column containing modification date in UNIX timestamp
-#'   format (e.g., last_modified)
-#' @param items Items in library to check for
-#' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
-#' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
-#' @param log A list for storing log elements, Default: list()
-#' @return Returns non-duplicated data in a Zotero-type matrix (tibble)
-#' @details Please see
-#'   \href{https://oeysan.github.io/c2z/}{https://oeysan.github.io/c2z/}
+#' @title Check Zotero Library for Duplicates
+#' @description Removes references from the input dataset that are duplicates
+#' already added to Zotero,
+#' preserving only those references that have been modified since their addition.
+#' @param data A tibble containing metadata (e.g., from Cristin)
+#' @param id A string specifying the column name in \code{data} that contains
+#' the unique identifier (e.g., \code{"cristin_result_id"})
+#' @param id.type A string specifying the type of metadata as stored in the
+#' Zotero extra field (e.g., "Cristin")
+#' @param created A string specifying the column name in \code{data} containing
+#' the creation date in UNIX timestamp format (e.g., \code{"created"})
+#' @param last.modified A string specifying the column name in \code{data}
+#' containing the last modification date in UNIX timestamp format
+#' (e.g., \code{"last_modified"})
+#' @param items A data frame or tibble representing items in the Zotero library
+#'  to check against
+#' @param remove.duplicates Logical. If \code{TRUE}, duplicates that have not
+#' been modified are removed. Default is \code{TRUE}.
+#' @param silent Logical. If \code{TRUE}, suppresses verbose output. Default
+#' is \code{FALSE}.
+#' @param log A list for storing log messages. Default is an empty list.
+#' @return A list with two elements: \code{data}, a tibble containing
+#' non-duplicated items, and \code{log}, the updated log list.
+#' @details For more details,
+#' see \href{https://oeysan.github.io/c2z/}{c2z documentation}.
 #' @examples
-#' \donttest{
-#'   # Simple `Cristin` search by id
+#' \dontrun{
+#'   # Simple Cristin search by id
 #'   cristin.data <- Cristin(
 #'     id = "840998",
 #'     zotero.import = FALSE
 #'   )
 #'
-#'   # Simple `ZoteroCheck`
-#'   example <- ZoteroCheck(
+#'   # Checking Zotero library for duplicates
+#'   result <- ZoteroCheck(
 #'     data = cristin.data$result,
 #'     id = "cristin_result_id",
 #'     id.type = "Cristin",
@@ -41,105 +48,102 @@
 #'   )
 #' }
 #' @seealso
-#'  \code{\link[dplyr]{arrange}},
-#'  \code{\link[dplyr]{coalesce}},
-#'  \code{\link[dplyr]{bind_rows}},
-#'  \code{\link[dplyr]{filter}}
-#' @rdname ZoteroCheck
+#'   \code{\link[dplyr]{arrange}},
+#'   \code{\link[dplyr]{coalesce}},
+#'   \code{\link[dplyr]{bind_rows}},
+#'   \code{\link[dplyr]{filter}}
 #' @export
-ZoteroCheck <- \(data,
-                 id,
-                 id.type,
-                 created,
-                 last.modified,
-                 items,
-                 remove.duplicates = TRUE,
-                 silent = FALSE,
-                 log = list()) {
+ZoteroCheck <- function(data,
+                        id,
+                        id.type,
+                        created,
+                        last.modified,
+                        items,
+                        remove.duplicates = TRUE,
+                        silent = FALSE,
+                        log = list()) {
 
   # Visible bindings
   extra <- NULL
 
-  # Checking references message
-  log <-  LogCat(
-    "Checking whether references exist in library",
-    silent = silent,
-    log = log
-  )
+  # Ensure that the required identifier column exists
+  if (!id %in% names(data)) {
+    stop(sprintf("Column '%s' not found in data.", id))
+  }
 
-  # Find result ids
-  data.ids <- data[, id][[1]]
+  # Log the checking process
+  log <- LogCat("Checking whether references exist in library",
+                silent = silent,
+                log = log)
 
-  # Fetch ids from zotero extras
+  # Extract the identifier column from data using tidy evaluation
+  data.ids <- dplyr::pull(data, !!rlang::sym(id))
+
+  # Retrieve IDs from the 'extra' field in items
   zotero.ids <- ZoteroId(id.type, items$extra)
 
-  # Find unique items
-  unique.data <- data |>
-    dplyr::filter(!data.ids %in% zotero.ids)
+  # Identify records not present in the Zotero library
+  unique.data <- dplyr::filter(data, !data.ids %in% zotero.ids)
 
-  # Check for modified data if data exists in Zotero library
+  # If duplicates exist, process them further
   if (nrow(unique.data) < nrow(data)) {
 
-    # Find duplicate items in new data
-    data.duplicates <- data |>
-      dplyr::filter(data.ids %in% zotero.ids)
+    # Filter duplicate records from the input data
+    data.duplicates <- dplyr::filter(data, data.ids %in% zotero.ids)
 
-    # Find duplicate items in zotero library
+    # Retrieve corresponding duplicate records from the Zotero library
     zotero.duplicates <- items |>
       dplyr::filter(zotero.ids %in% data.ids) |>
       dplyr::arrange(match(ZoteroId(id.type, extra), data.ids)) |>
       dplyr::distinct(extra, .keep_all = TRUE)
 
-    # Find modified date of items
+    # Get modification dates, using 'last.modified' with a fallback to 'created'
     data.modified <- dplyr::coalesce(
-      data.duplicates[, last.modified][[1]],
-      data.duplicates[, created][[1]]
+      dplyr::pull(data.duplicates, !!rlang::sym(last.modified)),
+      dplyr::pull(data.duplicates, !!rlang::sym(created))
     )
 
-    # Check if data is modified since added to zotero
+    # Determine which duplicates have been modified since addition to Zotero
     if (remove.duplicates) {
       modified <- data.modified > zotero.duplicates$dateModified
     } else {
-      modified <- TRUE
+      modified <- rep(TRUE, length(data.modified))
     }
 
-    # Add zotero key, version and collection to modified data
+    # Copy desired Zotero columns (if available) to the duplicates in data
     desired.cols <- c("key", "version", "collections")
-
-    # Determine which desired columns exist in zotero.duplicates
     cols.to.copy <- intersect(desired.cols, names(zotero.duplicates))
 
-    # Copy the matching columns from zotero.duplicates to data.duplicates
-    data.duplicates[modified, cols.to.copy] <-
-      zotero.duplicates[modified, cols.to.copy]
+    if (length(cols.to.copy) > 0) {
+      data.duplicates[modified, cols.to.copy] <-
+        zotero.duplicates[modified, cols.to.copy]
+    }
 
-    # Remove duplicates
+    # Combine unique data with the (modified) duplicate records
     if (remove.duplicates) {
       unique.data <- dplyr::bind_rows(unique.data, data.duplicates[modified, ])
     } else {
       unique.data <- dplyr::bind_rows(unique.data, data.duplicates)
     }
 
-    # Send message
-    log <-  LogCat(sprintf(
-      "Removed %s",
-      Numerus(nrow(data) - nrow(unique.data), "duplicate")
-    ),
-    silent = silent,
-    log = log)
-
-    if (any(modified)) {
-      # Send message
-      log <-  LogCat(sprintf(
-        "Modified %s",
-        Numerus(sum(modified), "item")
-      ),
+    # Log the number of duplicates removed
+    removed.count <- nrow(data) - nrow(unique.data)
+    log <- LogCat(
+      sprintf("Removed %s", Numerus(removed.count, "duplicate")),
       silent = silent,
-      log = log)
+      log = log
+    )
+
+    # Log how many items were modified
+    if (any(modified)) {
+      log <- LogCat(
+        sprintf("Modified %s", Numerus(sum(modified), "item")),
+        silent = silent,
+        log = log
+      )
     }
 
   }
 
-  return (list(data = unique.data, log = log))
-
+  return(list(data = unique.data, log = log))
 }

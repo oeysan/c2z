@@ -284,21 +284,17 @@ ProcessData <- function(data,
     func = quote({
       p <- progressr::progressor(steps = length(data.chunks))
 
-      chunk.list <- future.apply::future_lapply(seq_along(data.chunks), function(i) {
-        chunk <- data.chunks[[i]]
-        process.message <- sprintf(
-          "Processsed %s of %s batches", i, length(data.chunks)
-        )
+      chunk.list <- future.apply::future_lapply(data.chunks, function(chunk) {
         if (by.rows) {
           row.list <- lapply(seq_len(nrow(chunk)), function(i) {
             func(chunk[i, , drop = FALSE], ...)
           })
-          p(message = paste(process.message, "by rows"))
+          p(message = "Processing batches by rows")
           # Bind rows from the individual row processing into a single tibble for this chunk
           dplyr::bind_rows(row.list)
         } else {
           chunk.result <- func(chunk, ...)
-          p(message = process.message)
+          p(message = "Processing batches")
           chunk.result
         }
       }, future.seed = TRUE)

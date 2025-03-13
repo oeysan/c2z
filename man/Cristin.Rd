@@ -40,7 +40,7 @@ Cristin(
   custom.url = NULL,
   use.identifiers = TRUE,
   use.multisession = FALSE,
-  min.multisession = 50,
+  min.multisession = 25,
   n.workers = NULL,
   n.chunks = NULL,
   handler = NULL,
@@ -155,7 +155,7 @@ https://api.cristin.no/v2/results}
 processing using multisession is employed; otherwise, processing is sequential.}
 
 \item{min.multisession}{Minimum number of results for using multisession.
-Default: 50}
+Default: 25}
 
 \item{n.workers}{Optional integer for the number of workers to be used in
 multisession mode. If \code{NULL}, it defaults to the number of available

@@ -64,7 +64,7 @@
 #' @param use.multisession Logical. If \code{TRUE} (default), parallel
 #' processing using multisession is employed; otherwise, processing is sequential.
 #' @param min.multisession Minimum number of results for using multisession.
-#'   Default: 50
+#'   Default: 25
 #' @param n.workers Optional integer for the number of workers to be used in
 #' multisession mode. If \code{NULL}, it defaults to the number of available
 #' cores minus one (with a minimum of one).
@@ -151,7 +151,7 @@ Cristin <- function (id  = NULL,
                      custom.url = NULL,
                      use.identifiers = TRUE,
                      use.multisession = FALSE,
-                     min.multisession = 50,
+                     min.multisession = 25,
                      n.workers = NULL,
                      n.chunks = NULL,
                      handler = NULL,
@@ -606,10 +606,12 @@ Cristin <- function (id  = NULL,
 
     wrangle.data <- ProcessData(
       data = results,
-      func = \(data) CristinWrangler(
-        data = data,
-        use.identifiers = use.identifiers
-      ),
+      func = \(data) {
+        CristinWrangler(
+          data = data,
+          use.identifiers = use.identifiers
+        )
+      },
       by.rows = FALSE,
       min.multisession = min.multisession,
       n.workers = n.workers,
@@ -618,7 +620,7 @@ Cristin <- function (id  = NULL,
       use.multisession = use.multisession,
       start.message = start.message,
       handler = handler,
-      silent = FALSE
+      silent = silent
     )
 
     results <- wrangle.data$results

@@ -13,6 +13,7 @@ ProcessData(
   n.chunks = NULL,
   limit = 100,
   use.multisession = TRUE,
+  names = NULL,
   start.message = NULL,
   end.message = NULL,
   restore.defaults = TRUE,
@@ -46,6 +47,8 @@ the data is split into \code{n.chunks}; otherwise, it is split using \code{limit
 
 \item{use.multisession}{Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
 sequential processing is employed.}
+
+\item{names}{Optional column or vector to be used as display names for processing, default \code{NULL}.}
 
 \item{start.message}{Optional character string. A custom message to log at the start of processing.}
 

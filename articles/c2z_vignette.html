@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -153,11 +153,11 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt;   key      name  parentCollection</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Y6CZ8PQ9 dog   6DIEZZEJ        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 6DIEZZEJ lazy  2UZ8D3SF        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2UZ8D3SF the   P4527NK3        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2UZ8D3SF the   P4527NK3        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 6DIEZZEJ lazy  2UZ8D3SF        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P4527NK3 over  ZYKUUCS3        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ZYKUUCS3 jumps INX272R9        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> N8Y7ANBY brown GE36M75R        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> N8Y7ANBY brown GE36M75R        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ZYKUUCS3 jumps INX272R9        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> INX272R9 fox   N8Y7ANBY        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> GE36M75R quick PDX5A66Q        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> PDX5A66Q The   FALSE</span></span></code></pre></div>
@@ -181,11 +181,11 @@ regardless of letter case, and if this is important set
 <span><span class="co">#&gt;   name </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> dog  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lazy </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> the  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> the  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> lazy </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> over </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> jumps</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> brown</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> jumps</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> fox</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -275,8 +275,10 @@ collection to the Zotero list.</p>
 <span><span class="co">#&gt; Checking whether references are supported. See `CristinSupported()` </span></span>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
-<span><span class="co">#&gt; Conducting sequential processing of 6 items (began 11.03.2025 - 19:51:17) </span></span>
-<span><span class="co">#&gt; Runtime: 00:00:12.043 (ended 11.03.2025 - 19:51:29)</span></span>
+<span><span class="co">#&gt; Sequential processing. Converting 6 items to Zotero format (began 13.03.2025 - 11:55:17) </span></span>
+<span><span class="co">#&gt; Sequential processing. Converting 1 item to Zotero format (began 13.03.2025 - 11:56:17) </span></span>
+<span><span class="co">#&gt; Duration: 00:00:01.899 (ended 13.03.2025 - 11:56:19) </span></span>
+<span><span class="co">#&gt; Duration: 00:01:02.459 (ended 13.03.2025 - 11:56:19)</span></span>
 <span></span>
 <span><span class="co"># Get the fox key</span></span>
 <span><span class="va">fox</span> <span class="op">&lt;-</span> <span class="va">collections</span><span class="op">$</span><span class="va">collections</span> <span class="op">|&gt;</span> </span>
@@ -305,7 +307,7 @@ collection to the Zotero list.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Lundberg et al. (2021) Determination of maintenance Jarlsberg® cheese dose to…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Olsen et al. (2021) Feeding concentrates with different protein sources to hi…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Lundberg et al. (2020) Increased serum osteocalcin levels and vitamin K statu…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Henriquez Parodi et al. (2021) Kavli Selling Cheese in a Tube to the World    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Gaber et al. (2021) Manufacture and characterization of acid-coagulated fresh…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Wolka et al. (2021) Soil organic carbon and associated soil properties in Ens…</span></span></code></pre></div>
 <p>In this second example we have decided that 2019 was an even better
@@ -333,8 +335,8 @@ specified collection(s).</p>
 <span><span class="co">#&gt; Checking whether references are supported. See `CristinSupported()` </span></span>
 <span><span class="co">#&gt; Looking for missing data </span></span>
 <span><span class="co">#&gt; Filtered out 9 results </span></span>
-<span><span class="co">#&gt; Conducting sequential processing of 6 items (began 11.03.2025 - 19:51:31) </span></span>
-<span><span class="co">#&gt; Runtime: 00:00:02.066 (ended 11.03.2025 - 19:51:33)</span></span></code></pre></div>
+<span><span class="co">#&gt; Sequential processing. Converting 6 items to Zotero format (began 13.03.2025 - 11:56:23) </span></span>
+<span><span class="co">#&gt; Duration: 00:00:02.012 (ended 13.03.2025 - 11:56:25)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="adding-items-from-identifiers">Adding items from identifiers<a class="anchor" aria-label="anchor" href="#adding-items-from-identifiers"></a>
@@ -418,7 +420,7 @@ official reports using <code>ZoteroGov</code>.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> St.meld. nr. 26 (2001-2002) Bedre kollektivtransport           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NOU 2014: 4 (2014) Enklere regler – bedre anskaffelser         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NOU 2018: 2 (2018) Fremtidige kompetansebehovI                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NOU 2018: 2 (2018) Fremtidige kompetansebehov I                </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Meld. St. 31 (2014–2015) Garden som ressurs – marknaden som mål</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -473,20 +475,20 @@ choose to access all items under “project”, including those in
 <span><span class="co">#&gt; Found 9 collections </span></span>
 <span><span class="co">#&gt; The Zotero list contains: 2 collections, 0 items, and 0 attachments </span></span>
 <span><span class="co">#&gt; Adding 9 items to library using 1 POST request </span></span>
-<span><span class="co">#&gt; —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:00—————————————————</span></span>
+<span><span class="co">#&gt; —————————————————Process: 100.00% (1/1). Elapsed time: 00:00:01—————————————————</span></span>
 <span><span class="co">#&gt; $post.status.items</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 2</span></span></span>
 <span><span class="co">#&gt;   status  key     </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success QDBBT8EU</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success S3AD73ZI</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success 2UZHXDE9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success 2LJFGM78</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success B8CERAIB</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success FEB6YC86</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success 7GU66E2M</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success AS5CYNSX</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success YZYRLKA2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> success 2UZHXDE9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> success 2LJFGM78</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> success B8CERAIB</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> success FEB6YC86</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> success 7GU66E2M</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> success AS5CYNSX</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> success YZYRLKA2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> success HNB7946R</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> success NVSIAN7I</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $post.summary.items</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
@@ -665,6 +667,12 @@ Grøholt, B., Weidle, B., Garløv, I., &amp; Ramleth, R.-K. (2022).
 <em>Lærebok i barne- og ungdomspsykiatri</em> (6th ed.).
 Universitetsforlaget.
 </div>
+<div id="ref-chavan_kavli_2021" class="csl-entry">
+Henriquez Parodi, M. C., Lankut, E., &amp; Alon, I. (2021). Kavli
+selling cheese in a tube to the world. In M. Chavan &amp; L. Taksa
+(Eds.), <em>Intercultural management in practice: Learning to lead
+diverse global organizations</em> (p. 27). Emerald Publishing. <a href="https://doi.org/https://doi.org/10.1108/978-1-83982-826-320211004" class="external-link">https://doi.org/https://doi.org/10.1108/978-1-83982-826-320211004</a>
+</div>
 <div id="ref-henry_tidyselect_2024" class="csl-entry">
 Henry, L. (2024). <em>Tidyselect: Select from a set of strings</em>
 (Version 1.2.1) [Computer software]. <a href="https://cran.r-project.org/package=tidyselect" class="external-link">https://cran.r-project.org/package=tidyselect</a>
@@ -700,7 +708,7 @@ NOU 2014: 4. (2014). <em>Enklere regler – bedre anskaffelser</em>.
 Nærings- og fiskeridepartementet. <a href="https://www.regjeringen.no/id761768" class="external-link">https://www.regjeringen.no/id761768</a>
 </div>
 <div id="ref-nou_2018_2_fremtidige_2018" class="csl-entry">
-NOU 2018: 2. (2018). <em>Fremtidige <span>kompetansebehovI</span></em>.
+NOU 2018: 2. (2018). <em>Fremtidige kompetansebehov I</em>.
 Kunnskapsdepartementet. <a href="https://www.regjeringen.no/id2588070" class="external-link">https://www.regjeringen.no/id2588070</a>
 </div>
 <div id="ref-olsen_feeding_2021" class="csl-entry">
@@ -719,11 +727,6 @@ research. <em>American Journal of Evaluation</em>, <em>32</em>(1),
 <div id="ref-ooms_jsonlite_2025" class="csl-entry">
 Ooms, J. (2025). <em>Jsonlite: A simple and robust <span>JSON</span>
 parser and generator for r</em> (Version 1.9.1) [Computer software]. <a href="https://cran.r-project.org/package=jsonlite" class="external-link">https://cran.r-project.org/package=jsonlite</a>
-</div>
-<div id="ref-parodi_kavli_2021" class="csl-entry">
-Parodi, M. C. H., Lankut, E., &amp; Alon, I. (2021). Kavli selling
-cheese in a tube to the world. In <em>Intercultural management in
-practice</em> (pp. 27–33). Emerald Publishing Limited. <a href="https://doi.org/10.1108/978-1-83982-826-320211004" class="external-link">https://doi.org/10.1108/978-1-83982-826-320211004</a>
 </div>
 <div id="ref-stmeld_nr_26_2001-2002_bedre_2002" class="csl-entry">
 St.meld. nr. 26 (2001-2002). (2002). <em>Bedre kollektivtransport</em>.

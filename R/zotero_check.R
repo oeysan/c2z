@@ -123,7 +123,7 @@ ZoteroCheck <- function(data,
     # Determine which duplicates have been modified since addition to Zotero
     if (remove.duplicates) {
       modified <- data.modified > zotero.modified
-      modified[is.na(modified)] <- TRUE
+      modified[is.na(modified)] <- FALSE
     } else {
       modified <- rep(TRUE, length(data.modified))
     }

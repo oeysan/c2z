@@ -114,8 +114,8 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
       meta$url <- GoFish(x$links[[1]]$url[[1]])
     }
 
-    # If DOI is missing, try scraping the Cristin App
-    if (is.na(meta$DOI)) {
+    # If DOI/ISBN is missing, try scraping the Cristin App
+    if (any(is.na(GoFish(meta$DOI))) && (any(is.na(GoFish(meta$ISBN))))) {
       cristin.url <- paste0(
         "https://app.cristin.no/results/show.jsf?id=",
         x$cristin_result_id
@@ -132,14 +132,21 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
           rvest::html_text() |>
           GoFish(NULL)
 
-        if (!is.null(cristin.urls) & !is.null(CheckDoi(cristin.urls))) {
-          meta$DOI <- CheckDoi(cristin.urls, TRUE)
+        if (any(is.na(GoFish(meta$DOI)))) {
+          meta$DOI <- GoFish(CheckDoi(cristin.urls, TRUE), NULL)
+        }
+        if (any(is.na(GoFish(meta$ISBN)))) {
+          meta$ISBN <- GoFish(CheckIsbn(gsub("[^0-9]", "", cristin.urls)), NULL)
         }
       }
     }
 
     # If DOI is still missing and the URL looks like a DOI, set it as DOI
     if (any(is.na(GoFish(meta$DOI)))) meta$DOI <- CheckDoi(meta$url)
+    # Similar of ISBN
+    if (any(is.na(GoFish(meta$ISBN)))) {
+      meta$ISBN <- GoFish(CheckIsbn(gsub("[^0-9]", "", meta$url)), NULL)
+    }
 
     # Compile tags from scientific disciplines and keywords
     tags <- GoFish(c(
@@ -180,7 +187,7 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
 
       # If the item is part of a whole, fetch the external reference
         external.data <- Cristin(
-          id = basename(x$part_of$url), silent = TRUE
+          id = basename(x$part_of$url), silent = TRUE, force.type = "book"
           )$results |>
           GoFish(NULL)
 

@@ -91,7 +91,12 @@ ZoteroCheck <- function(data,
   if (nrow(unique.data) < nrow(data)) {
 
     # Filter duplicate records from the input data
-    data.duplicates <- dplyr::filter(data, data.ids %in% zotero.ids)
+    data.duplicates <- dplyr::filter(data, data.ids %in% zotero.ids) |>
+      AddMissing(
+        missing.names = c(created, last.modified),
+        na.type = NA_character_,
+        location = NULL
+      )
 
     # Retrieve corresponding duplicate records from the Zotero library
     zotero.duplicates <- items |>
@@ -99,7 +104,7 @@ ZoteroCheck <- function(data,
       dplyr::arrange(match(ZoteroId(id.type, extra), data.ids)) |>
       dplyr::distinct(extra, .keep_all = TRUE) |>
       AddMissing(
-        missing.names = "dateModified",
+        missing.names = c("dateAdded", "dateModified"),
         na.type = NA_character_,
         location = NULL
       )

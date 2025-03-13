@@ -1233,60 +1233,85 @@ RemoveHtml  <- \(x) {
 #' @title CleanText
 #' @keywords internal
 #' @noRd
-CleanText <- \(x, multiline = FALSE) {
+ApaTitle <- function(title) {
+  # Define a vector of "minor" words to keep in lower case
+  minor.words <- c("a", "an", "the", "and", "but", "or", "nor",
+                   "for", "so", "yet", "at", "around", "by", "after",
+                   "along", "from", "of", "on", "to", "with", "without", "in")
 
-  # Remove HTML
-  x <- RemoveHtml(x)
+  # Split the title into words
+  words <- unlist(strsplit(tolower(title), " "))
+  n <- length(words)
 
-  # Trim string
-  x <- Trim(x) |>
-    GoFish()
+  # Process each word
+  for (i in seq_along(words)) {
+    # Check for trailing punctuation (e.g., colon, comma, period)
+    punct <- ""
+    if (grepl("[[:punct:]]$", words[i])) {
+      punct <- substr(words[i], nchar(words[i]), nchar(words[i]))
+      words[i] <- substr(words[i], 1, nchar(words[i]) - 1)
+    }
 
-  # Return if NA
-  if (all(is.na(x))) {
-    return (x)
+    # Determine if the word should be capitalized:
+    # Always capitalize if it's the first or last word,
+    # or if the previous word ended with a colon.
+    if (i == 1 || i == n || (i > 1 && substr(words[i - 1], nchar(words[i - 1]), nchar(words[i - 1])) == ":")) {
+      words[i] <- paste0(toupper(substr(words[i], 1, 1)), substr(words[i], 2, nchar(words[i])))
+    } else if (words[i] %in% minor.words) {
+      # Leave the word in lowercase if it is a minor word
+      # (already lowercased by the call to tolower())
+      words[i] <- words[i]
+    } else {
+      words[i] <- paste0(toupper(substr(words[i], 1, 1)), substr(words[i], 2, nchar(words[i])))
+    }
+
+    # Re-attach any trailing punctuation
+    words[i] <- paste0(words[i], punct)
   }
 
-  # List of characters to remove
-  character.vector <- c(".",",",":",";","-","--","\u2013","\u2014",
-                        "[","]","{","}","=","&","/")
-  remove.characters <- paste0("\\", character.vector, collapse="|")
+  # Combine the words back into a single string
+  return(paste(words, collapse = " "))
+}
 
-  # Remove first character if unwanted
-  first.character <- gsub(remove.characters, "", substring(x, 1, 1))
-  # Put Humpty together again
-  if (max(0,nchar(Trim(gsub("(\\s).*", "\\1", x)))) == 1) {
-    x <- paste(first.character, Trim(substring(x, 2)))
-  } else {
-    x <- paste0(first.character, Trim(substring(x, 2)))
+#' @title CleanText
+#' @keywords internal
+#' @noRd
+CleanText <- function(x, multiline = FALSE) {
+
+  if (any(is.na(GoFish(x)))) return (x)
+
+  # If the text is in ALL CAPS (allowing spaces), convert it to Title Case.
+  # Remove non-letter characters (e.g., spaces, punctuation, digits)
+  letters.only <- gsub("[^[:alpha:]]", "", x)
+  # Compare the filtered string with its uppercase version
+  if (all(letters.only == toupper(letters.only), na.rm = TRUE))  {
+    x <- ApaTitle(x)
   }
 
-  # Remove last character if unwanted
-  last.character <- gsub(remove.characters, "", substr(x, nchar(x), nchar(x)))
-  # Put Humpty togheter again
-  x <- paste0(Trim(substr(x, 1, nchar(x)-1)), last.character)
+  # Define characters to remove
+  chars <- c(",", ":", ";", "-", "--", "\u2013", "\u2014", "[", "]", "{", "}",
+             "=", "&", "/")
+  # Create a regex pattern by escaping each character and joining them with |
+  pattern <- paste0("\\", chars, collapse = "|")
 
-  # Remove any #. (e.g., 1. Title)
-  x <- Trim(gsub("^\\s*\\d+\\s*\\.", "", x))
+  # Remove any unwanted characters from the beginning or end of the string
+  x <- gsub(paste0("^(", pattern, ")+|(", pattern, ")+$"), "", x)
 
-  # Remove \r\n if multiline is set to FALSE
-  if (!multiline) x <- Trim(gsub("\r?\n|\r", " ", x))
-
-  # Remove any abstract from beginning of string
-  if (any(grepl("abstract", tolower(substr(x, 1, 8))))) {
-    x <- substring(x, 9)
+  # Remove newline characters if multiline is set to FALSE.
+  if (!multiline) {
+    x <- gsub("\r?\n|\r", " ", x)
   }
 
-  # Convert ALL CAPITALS to All Capitals
-  if (all(stringr::str_detect(x, "^[[:upper:][:space:]]+$"))) {
-    x <- stringr::str_to_title(x)
-  }
+  # Remove HTML/XML tags and common HTML entities.
+  x <- gsub("<.*?>|&lt;|&gt;|\ufffd", "", x)
 
-  # Remove NA
-  x <- x[! x %in% c("NANA")] |>
-    Trim()
+  # Remove the word "abstract" from the beginning (case-insensitive)
+  x <- sub("(?i)^abstract\\b\\s*", "", x, perl = TRUE)
 
-  return (x)
+  # Collapse multiple whitespace characters into a single space.
+  x <- Trim(gsub("\\s+", " ", x))
+
+  return(x)
 
 }
 

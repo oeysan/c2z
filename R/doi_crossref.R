@@ -53,10 +53,14 @@ DoiCrossref <- \(data,
     } else if (msg$type == "posted-content" &&
                !is.null(msg$subtype) && msg$subtype == "preprint") {
       itemType <- "preprint"
-    } else if (msg$type == "book-chapter") {
+    } else if (msg$type == "book-chapter" ||
+               msg$type == "book-section" ||
+               msg$type == "book-part"
+               ) {
       itemType <- "bookSection"
     } else if (msg$type == "edited-book" ||
-               msg$type == "book") {
+               msg$type == "book" ||
+               msg$type == "monograph") {
       itemType <- "book"
     } else {
       itemType <- "document"

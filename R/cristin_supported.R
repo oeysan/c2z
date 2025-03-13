@@ -39,9 +39,6 @@ CristinSupported <- \(data = NULL,
     firstName <- creatorType <- lastName <- filter.name <- external.data <-
     results <- id <- name <- category <- key <- . <- NULL
 
-  # Set replace.na as force.type if defined
-  if (!is.null(force.type)) replace.na <- force.type
-
   # Currently supported references
   supported.types <- c(
     anthologyaca= "book",
@@ -199,6 +196,9 @@ CristinSupported <- \(data = NULL,
 
   # Set data as supported data
   data <- supported.data
+
+  # force.type if defined
+  if (!is.null(force.type)) data$category <- force.type
 
   # Checking missing data message
   log <-  LogCat(

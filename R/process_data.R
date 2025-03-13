@@ -45,7 +45,7 @@
 #' @examples
 #' \dontrun{
 #'   # Example: Process data with a simple sleep expression using multisession processing
-#'   result <- ProcessData(
+#'   result <- Processing(
 #'     func = quote({
 #'       Sys.sleep(2)  # simulate a time-consuming task
 #'       "Task Completed"
@@ -60,7 +60,7 @@
 #' @import future
 #' @import progressr
 #' @export
-ProcessData <- function(func = substitute(NULL),
+Processing <- function(func = substitute(NULL),
                         n = NULL,
                         start.message = NULL,
                         end.message = NULL,
@@ -92,7 +92,14 @@ ProcessData <- function(func = substitute(NULL),
         start.message, sprintf("of %s", Numerus(n, "item"))
       )
     }
+  } else {
+    start.message <- paste(
+      sprintf("%s processing.", stringr::str_to_title(process.type)),
+      start.message
+    )
   }
+
+  toupper("test")
 
   log <- LogCat(
     sprintf(
@@ -117,15 +124,21 @@ ProcessData <- function(func = substitute(NULL),
 
   # Compute end time and runtime message
   process.end <- Sys.time()
+  time.diff <- process.end - process.start
+  total.seconds <- as.numeric(time.diff, units = "secs")
+  hours <- floor(total.seconds / 3600)
+  minutes <- floor((total.seconds %% 3600) / 60)
+  seconds.whole <- floor(total.seconds %% 60)
+  ms <- round((total.seconds - floor(total.seconds)) * 1000)
+  runtime <- sprintf(
+    "Duration: %02d:%02d:%02d.%03d",
+    hours, minutes, seconds.whole, ms
+  )
+
   if (is.null(end.message)) {
-    time.diff <- process.end - process.start
-    total_seconds <- as.numeric(time.diff, units = "secs")
-    hours <- floor(total_seconds / 3600)
-    minutes <- floor((total_seconds %% 3600) / 60)
-    seconds_whole <- floor(total_seconds %% 60)
-    ms <- round((total_seconds - floor(total_seconds)) * 1000)
-    end.message <- sprintf("Runtime: %02d:%02d:%02d.%03d",
-                           hours, minutes, seconds_whole, ms)
+    end.message <- runtime
+  } else {
+    end.message <- sprintf("%s. %s", runtime, end.message)
   }
 
   log <- LogCat(
@@ -140,10 +153,172 @@ ProcessData <- function(func = substitute(NULL),
 
   # Store the current future plan and handlers if restore.defaults is TRUE
   if (restore.defaults) {
-    original_plan <- future::plan()
-    on.exit(future::plan(original_plan), add = TRUE)
+    original.plan <- future::plan()
+    on.exit(future::plan(original.plan), add = TRUE)
     on.exit(handlers(handlers), add = TRUE)
   }
 
   return(list(results = results, log = log))
 }
+
+#' Process data with Parallel Execution and Row/Chunk Processing
+#'
+#' This function processes a tibble (or data frame) in parallel using the \code{future} package
+#' along with \code{progressr} for progress reporting. The data is split into chunks via a helper function
+#' \code{SplitData}. Depending on the \code{by.rows} flag, each chunk is processed either row-by-row
+#' (using \code{lapply}) or as an entire chunk. In either case, the processed results are bound into a single tibble.
+#'
+#' @param data Data to be processed.
+#' @param func A function that processes either a single row (if \code{by.rows = TRUE}) or an entire chunk
+#'   (if \code{by.rows = FALSE}). Additional arguments are passed to \code{func} via \code{...}.
+#' @param by.rows Logical. If \code{TRUE}, \code{func} is applied to each row individually within each chunk;
+#'   if \code{FALSE}, \code{func} is applied to the entire chunk. Default is \code{TRUE}.
+#' @param min.multisession Integer. The minimum number of rows in \code{data} required to use multisession
+#'   (parallel execution). If \code{nrow(data)} is less than this value, parallel processing is disabled.
+#'   Default is \code{1}.
+#' @param n.workers Integer. The number of workers to use for parallel processing.
+#'   Defaults to \code{max(1, future::availableCores() - 1)}.
+#' @param n.chunks Integer. The number of chunks into which the data is split.
+#'   If \code{NULL}, it defaults to the number of workers.
+#' @param limit Integer. If \code{(nrow(data) / limit)} is less than or equal to \code{n.workers},
+#'   the data is split into \code{n.chunks}; otherwise, it is split using \code{limit}. Default is \code{100}.
+#' @param use.multisession Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
+#'   sequential processing is employed.
+#' @param start.message Optional character string. A custom message to log at the start of processing.
+#' @param end.message Optional character string. A custom message to log at the end of processing.
+#' @param restore.defaults Logical. If \code{TRUE} (default), the original future plan and progress handlers
+#'   are restored after processing.
+#' @param handler Character string. The progress handler to be used by the \code{progressr} package.
+#'   Defaults to \code{"txtprogressbar"} unless \code{silent} is \code{TRUE}.
+#' @param silent Logical. If \code{TRUE}, progress messages and logging are suppressed. Default is \code{FALSE}.
+#' @param log List. An initial log (default is an empty list) to which log messages are appended.
+#' @param ... Additional arguments passed to the processing function \code{func}.
+#'
+#' @return A list with two components:
+#' \describe{
+#'   \item{results}{A tibble resulting from binding all processed rows from each chunk.}
+#'   \item{log}{A list of log messages generated during processing.}
+#' }
+#'
+#' @details
+#' The function first checks if the data has enough rows to warrant parallel processing.
+#' It then determines the number of workers and chunks and splits the data using the helper function
+#' \code{SplitData}. The processing is executed with \code{future.apply::future_lapply} in parallel. If \code{by.rows} is \code{TRUE},
+#' each row within a chunk is processed individually and then bound together using \code{dplyr::bind_rows};
+#' if \code{by.rows} is \code{FALSE}, the entire chunk is processed at once. Finally, all chunk results are combined
+#' into a single tibble.
+#'
+#' @examples
+#' \dontrun{
+#' example.result <- ProcessData(
+#'   data =  tibble::tibble(
+#'     key = LETTERS[1:3],
+#'     value = seq(3)
+#'   ),
+#'   func = \(data) {
+#'     data$value <- data$value * 10
+#'     data
+#'   },
+#'   by.rows = FALSE,
+#'   min.multisession = 10,
+#'   n.workers = 4,
+#'   n.chunks = 4,
+#'   limit = 100,
+#'   use.multisession = TRUE,
+#'   start.message = "Starting example data processing",
+#'   end.message   = "Finished example data processing",
+#'   handler = "txtprogressbar",
+#'   silent = FALSE
+#' )
+#' # The result is a single tibble.
+#' processed.tibble <- example.result$results
+#' process.log <- example.result$log
+#' if (any(nrow(processed.tibble))) print(processed.tibble)
+#' }
+#'
+#' @export
+ProcessData <- function(data,
+                          func,
+                          by.rows = TRUE,
+                          min.multisession = 1,
+                          n.workers = NULL,
+                          n.chunks = NULL,
+                          limit = 100,
+                          use.multisession = TRUE,
+                          start.message = NULL,
+                          end.message = NULL,
+                          restore.defaults = TRUE,
+                          handler = NULL,
+                          silent = FALSE,
+                          log = list(),
+                          ...) {
+
+
+  # Return data if empty
+  if (!any(nrow(data))) {
+    return (list(results = NULL, log = c(log, "No results to wrangle.")))
+  }
+
+  # Disable multisession if the number of rows in data is below the threshold
+  if (nrow(data) < min.multisession) {
+    use.multisession <- FALSE
+  }
+
+  # Set number of workers and chunks if not provided
+  if (is.null(n.workers)) {
+    n.workers <- max(1, future::availableCores() - 1)
+  }
+  if (is.null(n.chunks)) {
+    n.chunks <- n.workers
+  }
+
+  # Split the data into chunks using the SplitData helper
+  if ((nrow(data) / limit) <= n.workers) {
+    data.chunks <- SplitData(data, chunks = n.chunks)
+  } else {
+    data.chunks <- SplitData(data, limit)
+  }
+
+  # Use Processing to handle future plan and progress reporting
+  process.result <- Processing(
+    func = quote({
+      p <- progressr::progressor(steps = length(data.chunks))
+
+      chunk.list <- future.apply::future_lapply(seq_along(data.chunks), function(i) {
+        chunk <- data.chunks[[i]]
+        process.message <- sprintf(
+          "Processsed %s of %s batches", i, length(data.chunks)
+        )
+        if (by.rows) {
+          row.list <- lapply(seq_len(nrow(chunk)), function(i) {
+            func(chunk[i, , drop = FALSE], ...)
+          })
+          p(message = paste(process.message, "by rows"))
+          # Bind rows from the individual row processing into a single tibble for this chunk
+          dplyr::bind_rows(row.list)
+        } else {
+          chunk.result <- func(chunk, ...)
+          p(message = process.message)
+          chunk.result
+        }
+      }, future.seed = TRUE)
+
+      # Combine results from all chunks into one tibble
+      dplyr::bind_rows(chunk.list)
+    }),
+    n = nrow(data),
+    start.message = start.message,
+    end.message = end.message,
+    use.multisession = use.multisession,
+    restore.defaults = restore.defaults,
+    handler = handler,
+    silent = silent
+  )
+
+  log <- c(log, process.result$log)
+  results <- process.result$results
+
+  return(list(results = results, log = log))
+}
+
+

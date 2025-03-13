@@ -121,7 +121,7 @@ ZoteroIsbn <- \(keys,
 
         # MARCXML metadata
         metadata <- list(rvest::read_html(httr.get$data)) |>
-        GoFish()
+          GoFish()
 
         if (is.null(metadata)) return (list(log = httr.get$log))
 
@@ -410,6 +410,12 @@ ZoteroIsbn <- \(keys,
 
     # Check libraries for metadata
     metadata <- Isbn(key)
+
+    if (any(is.na(GoFish(metadata$title))) ||
+        any(is.na(GoFish(metadata$creators)))) {
+      # Check libraries for metadata
+      metadata <- Isbn(key)
+    }
 
     # Add data
     data <- AddAppend(metadata$data, data)

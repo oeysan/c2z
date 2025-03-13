@@ -99,10 +99,18 @@ ZoteroFormat <- \(data = NULL,
       names <- names(data[i])
 
       # Make certain fields not in multiline are strings
-      if (!names %in% multiline.items) x <- ToString(x)
+      if (!names %in% multiline.items) {
+        x <- ToString(x)
+      }
 
       # Remove numbering from title
-      if (names %in% c("title")) x <- gsub("^\\d+\\.\\s*", "", x)
+      if (names %in% c("title")) x <- gsub("^\\d+\\.\\s*", "", CleanText(x))
+
+      if (names %in% c("abstractNote")) {
+        if (grepl("^This work is licensed under", x, ignore.case = TRUE)) {
+          x <- NA
+          }
+      }
 
       # Add to list if element is a data frame
       ## Make certain list.items is in a list

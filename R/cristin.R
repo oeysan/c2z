@@ -63,6 +63,8 @@
 #' @param use.identifiers Use if ISBN/DOI identifiers if enabled, Default: TRUE
 #' @param use.multisession Logical. If \code{TRUE} (default), parallel
 #' processing using multisession is employed; otherwise, processing is sequential.
+#' @param min.multisession Minimum number of results for using multisession.
+#'   Default: 50
 #' @param n.workers Optional integer for the number of workers to be used in
 #' multisession mode. If \code{NULL}, it defaults to the number of available
 #' cores minus one (with a minimum of one).
@@ -149,6 +151,7 @@ Cristin <- function (id  = NULL,
                      custom.url = NULL,
                      use.identifiers = TRUE,
                      use.multisession = FALSE,
+                     min.multisession = 50,
                      n.workers = NULL,
                      n.chunks = NULL,
                      handler = NULL,
@@ -590,50 +593,38 @@ Cristin <- function (id  = NULL,
   # Convert to Zotero-format if zotero.import is TRUE
   if (zotero.import & any(nrow(results))) {
 
-    # Define workers and future session
-    process.type <- if (use.multisession) "multisession" else "sequential"
-    if (is.null(n.workers)) n.workers <- max(1, future::availableCores() - 1)
-    if (is.null(n.chunks)) n.chunks <- n.workers
-    if (use.multisession && !inherits(future::plan(), process.type)) {
-      future::plan(process.type, workers = n.workers)
-    } else {
-      future::plan(process.type)
-    }
+    # Define future
+    if (nrow(results) < min.multisession) use.multisession <- FALSE
 
-    limit <- 1000
-    if ((nrow(results) / limit) <= n.workers) {
-      cristin.chunks <- SplitData(results, chunks = n.chunks)
-    } else {
-      cristin.chunks <- SplitData(results, limit)
-    }
-    zotero.data <- ProcessData(
-      {
-        p <- progressr::progressor(steps = length(cristin.chunks))
-        run <- future_lapply(cristin.chunks, \(chunk) {
+    start.message <- sprintf(
+      "Converting %s to Zotero format",
+      Numerus(
+        nrow(results),
+        "item",
+      )
+    )
 
-          chunk <- CristinWrangler(
-            data = chunk,
-            use.identifiers = use.identifiers
-          )
-
-          p(message = "Processing data...")
-
-          return (chunk)
-        },
-        future.seed = TRUE)
-      dplyr::bind_rows(run)
-      },
-      n = nrow(results),
-      use.multisession = use.multisession,
-      restore.defaults = restore.defaults,
+    wrangle.data <- ProcessData(
+      data = results,
+      func = \(data) CristinWrangler(
+        data = data,
+        use.identifiers = use.identifiers
+      ),
+      by.rows = FALSE,
+      min.multisession = min.multisession,
       n.workers = n.workers,
       n.chunks = n.chunks,
+      limit = 1000,
+      use.multisession = use.multisession,
+      start.message = start.message,
       handler = handler,
-      silent = silent,
+      silent = FALSE
     )
-    results <- zotero.data$results
-    log <- c(log, zotero.data$log)
+
+    results <- wrangle.data$results
+    log <- c(log, wrangle.data$log)
   }
+
 
   if (any(nrow(results)) && zotero.import) {
     # Make sure that new items has a unique key.

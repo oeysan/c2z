@@ -13,7 +13,10 @@ maintenance simpler.
 
 #### Minor
 
-* added the options ot use `post.token`, Zotero-Write-Token (TRUE) or 
+* Added the internal function `ApaTitle` to helpe with producing titles
+in Title Case when the input is all CAPITAL LETTERS.
+
+* Added the options ot use `post.token`, Zotero-Write-Token (TRUE) or 
 If-Unmodified-Since-Version (FALSE), in `ZoteroPost`
 
 * Made `zotero.types` globally available.

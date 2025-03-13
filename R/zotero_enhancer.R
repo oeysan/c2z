@@ -53,7 +53,7 @@ ZoteroEnhancer <- \(zotero.data,
                     use.semantic = TRUE,
                     use.isbn = TRUE) {
 
-  if (!any(nrow(GoFish(zotero.data))) || !any(nrow(GoFish(zotero.data)))) {
+  if (!any(nrow(GoFish(zotero.data))) && !any(nrow(GoFish(external.data)))) {
     return (zotero.data)
   }
 
@@ -61,7 +61,7 @@ ZoteroEnhancer <- \(zotero.data,
   UpdateTibble <- \(x, external.data) {
 
     # Visible bindings
-    creatorType <- NULL
+    creatorType <- isbn <- doi <- NULL
 
     # Update the external metadata with essentials from the original data
     external.data$key <- GoFish(x$key)
@@ -118,7 +118,7 @@ ZoteroEnhancer <- \(zotero.data,
 
   # If external.data is provided and non-empty, use it directly.
   if (any(nrow(external.data))) {
-    # Assume x is a placeholder record to be updated.
+
     zotero.data <- UpdateTibble(zotero.data, external.data)
     return(zotero.data)
   }
@@ -130,16 +130,11 @@ ZoteroEnhancer <- \(zotero.data,
     if (!any(is.na(GoFish(x$abstractNote)))) next
 
     # Attempt to extract DOI from the DOI field, or if not present, from the URL.
-    doi <- CheckDoi(x$DOI)
-    if (is.null(doi)) doi <- CheckDoi(x$url)
+    doi <- GoFish(c2z::CheckDoi(x$DOI), NULL)
+    if (is.null(doi)) doi <- GoFish(c2z::CheckDoi(x$url), NULL)
 
-    # Process the ISBN field by removing spaces and selecting the first value.
-    isbn <- CheckDoi(x$ISBN)
-
-    # If an abstract is already present (redundant check), skip the record.
-    if (!any(is.na(GoFish(x$abstractNote)))) {
-      next
-    }
+    # Process the ISBN field
+    isbn <- GoFish(c2z::CheckIsbn(x$ISBN), NULL)
 
     # Check if item has isbn
     if (!is.null(isbn) && use.isbn) {
@@ -149,6 +144,13 @@ ZoteroEnhancer <- \(zotero.data,
     # Check if item has doi and external data is still empty
     if (is.null(external.data) && (!is.null(doi) && use.doi)) {
       external.data <- c2z::ZoteroDoi(doi, use.semantic = use.semantic)$data
+    }
+
+    # Remove external data if item is a chapter and external data does not match
+    if (x$itemType == "bookSection" &&
+        !(external.data$itemType %in%
+          c("conferencePaper", "journalArticle", "book"))) {
+      external.data <- NULL
     }
 
     # If no external metadata was retrieved, skip the record.

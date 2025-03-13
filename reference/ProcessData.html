@@ -13,7 +13,7 @@ SplitData. Depending on the by.rows flag, each chunk is processed either row-by-
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,6 +63,7 @@ along with <code>progressr</code> for progress reporting. The data is split into
 <span>  n.chunks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  use.multisession <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  start.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  end.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  restore.defaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -115,6 +116,10 @@ the data is split into <code>n.chunks</code>; otherwise, it is split using <code
 <dt id="arg-use-multisession">use.multisession<a class="anchor" aria-label="anchor" href="#arg-use-multisession"></a></dt>
 <dd><p>Logical. If <code>TRUE</code> (default) parallel processing is used; otherwise,
 sequential processing is employed.</p></dd>
+
+
+<dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
+<dd><p>Optional column or vector to be used as display names for processing, default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-start-message">start.message<a class="anchor" aria-label="anchor" href="#arg-start-message"></a></dt>

@@ -71,10 +71,11 @@ ZoteroEnhancer <- \(zotero.data,
 
     # Determine if the record is a book section by checking if the original record's
     # itemType is "bookSection" while the external metadata indicates a "book".
-    book.section <- GoFish(
-      x$itemType == "bookSection" & external.data$itemType == "book",
-      FALSE
-    )
+
+    book.section <- all(GoFish(
+      x$itemType == "bookSection" &&
+        external.data$itemType == "book",
+      FALSE))
 
     if (book.section) {
       external.data$pages <- GoFish(x$pages)
@@ -147,9 +148,12 @@ ZoteroEnhancer <- \(zotero.data,
     }
 
     # Remove external data if item is a chapter and external data does not match
-    if (x$itemType == "bookSection" &&
-        !(external.data$itemType %in%
-          c("conferencePaper", "journalArticle", "book"))) {
+    if (all(GoFish(
+      x$itemType == "bookSection"  &&
+        !external.data$itemType %in%
+          c("conferencePaper", "journalArticle", "book"),
+      FALSE
+      ))) {
       external.data <- NULL
     }
 

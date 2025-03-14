@@ -99,8 +99,6 @@ Processing <- \(func = substitute(NULL),
     )
   }
 
-  toupper("test")
-
   log <- LogCat(
     sprintf(
       "%s (began %s)",

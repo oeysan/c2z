@@ -612,11 +612,11 @@ Cristin <- function (id  = NULL,
           use.identifiers = use.identifiers
         )
       },
-      by.rows = FALSE,
+      by.rows = TRUE,
       min.multisession = min.multisession,
       n.workers = n.workers,
       n.chunks = n.chunks,
-      limit = 1000,
+      limit = 100,
       use.multisession = use.multisession,
       start.message = start.message,
       handler = handler,

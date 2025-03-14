@@ -37,7 +37,8 @@ ZoteroFormat <- \(data = NULL,
   relations <- NULL
 
   # Run if not empty
-  if (all(is.na(GoFish(data)))) {
+  if (all(is.na(GoFish(data))) ||
+      all(GoFish(data$version == 0 && is.na(data$itemType), FALSE))) {
     return (NULL)
   }
 

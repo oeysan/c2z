@@ -331,8 +331,10 @@ ZoteroPost <- \(zotero,
     key <- status <- log.eta <- NULL
 
     # MORE...
-    n.attachments <- Numerus(nrow(zotero$attachments),
-                              "attachment")
+    n.attachments <- Numerus(
+      nrow(zotero$attachments),
+      "attachment"
+    )
 
     # Add message to log
     zotero$log <- LogCat(

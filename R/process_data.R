@@ -184,7 +184,6 @@ Processing <- \(func = substitute(NULL),
 #'   the data is split into \code{n.chunks}; otherwise, it is split using \code{limit}. Default is \code{100}.
 #' @param use.multisession Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
 #'   sequential processing is employed.
-#' @param names Optional column or vector to be used as display names for processing, default \code{NULL}.
 #' @param start.message Optional character string. A custom message to log at the start of processing.
 #' @param end.message Optional character string. A custom message to log at the end of processing.
 #' @param restore.defaults Logical. If \code{TRUE} (default), the original future plan and progress handlers
@@ -246,7 +245,6 @@ ProcessData <- \(data,
                  n.chunks = NULL,
                  limit = 100,
                  use.multisession = TRUE,
-                 names = NULL,
                  start.message = NULL,
                  end.message = NULL,
                  restore.defaults = TRUE,
@@ -286,41 +284,17 @@ ProcessData <- \(data,
     func = quote({
       p <- progressr::progressor(steps = length(data.chunks))
 
-      chunk.list <- future.apply::future_lapply(
-        seq_along(data.chunks), \(i) {
-
-          chunk <- data.chunks[[i]]
-
+      chunk.list <- future.apply::future_lapply(data.chunks, \(chunk) {
         if (by.rows) {
-          process.message <- sprintf(
-            "Processing %s by rows.",
-            Numerus(length(data.chunks), "batch", "batches")
-          )
-          row.list <- lapply(seq_len(nrow(chunk)), \(j) {
-            if (!is.null(names)) {
-              process.message <- sprintf(
-                "Processing %s.",
-                chunk[j, names]
-              )
-            }
-            func(chunk[j, , drop = FALSE], ...)
-            p(message = process.message)
+          row.list <- lapply(seq_len(nrow(chunk)), \(i) {
+            func(chunk[i, , drop = FALSE], ...)
           })
+          p(message = "Processing batches by row")
+          # Bind rows from the individual rows
           dplyr::bind_rows(row.list)
         } else {
-          if (!is.null(names)) {
-            process.message <- sprintf(
-              "Processing %s.",
-              names[[i]]
-            )
-          } else {
-            process.message <- sprintf(
-              "Processing %s.",
-              Numerus(length(data.chunks), "batch", "batches")
-            )
-          }
           chunk.result <- func(chunk, ...)
-          p(message = process.message)
+          p(message = "Processing batches")
           chunk.result
         }
       }, future.seed = TRUE)

@@ -12,6 +12,7 @@ ProcessData(
   n.workers = NULL,
   limit = 100,
   use.multisession = TRUE,
+  n.message = 1,
   start.message = NULL,
   process.message = NULL,
   end.message = NULL,
@@ -43,6 +44,8 @@ the data is split into \code{n.workers}; otherwise, it is split using \code{limi
 
 \item{use.multisession}{Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
 sequential processing is employed.}
+
+\item{n.message}{Integer. Display a process message every nth iteration. Defaults to \code{1}. Turn off messages with 0.}
 
 \item{start.message}{Optional character string. A custom message to log at the start of processing.}
 

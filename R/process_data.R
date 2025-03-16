@@ -176,6 +176,7 @@ Processing <- \(func = substitute(NULL),
 #'   the data is split into \code{n.workers}; otherwise, it is split using \code{limit}. Default is \code{100}.
 #' @param use.multisession Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
 #'   sequential processing is employed.
+#' @param n.message Integer. Display a process message every nth iteration. Defaults to \code{1}. Turn off messages with 0.
 #' @param start.message Optional character string. A custom message to log at the start of processing.
 #' @param process.message Optional column name. A custom message to log during processing.
 #' @param end.message Optional character string. A custom message to log at the end of processing.
@@ -236,6 +237,7 @@ ProcessData <- \(data,
                  n.workers = NULL,
                  limit = 100,
                  use.multisession = TRUE,
+                 n.message = 1,
                  start.message = NULL,
                  process.message = NULL,
                  end.message = NULL,
@@ -282,16 +284,21 @@ ProcessData <- \(data,
         p <- progressr::progressor(steps = nrow(data.chunks))
         chunk.list <- future.apply::future_lapply(
           seq_len(nrow(data.chunks)), \(i) {
-            if (!is.null(process.message)) {
-              process.message <- sprintf(
-                "Processing %s.",
-                dplyr::pull(data[i, process.message])
-              )
-            } else {
-              process.message <- sprintf("Processing batch %s by rows.", i)
-            }
-            p(message = process.message)
             chunk.result <- func(data.chunks[i, , drop = FALSE], ...)
+            if (n.message > 0) {
+              if (!is.null(process.message)) {
+                process.message <- sprintf(
+                  "Processing %s.",
+                  dplyr::pull(data[i, process.message])
+                )
+              } else {
+                process.message <- sprintf("Processing batch %s by rows.", i)
+              }
+              if (i %% n.message == 0) {
+                p(message = process.message)
+              }
+            }
+            return (chunk.result)
           },
           future.seed = TRUE
         )
@@ -302,23 +309,26 @@ ProcessData <- \(data,
         chunk.list <- future.apply::future_lapply(
           seq_along(data.chunks), \(i) {
             chunk <- data.chunks[[i]]
-            if (!is.null(process.message)) {
-              process.message <- sprintf(
-                "Processing %s.",
-                dplyr::pull(chunk[1, process.message])
-              )
-            } else {
-              process.message <- sprintf("Processing batch %s.", i)
-            }
-            p(message = process.message)
             chunk.result <- func(chunk, ...)
+            if (n.message > 0) {
+              if (!is.null(process.message)) {
+                process.message <- sprintf(
+                  "Processing %s.",
+                  dplyr::pull(chunk[1, process.message])
+                )
+              } else if (n.message > 0) {
+                process.message <- sprintf("Processing batch %s.", i)
+              }
+              if (i %% n.message == 0) p(message = process.message)
+            }
+            return (chunk.result)
           },
           future.seed = TRUE
         )
 
       }
       # Combine results from all chunks into one tibble
-      dplyr::bind_rows(chunk.list)
+      return (dplyr::bind_rows(chunk.list))
     }),
     n = nrow(data),
     start.message = start.message,

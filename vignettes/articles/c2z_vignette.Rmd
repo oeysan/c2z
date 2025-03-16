@@ -418,10 +418,13 @@ post.copy <- ZoteroPost(
   post.token = TRUE
 )
 
-# Select only names in index and print
-ZoteroIndex(post.copy$items) |>
-  dplyr::select(name) |>
-  print(width = 80)
+
+if (any(nrow(post.copy$items))) {
+  # Select only names in index and print
+  ZoteroIndex(post.copy$items) |>
+    dplyr::select(name) |>
+    print(width = 80)
+}
 ```
 
 # Bibliography

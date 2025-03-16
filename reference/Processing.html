@@ -13,7 +13,7 @@ progress handlers, and execution plans."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,6 @@ progress handlers, and execution plans.</p>
 <span>  end.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use.multisession <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n.workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  n.chunks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  handler <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  restore.defaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -101,11 +100,6 @@ is employed; otherwise, processing is sequential.</p></dd>
 <dd><p>Optional integer for the number of workers to be used in
 multisession mode. If <code>NULL</code>, it defaults to the number of available
 cores minus one (with a minimum of one).</p></dd>
-
-
-<dt id="arg-n-chunks">n.chunks<a class="anchor" aria-label="anchor" href="#arg-n-chunks"></a></dt>
-<dd><p>Optional integer for the number of chunks to process.
-If <code>NULL</code>, it defaults to the number of workers.</p></dd>
 
 
 <dt id="arg-handler">handler<a class="anchor" aria-label="anchor" href="#arg-handler"></a></dt>

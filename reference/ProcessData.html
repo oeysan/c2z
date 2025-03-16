@@ -13,7 +13,7 @@ SplitData. Depending on the by.rows flag, each chunk is processed either row-by-
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,10 +60,10 @@ along with <code>progressr</code> for progress reporting. The data is split into
 <span>  by.rows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  min.multisession <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n.workers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  n.chunks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  use.multisession <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  start.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  process.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  end.message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  restore.defaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  handler <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -102,14 +102,9 @@ Default is <code>1</code>.</p></dd>
 Defaults to <code>max(1, future::availableCores() - 1)</code>.</p></dd>
 
 
-<dt id="arg-n-chunks">n.chunks<a class="anchor" aria-label="anchor" href="#arg-n-chunks"></a></dt>
-<dd><p>Integer. The number of chunks into which the data is split.
-If <code>NULL</code>, it defaults to the number of workers.</p></dd>
-
-
 <dt id="arg-limit">limit<a class="anchor" aria-label="anchor" href="#arg-limit"></a></dt>
 <dd><p>Integer. If <code>(nrow(data) / limit)</code> is less than or equal to <code>n.workers</code>,
-the data is split into <code>n.chunks</code>; otherwise, it is split using <code>limit</code>. Default is <code>100</code>.</p></dd>
+the data is split into <code>n.workers</code>; otherwise, it is split using <code>limit</code>. Default is <code>100</code>.</p></dd>
 
 
 <dt id="arg-use-multisession">use.multisession<a class="anchor" aria-label="anchor" href="#arg-use-multisession"></a></dt>
@@ -119,6 +114,10 @@ sequential processing is employed.</p></dd>
 
 <dt id="arg-start-message">start.message<a class="anchor" aria-label="anchor" href="#arg-start-message"></a></dt>
 <dd><p>Optional character string. A custom message to log at the start of processing.</p></dd>
+
+
+<dt id="arg-process-message">process.message<a class="anchor" aria-label="anchor" href="#arg-process-message"></a></dt>
+<dd><p>Optional column name. A custom message to log during processing.</p></dd>
 
 
 <dt id="arg-end-message">end.message<a class="anchor" aria-label="anchor" href="#arg-end-message"></a></dt>
@@ -182,7 +181,6 @@ into a single tibble.</p>
 <span class="r-in"><span>  by.rows <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  min.multisession <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  n.workers <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>  n.chunks <span class="op">=</span> <span class="fl">4</span>,</span></span>
 <span class="r-in"><span>  limit <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>  use.multisession <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  start.message <span class="op">=</span> <span class="st">"Starting example data processing"</span>,</span></span>

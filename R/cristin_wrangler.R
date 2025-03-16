@@ -22,7 +22,7 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
   meta$collections <- GoFish(x$collections, NULL)
 
   # Set item type
-  meta$itemType <- x$category
+  meta$itemType <- unname(x$category)
 
   # Fetch and clean title
   meta$title <- GoFish(x$title[x$original_language])
@@ -58,7 +58,7 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
         )
       })
 
-      meta$creators <- ZoteroCreator(cristin.creators)
+      meta$creators <- list(ZoteroCreator(cristin.creators))
     }
   }
 
@@ -85,8 +85,9 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
   meta$numPages        <- as.character(GoFish(x$number_of_pages))
   meta$language        <- GoFish(x$original_language)
   meta$ISBN            <- GoFish(
-    ToString(x$international_standard_numbers[[1]]$value)
+    CheckIsbn(x$international_standard_numbers[[1]]$value)
   )
+
   meta$publisher       <- GoFish(x$publisher$name)
   if (is.null(meta$place)) {
     meta$place <- GoFish(x$publisher$place)
@@ -139,7 +140,7 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
         meta$DOI <- GoFish(CheckDoi(cristin.urls, TRUE), NULL)
       }
       if (any(is.na(GoFish(meta$ISBN)))) {
-        meta$ISBN <- GoFish(CheckIsbn(gsub("[^0-9]", "", cristin.urls)), NULL)
+        meta$ISBN <- GoFish(CheckIsbn(cristin.urls))
       }
     }
   }
@@ -148,7 +149,7 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
   if (any(is.na(GoFish(meta$DOI)))) meta$DOI <- CheckDoi(meta$url)
   # Similar of ISBN
   if (any(is.na(GoFish(meta$ISBN)))) {
-    meta$ISBN <- GoFish(CheckIsbn(gsub("[^0-9]", "", meta$url)), NULL)
+    meta$ISBN <- GoFish(CheckIsbn(meta$url))
   }
 
   # Compile tags from scientific disciplines and keywords
@@ -202,19 +203,21 @@ CristinWrangler <- \(data, meta = list(), use.identifiers = TRUE) {
   }
 
   # Fix mismatch between creatorType and itemType
-  if ("editor" %in% GoFish(meta$creators$creatorType)) {
-    editor.items <- c("book", "bookSection", "conferencePaper",
-                      "dictionaryEntry", "document", "encyclopediaArticle",
-                      "journalArticle", "preprint")
-    hasBookTitle <- !is.na(GoFish(meta$bookTitle))
-    if (meta$itemType == "report" && !hasBookTitle) {
-      meta$creators$creatorType[
-        meta$creators$creatorType == "editor"
-      ] <- "serieseditor"
-    } else if (!(meta$itemType %in% editor.items) && hasBookTitle) {
-      meta$itemType <- "bookSection"
-    } else if (!(meta$itemType %in% editor.items)) {
-      meta$itemType <- "book"
+  if (any(nrow(GoFish(meta$creators[[1]])))) {
+    if ("editor" %in% GoFish(meta$creators[[1]]$creatorType)) {
+      editor.items <- c("book", "bookSection", "conferencePaper",
+                        "dictionaryEntry", "document", "encyclopediaArticle",
+                        "journalArticle", "preprint")
+      hasBookTitle <- GoFish(meta$bookTitle, FALSE)
+      if (meta$itemType == "report" && !hasBookTitle) {
+        meta$creators[[1]]$creatorType[
+          meta$creators[[1]]$creatorType == "editor"
+        ] <- "serieseditor"
+      } else if (!(meta$itemType %in% editor.items) && hasBookTitle) {
+        meta$itemType <- "bookSection"
+      } else if (!(meta$itemType %in% editor.items)) {
+        meta$itemType <- "book"
+      }
     }
   }
 

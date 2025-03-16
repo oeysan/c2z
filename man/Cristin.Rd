@@ -42,7 +42,6 @@ Cristin(
   use.multisession = FALSE,
   min.multisession = 25,
   n.workers = NULL,
-  n.chunks = NULL,
   handler = NULL,
   restore.defaults = TRUE,
   zotero = NULL,
@@ -160,9 +159,6 @@ Default: 25}
 \item{n.workers}{Optional integer for the number of workers to be used in
 multisession mode. If \code{NULL}, it defaults to the number of available
 cores minus one (with a minimum of one).}
-
-\item{n.chunks}{Optional integer for the number of chunks to process.
-If \code{NULL}, it defaults to the number of workers.}
 
 \item{handler}{The progress handler to be used by the \code{progressr}
 package. If \code{NULL} and

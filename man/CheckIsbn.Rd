@@ -4,34 +4,37 @@
 \alias{CheckIsbn}
 \title{Check and Convert ISBN}
 \usage{
-CheckIsbn(key, split.key = ",")
+CheckIsbn(key)
 }
 \arguments{
 \item{key}{A character string that contains an ISBN or a compound string where the first element is the ISBN.}
-
-\item{split.key}{A delimiter used to split the \code{key}. Default is \code{","}.}
 }
 \value{
 A cleaned and validated ISBN string. If the resulting ISBN does not meet the expected criteria,
   the function returns \code{NULL}.
 }
 \description{
-This function takes an input string that may contain an ISBN (or a compound string
-where the first component is the ISBN), cleans it by removing non-alphanumeric characters
-(except spaces) and spaces, and processes it with the \code{GoFish} function. If the cleaned
-ISBN is in the ISBN10 format, the function converts it to ISBN13. Finally, it validates the ISBN;
-valid ISBNs either start with "97" and are 13 characters long or start with "99" and are longer than 7 characters.
+This function processes an input string that contains an ISBN (or a compound string
+where the first element is the ISBN). It first removes unwanted characters (keeping only digits, commas, and spaces),
+then uses the \code{GoFish} function to further process the string. The function splits the cleaned string by spaces or commas
+to extract a candidate ISBN. If the candidate ISBN is in ISBN10 format, it is converted to ISBN13 by prepending "978",
+recalculating the check digit, and concatenating the result. Finally, the function validates that the resulting ISBN is a valid ISBN13,
+i.e., it is 13 digits long and starts with either "978" or "979".
 }
 \details{
 The function performs the following steps:
 \enumerate{
-  \item Splits the input \code{key} using \code{split.key} and selects the first element.
-  \item Removes foreign (non-alphanumeric) characters and spaces using nested \code{gsub} calls.
-  \item Applies the \code{GoFish} function to the cleaned key (ensure that \code{GoFish} is defined in your environment).
-  \item If the key is in ISBN10 format (10 characters), converts it to ISBN13 by prepending \code{978},
-        recalculating the check digit, and concatenating the result.
-  \item Checks that the final key is valid by confirming that it either starts with "97" (and is 13 characters long)
-        or starts with "99" and has more than 7 characters.
+  \item Cleans the input \code{key} by removing all characters except digits, commas, and spaces.
+  \item Processes the cleaned key using the \code{GoFish} function (which must be defined in your environment).
+  \item Splits the resulting string by spaces and commas to extract the first candidate ISBN.
+  \item If the candidate is in ISBN10 format (10 characters), it converts it to ISBN13 by:
+        \enumerate{
+          \item Converting the first 9 digits to numeric.
+          \item Prepending the ISBN13 prefix "978".
+          \item Calculating the ISBN13 check digit using alternating weights of 1 and 3.
+          \item Concatenating the digits to form the full ISBN13.
+        }
+  \item Validates that the final key is a valid ISBN13 (i.e., 13 digits long and starting with "978" or "979").
 }
 }
 \examples{

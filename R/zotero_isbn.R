@@ -322,9 +322,7 @@ ZoteroIsbn <- \(keys,
     )
 
     # Fetch ISBN
-    meta$ISBN <- GoFish(
-      ToString(gsub("[^0-9-]", "", Marc(marc, "020", "a")))
-    )
+    meta$ISBN <- GoFish(CheckIsbn(Marc(marc, "020", "a")))
     # Fetch ISSN
     issn <- Marc(marc, "022", "a")
     # Fetch language field
@@ -447,27 +445,31 @@ ZoteroIsbn <- \(keys,
 
 #' Check and Convert ISBN
 #'
-#' This function takes an input string that may contain an ISBN (or a compound string
-#' where the first component is the ISBN), cleans it by removing non-alphanumeric characters
-#' (except spaces) and spaces, and processes it with the \code{GoFish} function. If the cleaned
-#' ISBN is in the ISBN10 format, the function converts it to ISBN13. Finally, it validates the ISBN;
-#' valid ISBNs either start with "97" and are 13 characters long or start with "99" and are longer than 7 characters.
+#' This function processes an input string that contains an ISBN (or a compound string
+#' where the first element is the ISBN). It first removes unwanted characters (keeping only digits, commas, and spaces),
+#' then uses the \code{GoFish} function to further process the string. The function splits the cleaned string by spaces or commas
+#' to extract a candidate ISBN. If the candidate ISBN is in ISBN10 format, it is converted to ISBN13 by prepending "978",
+#' recalculating the check digit, and concatenating the result. Finally, the function validates that the resulting ISBN is a valid ISBN13,
+#' i.e., it is 13 digits long and starts with either "978" or "979".
 #'
 #' @param key A character string that contains an ISBN or a compound string where the first element is the ISBN.
-#' @param split.key A delimiter used to split the \code{key}. Default is \code{","}.
 #'
 #' @return A cleaned and validated ISBN string. If the resulting ISBN does not meet the expected criteria,
 #'   the function returns \code{NULL}.
 #'
 #' @details The function performs the following steps:
 #' \enumerate{
-#'   \item Splits the input \code{key} using \code{split.key} and selects the first element.
-#'   \item Removes foreign (non-alphanumeric) characters and spaces using nested \code{gsub} calls.
-#'   \item Applies the \code{GoFish} function to the cleaned key (ensure that \code{GoFish} is defined in your environment).
-#'   \item If the key is in ISBN10 format (10 characters), converts it to ISBN13 by prepending \code{978},
-#'         recalculating the check digit, and concatenating the result.
-#'   \item Checks that the final key is valid by confirming that it either starts with "97" (and is 13 characters long)
-#'         or starts with "99" and has more than 7 characters.
+#'   \item Cleans the input \code{key} by removing all characters except digits, commas, and spaces.
+#'   \item Processes the cleaned key using the \code{GoFish} function (which must be defined in your environment).
+#'   \item Splits the resulting string by spaces and commas to extract the first candidate ISBN.
+#'   \item If the candidate is in ISBN10 format (10 characters), it converts it to ISBN13 by:
+#'         \enumerate{
+#'           \item Converting the first 9 digits to numeric.
+#'           \item Prepending the ISBN13 prefix "978".
+#'           \item Calculating the ISBN13 check digit using alternating weights of 1 and 3.
+#'           \item Concatenating the digits to form the full ISBN13.
+#'         }
+#'   \item Validates that the final key is a valid ISBN13 (i.e., 13 digits long and starting with "978" or "979").
 #' }
 #'
 #' @examples
@@ -482,29 +484,45 @@ ZoteroIsbn <- \(keys,
 #' }
 #'
 #' @export
+CheckIsbn <- function(key) {
 
-CheckIsbn <- \(key, split.key=",") {
-
-  key <- strsplit(key, split = split.key)[[1]][1]
-
-  # Trim and remove foreign characters from key
-  key <- as.character(gsub(" ", "", gsub("[^[:alnum:] ]", "", key))) |>
-    GoFish(NULL)
-
-  if (is.null(key)) return (NULL)
-
-  # Convert to ISBN13 if ISBN10
-  if (nchar(key) == 10) {
-    isbn10 <- c(9,7,8, as.numeric(strsplit(key, "")[[1]][1:9]))
-    check <- sum(isbn10 * c(1,3)) %% 10
-    check <- if (check == 0) check else 10 - check
-    key <- paste0(ToString(isbn10, ""), check)
+  # Helper function to validate and, if needed, convert an ISBN candidate.
+  ValidIsbn <- function(key) {
+    valid <- FALSE
+    # If the candidate is ISBN10 (10 characters), convert to ISBN13.
+    if (nchar(key) == 10) {
+      # Convert first 9 characters to numeric.
+      digits <- as.numeric(strsplit(key, "")[[1]][1:9])
+      if (any(is.na(digits))) return(FALSE)
+      # Prepend the ISBN13 prefix "978".
+      isbn13_digits <- c(9, 7, 8, digits)
+      # Calculate the ISBN13 check digit using alternating weights of 1 and 3.
+      weights <- rep(c(1, 3), length.out = 12)
+      sum_val <- sum(isbn13_digits * weights)
+      check <- (10 - (sum_val %% 10)) %% 10
+      # Reconstruct the ISBN13 key.
+      key <- paste0(paste(isbn13_digits, collapse = ""), check)
+    }
+    # Validate that the key is a valid ISBN13: 13 digits long and starting with "978" or "979".
+    if (nchar(key) == 13 && grepl("^(978|979)", key)) {
+      valid <- TRUE
+    }
+    return(valid)
   }
-  if (!(substr(key, 1, 2) == "97" & nchar(key) == 13 |
-        substr(key, 1, 2) == "99" & nchar(key) > 7)) {
-    key <- NULL
-  }
 
-  return(key)
+  # Remove all characters except digits, commas, and spaces.
+  key <- gsub("[^0-9, ]", "", key) |>
+    GoFish(type = NULL)
+
+  if (is.null(key)) return(NULL)
+
+  # Attempt extraction using space separation.
+  space_key <- GoFish(TrimSplit(key, " ")[1], FALSE)
+  if (ValidIsbn(space_key)) return(space_key)
+
+  # Attempt extraction using comma separation.
+  comma_key <- GoFish(TrimSplit(key, ",")[1], FALSE)
+  if (ValidIsbn(comma_key)) return(comma_key)
+
+  return(NULL)
 }
-

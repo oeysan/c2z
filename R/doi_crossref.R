@@ -141,7 +141,7 @@ DoiCrossref <- \(data,
     # Other common fields.
     meta$DOI       <- GoFish(msg$DOI)
     meta$ISSN      <- GoFish(paste(msg$ISSN, collapse = ", "))
-    meta$ISBN      <- GoFish(paste(msg$ISBN, collapse = ", "))
+    meta$ISBN      <- GoFish(CheckIsbn(msg$ISBN))
     meta$url       <- GoFish(msg$URL)
     meta$language  <- GoFish(msg$language)
     meta$publisher <- GoFish(msg$publisher)
@@ -416,7 +416,7 @@ DoiCrossref <- \(data,
       )
     }
     # Fetch ISBN
-    meta$ISBN <- paste(ReadXpath(ref, "//isbn"), collapse=", ")
+    meta$ISBN <- CheckIsbn(ReadXpath(ref, "//isbn"))
     # Fetch URL
     meta$url <- ReadXpath(
       ref, paste0(book.metadata,"/doi_data/resource[1]"), FALSE)
@@ -575,7 +575,7 @@ DoiCrossref <- \(data,
       ref, "//proceedings_metadata//publisher_name"
     )
 
-    meta$ISBN <- ToString(
+    meta$ISBN <- CheckIsbn(
       ReadXpath(ref, "//proceedings_metadata/isbn")
     )
 

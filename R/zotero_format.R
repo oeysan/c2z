@@ -110,7 +110,7 @@ ZoteroFormat <- \(data = NULL,
       if (names %in% c("abstractNote")) {
         if (grepl("^This work is licensed under", x, ignore.case = TRUE)) {
           x <- NA
-          }
+        }
       }
 
       # Add to list if element is a data frame

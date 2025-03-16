@@ -120,7 +120,7 @@ ZoteroCopy <- \(zotero,
   }
 
   # Return zotero list if copy.collections is FALSE or no collections
-  if (!copy.collections | is.null(zotero$collections)) {
+  if (!copy.collections || is.null(zotero$collections)) {
     return (zotero)
   }
 
@@ -144,7 +144,8 @@ ZoteroCopy <- \(zotero,
         parentCollection == "FALSE" ~ "FALSE",
         TRUE ~ key[match(parentCollection, old.keys)]
       )
-    )
+    ) |>
+    OrderCollections()
 
   # Set new collection main key
   if (!is.null(zotero$collection.key)) {

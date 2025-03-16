@@ -10,10 +10,10 @@ ProcessData(
   by.rows = TRUE,
   min.multisession = 1,
   n.workers = NULL,
-  n.chunks = NULL,
   limit = 100,
   use.multisession = TRUE,
   start.message = NULL,
+  process.message = NULL,
   end.message = NULL,
   restore.defaults = TRUE,
   handler = NULL,
@@ -38,16 +38,15 @@ Default is \code{1}.}
 \item{n.workers}{Integer. The number of workers to use for parallel processing.
 Defaults to \code{max(1, future::availableCores() - 1)}.}
 
-\item{n.chunks}{Integer. The number of chunks into which the data is split.
-If \code{NULL}, it defaults to the number of workers.}
-
 \item{limit}{Integer. If \code{(nrow(data) / limit)} is less than or equal to \code{n.workers},
-the data is split into \code{n.chunks}; otherwise, it is split using \code{limit}. Default is \code{100}.}
+the data is split into \code{n.workers}; otherwise, it is split using \code{limit}. Default is \code{100}.}
 
 \item{use.multisession}{Logical. If \code{TRUE} (default) parallel processing is used; otherwise,
 sequential processing is employed.}
 
 \item{start.message}{Optional character string. A custom message to log at the start of processing.}
+
+\item{process.message}{Optional column name. A custom message to log during processing.}
 
 \item{end.message}{Optional character string. A custom message to log at the end of processing.}
 
@@ -98,7 +97,6 @@ example.result <- ProcessData(
   by.rows = FALSE,
   min.multisession = 10,
   n.workers = 4,
-  n.chunks = 4,
   limit = 100,
   use.multisession = TRUE,
   start.message = "Starting example data processing",

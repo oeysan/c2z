@@ -68,8 +68,6 @@
 #' @param n.workers Optional integer for the number of workers to be used in
 #' multisession mode. If \code{NULL}, it defaults to the number of available
 #' cores minus one (with a minimum of one).
-#' @param n.chunks Optional integer for the number of chunks to process.
-#' If \code{NULL}, it defaults to the number of workers.
 #' @param handler The progress handler to be used by the \code{progressr}
 #' package. If \code{NULL} and
 #'   \code{silent} is \code{FALSE}, it defaults to \code{"txtprogressbar"}.
@@ -153,7 +151,6 @@ Cristin <- function (id  = NULL,
                      use.multisession = FALSE,
                      min.multisession = 25,
                      n.workers = NULL,
-                     n.chunks = NULL,
                      handler = NULL,
                      restore.defaults = TRUE,
                      zotero = NULL,
@@ -615,7 +612,6 @@ Cristin <- function (id  = NULL,
       by.rows = TRUE,
       min.multisession = min.multisession,
       n.workers = n.workers,
-      n.chunks = n.chunks,
       limit = 100,
       use.multisession = use.multisession,
       start.message = start.message,

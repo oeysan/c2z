@@ -327,6 +327,40 @@ Interleave <- function(a, b, rm.na = TRUE) {
   return(ab)
 }
 
+#' @title OrderCollections
+#' @keywords internal
+#' @noRd
+OrderCollections <- \(df) {
+
+  # Visible bindings
+  parentCollection <-
+
+  # Identify root nodes: these are rows where the parentCollection is not a key in the dataframe.
+  roots <- df |>
+    dplyr::filter(!(parentCollection %in% df$key))
+
+  # Initialize an empty tibble for the result with the same structure as df.
+  result <- df[0, ]
+
+  # Recursive helper function to append a node and its descendants.
+  AppendChildren <- \(node) {
+    result <<- dplyr::bind_rows(result, node)
+    # Find children whose parentCollection equals the current node's key
+    children <- df |>
+      dplyr::filter(parentCollection == node$key)
+    for (i in seq_len(nrow(children))) {
+      AppendChildren(children[i, ])
+    }
+  }
+
+  # For each root node, recursively collect its children.
+  for (i in seq_len(nrow(roots))) {
+    AppendChildren(roots[i, ])
+  }
+
+  return(result)
+}
+
 #' @title AncestorPath
 #' @keywords internal
 #' @noRd

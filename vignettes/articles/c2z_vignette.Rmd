@@ -410,8 +410,12 @@ copy.library$collections <- copy.library$collections |>
 
 # Copy the collection and items to the user library
 post.copy <- ZoteroPost(
-  zotero = copy.library,
-  silent = TRUE
+  Zotero(
+    collections = copy.library$collections,
+    items = copy.library$items
+  ),
+  silent = FALSE,
+  post.token = TRUE
 )
 
 # Select only names in index and print

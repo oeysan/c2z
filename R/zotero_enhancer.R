@@ -95,7 +95,7 @@ ZoteroEnhancer <- \(zotero.data,
 
     # If the external metadata's creator list is shorter than the Zotero record's,
     # then use the longer list from the Zotero record.
-    if (any(nrow(GoFish(x$creators[[1]])) &&
+    if (all(any(nrow(GoFish(x$creators[[1]]))) &&
             any(nrow(GoFish(external.data$creators[[1]]))))) {
       if (nrow(external.data$creators[[1]]) < nrow(x$creators[[1]])) {
         external.data$creators[[1]] <- x$creators[[1]]

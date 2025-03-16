@@ -144,6 +144,8 @@ ZoteroCheck <- function(data,
       unique.data <- dplyr::bind_rows(unique.data, data.duplicates)
     }
 
+    names(unique.data)
+
     # Log the number of duplicates removed
     removed.count <- nrow(data) - nrow(unique.data)
     log <- LogCat(

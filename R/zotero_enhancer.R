@@ -239,9 +239,9 @@ ZoteroEnhancer <- \(zotero.data,
 #' @importFrom dplyr mutate select rows_upsert bind_rows filter
 #' @export
 
-UpdateInsert <- function(x, y, key = "key", check.missing = FALSE) {
+UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
 
-  AddColumns <- function(x, y) {
+  AddColumns <- \(x, y) {
     missing.cols <- setdiff(names(y), names(x))
     for (col in missing.cols) {
       new.val <- if (is.factor(y[[col]])) {
@@ -323,40 +323,63 @@ UpdateInsert <- function(x, y, key = "key", check.missing = FALSE) {
 
   if (check.missing) {
     # Helper to determine if a cell value is "missing":
-    # For list columns: if the cell is a one-element list whose element is empty.
-    # For atomic types: if the value is NA.
-    is.missing <- function(val) {
+    # For list columns, consider it missing if it is empty or if it is a
+    # one-element list whose element is empty or all NA.
+    IsMissing <- \(val) {
       if (is.list(val)) {
-        if (length(val) == 1 && length(val[[1]]) == 0) {
-          return(TRUE)
-        } else {
-          return(FALSE)
-        }
+        # For list values, consider them missing if:
+        # - The list is empty, or
+        # - It has one element, and that element is either empty or all NA.
+        return(
+          length(val) == 0 ||
+            (length(val) == 1 &&
+               (length(val[[1]]) == 0 || all(is.na(val[[1]])))
+            )
+        )
       } else {
+        # For non-list values, simply check if the value is NA.
         return(is.na(val))
       }
     }
 
-    # Get common keys between x and y.
-    common.keys <- intersect(x[[key]], y[[key]])
+    # Create composite keys for matching.
+    CompositeKey <- \(df, keys) {
+      do.call(paste, c(df[keys], sep = "___"))
+    }
+    x.key <- CompositeKey(x, key)
+    y.key <- CompositeKey(y, key)
 
-    # For each matching key, update cell-by-cell.
+    common.keys <- intersect(x.key, y.key)
+
+    # For each matching composite key, update row-by-row.
     for (k in common.keys) {
-      ix <- which(x[[key]] == k)
-      iy <- which(y[[key]] == k)
+      ix <- which(x.key == k)
+      iy <- which(y.key == k)
       for (col in setdiff(common.cols, key)) {
         new.val <- y[[col]][iy]
-        # If y's value is valid (i.e. not missing), overwrite x's value.
-        if (!is.missing(new.val)) {
-          x[[col]][ix] <- new.val
+        if (!IsMissing(new.val)) {
+          if (is.list(x[[col]])) {
+            # If new.val is a single element, update all matching rows.
+            if (length(new.val) == 1) {
+              for (j in seq_along(ix)) {
+                x[[col]][[ix[j]]] <- new.val[[1]]
+              }
+            } else {
+              for (j in seq_along(ix)) {
+                x[[col]][[ix[j]]] <- new.val[[j]]
+              }
+            }
+          } else {
+            x[[col]][ix] <- new.val
+          }
         }
       }
     }
 
-    # Append rows from y that do not exist in x.
-    new.keys <- setdiff(y[[key]], x[[key]])
+    new.keys <- setdiff(y.key, x.key)
     if (length(new.keys) > 0) {
-      x <- dplyr::bind_rows(x, dplyr::filter(y, !!rlang::sym(key) %in% new.keys))
+      new.rows <- y[which(y.key %in% new.keys), ]
+      x <- dplyr::bind_rows(x, new.rows)
     }
   } else {
     # Standard upsert: update matching rows and insert new rows.

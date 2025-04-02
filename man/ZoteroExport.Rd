@@ -55,7 +55,7 @@ Please see
   zotero = Zotero(
     user = FALSE,
     id = "4827927",
-    api = "RqlAmlH5l1KPghfCseAq1sQ1",
+    api = "Io1bwAiOjB1jPgUNegjJhJxF",
     item.type = "-attachment || note",
     max.result = 1,
     library = TRUE

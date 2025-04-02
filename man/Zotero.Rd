@@ -243,7 +243,7 @@ Please see
 }
 \examples{
 # Create the default Zotero list
-example <- Zotero(id = "9913421", api = "RqlAmlH5l1KPghfCseAq1sQ1")
+example <- Zotero(id = "9913421", api = "Io1bwAiOjB1jPgUNegjJhJxF")
 # Print the interesting pars of an otherwise empty list
 print(tail(example,5))
 }

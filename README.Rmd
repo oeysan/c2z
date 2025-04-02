@@ -219,7 +219,8 @@ example <- Zotero(
   delete = TRUE,
   delete.collections = TRUE,
   delete.items = TRUE,
-  index = TRUE
+  index = TRUE,
+  post.token = TRUE
 )
 ```
                   

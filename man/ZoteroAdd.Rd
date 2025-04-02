@@ -35,7 +35,7 @@ Please see
   example <- ZoteroAdd(
     Zotero(
       id = "9913421",
-      api = "RqlAmlH5l1KPghfCseAq1sQ1"
+      api = "Io1bwAiOjB1jPgUNegjJhJxF"
     ),
     isbn = "978-1529797138"
   )

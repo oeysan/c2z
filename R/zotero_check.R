@@ -41,7 +41,7 @@
 #'     items = Zotero(
 #'       user = FALSE,
 #'       id = "4827927",
-#'       api = "RqlAmlH5l1KPghfCseAq1sQ1",
+#'       api = "Io1bwAiOjB1jPgUNegjJhJxF",
 #'       library = TRUE,
 #'       silent = TRUE
 #'     )$items

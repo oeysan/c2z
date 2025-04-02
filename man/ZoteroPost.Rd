@@ -54,7 +54,7 @@ Please see
   zotero <- Zotero(
     user = FALSE,
     id = "4988497",
-    api = "RqlAmlH5l1KPghfCseAq1sQ1"
+    api = "Io1bwAiOjB1jPgUNegjJhJxF"
   )
 
   # Create a new collection for POST

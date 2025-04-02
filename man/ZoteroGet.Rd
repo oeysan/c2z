@@ -103,7 +103,7 @@ Please see
   zotero = Zotero(
     user = FALSE,
     id = "5250382",
-    api = "RqlAmlH5l1KPghfCseAq1sQ1"
+    api = "Io1bwAiOjB1jPgUNegjJhJxF"
   )
 
   # Query default group Zotero library for 1 item

@@ -34,7 +34,7 @@
 #'   separated by colon (e.g., NFR:1234), Default: NULL
 #' @param lang Two letter
 #'   \href{https://api.cristin.no/v2/doc/index.html#lang}{language code},
-#'   Default: NULL
+#'   Default: en
 #' @param page Page number. See
 #'   \href{https://api.cristin.no/v2/doc/index.html#pagination}{pagination},
 #'   Default: 1
@@ -133,7 +133,7 @@ Cristin <- function (id  = NULL,
                      project_code  = NULL,
                      funding_source  = NULL,
                      funding  = NULL,
-                     lang  = NULL,
+                     lang  = "en",
                      page  = 1,
                      per_page  = 1000,
                      max.results = NULL,
@@ -187,6 +187,12 @@ Cristin <- function (id  = NULL,
   } else if (!all.results) {
     max.results <- per_page
   }
+
+  # Languages
+  # Set lang as nn if no
+  if (lang %in% c("no")) lang <- "nn"
+  # Set lang to en if not Norwegian
+  if (!lang %in% c("nb", "nn", "no")) lang <- "en"
 
   # Create query list
   query.list <- if (!is.null(open.query)) {
@@ -291,6 +297,7 @@ Cristin <- function (id  = NULL,
       replace.na = replace.na,
       force.type = force.type,
       remove.duplicates = remove.duplicates,
+      lang = lang,
       silent = silent,
       log = log
     )

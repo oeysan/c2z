@@ -13,6 +13,9 @@ maintenance simpler.
 
 #### Minor
 
+* Fixed a bug in `CristinSupported` where presentationType were always
+set to English regardless of requested language.
+
 * Added the internal function `ApaTitle` to helpe with producing titles
 in Title Case when the input is all CAPITAL LETTERS.
 

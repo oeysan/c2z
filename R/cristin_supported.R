@@ -12,6 +12,9 @@
 #'   Default: 'book'
 #' @param force.type Force all items to a predefined itemType, Default: NULL
 #' @param remove.duplicates Remove duplicates if TRUE, Default: TRUE
+#' @param lang Two letter
+#'   \href{https://api.cristin.no/v2/doc/index.html#lang}{language code},
+#'   Default: en
 #' @param silent c2z is noisy, tell it to be quiet, Default: FALSE
 #' @param log A list for storing log elements, Default: list()
 #' @return Zotero supported items with unsupported categories as NA
@@ -31,6 +34,7 @@ CristinSupported <- \(data = NULL,
                       replace.na = "book",
                       force.type = NULL,
                       remove.duplicates = TRUE,
+                      lang = "en",
                       silent = FALSE,
                       log = list()) {
 
@@ -116,7 +120,11 @@ CristinSupported <- \(data = NULL,
   }
 
   # Define Cristin category type
-  data$type <- GoFish(data$category$name$en)
+  data$type <- GoFish(data$category$name$lang)
+  if (any(is.na((data$type))) && lang == "nn") {
+    data$type <- GoFish(data$category$name$nb)
+  }
+  if (any(is.na((data$type)))) data$type <- GoFish(data$category$name$en)
 
   # Define Cristin category code
   data$code <-  GoFish(data$category$code)

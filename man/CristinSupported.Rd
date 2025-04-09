@@ -12,6 +12,7 @@ CristinSupported(
   replace.na = "book",
   force.type = NULL,
   remove.duplicates = TRUE,
+  lang = "en",
   silent = FALSE,
   log = list()
 )
@@ -35,6 +36,10 @@ Default: 'book'}
 \item{force.type}{Force all items to a predefined itemType, Default: NULL}
 
 \item{remove.duplicates}{Remove duplicates if TRUE, Default: TRUE}
+
+\item{lang}{Two letter
+\href{https://api.cristin.no/v2/doc/index.html#lang}{language code},
+Default: en}
 
 \item{silent}{c2z is noisy, tell it to be quiet, Default: FALSE}
 

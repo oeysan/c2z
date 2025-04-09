@@ -24,7 +24,7 @@ Cristin(
   project_code = NULL,
   funding_source = NULL,
   funding = NULL,
-  lang = NULL,
+  lang = "en",
   page = 1,
   per_page = 1000,
   max.results = NULL,
@@ -108,7 +108,7 @@ separated by colon (e.g., NFR:1234), Default: NULL}
 
 \item{lang}{Two letter
 \href{https://api.cristin.no/v2/doc/index.html#lang}{language code},
-Default: NULL}
+Default: en}
 
 \item{page}{Page number. See
 \href{https://api.cristin.no/v2/doc/index.html#pagination}{pagination},

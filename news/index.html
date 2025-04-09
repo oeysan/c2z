@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">c2z</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9014</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9015</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,8 @@
 </ul></div>
 <div class="section level5">
 <h5 id="minor-development-version">Minor<a class="anchor" aria-label="anchor" href="#minor-development-version"></a></h5>
-<ul><li><p>Added the internal function <code>ApaTitle</code> to helpe with producing titles in Title Case when the input is all CAPITAL LETTERS.</p></li>
+<ul><li><p>Fixed a bug in <code>CristinSupported</code> where presentationType were always set to English regardless of requested language.</p></li>
+<li><p>Added the internal function <code>ApaTitle</code> to helpe with producing titles in Title Case when the input is all CAPITAL LETTERS.</p></li>
 <li><p>Added the options ot use <code>post.token</code>, Zotero-Write-Token (TRUE) or If-Unmodified-Since-Version (FALSE), in <code>ZoteroPost</code></p></li>
 <li><p>Made <code>zotero.types</code> globally available.</p></li>
 <li><p>Slimmed down <code>ZoteroWrangler</code>, in preperation for adding the new Cris/NVA. Added several functions to aid the process of enhancing metadata using <code>ZoteroEnhancer</code> and <code>ProcessData</code> for parallel processing.</p></li>

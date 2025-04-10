@@ -241,6 +241,19 @@ ZoteroEnhancer <- \(zotero.data,
 
 UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
 
+  # Fix any empty column names.
+  FixEmptyNames <- \(df) {
+    nms <- names(df)
+    if (any(nms == "")) {
+      nms[nms == ""] <- paste0("unnamed_", seq_len(sum(nms == "")))
+      names(df) <- nms
+    }
+    return(df)
+  }
+  x <- FixEmptyNames(x)
+  y <- FixEmptyNames(y)
+
+  # Add columns in y missing from x (and vice versa) with an appropriate NA.
   AddColumns <- \(x, y) {
     missing.cols <- setdiff(names(y), names(x))
     for (col in missing.cols) {
@@ -254,57 +267,53 @@ UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
         NA_character_
       } else if (is.logical(y[[col]])) {
         NA
+      } else if (is.list(y[[col]])) {
+        rep(list(NA), nrow(x))
       } else {
         NA
       }
-      x <- dplyr::mutate(x, !!col := new.val)
+      x <- dplyr::mutate(x, !!rlang::sym(col) := new.val)
     }
     return(x)
   }
 
+  # Create a missing-value vector coercing the type of y.
   CoerceNa <- \(x, y) {
     n <- length(x)
     if (is.factor(y)) {
-      return(factor(rep(NA, n), levels = levels(y)))
+      factor(rep(NA, n), levels = levels(y))
     } else if (is.character(y)) {
-      return(rep(NA_character_, n))
+      rep(NA_character_, n)
     } else if (is.integer(y)) {
-      return(rep(NA_integer_, n))
+      rep(NA_integer_, n)
     } else if (is.numeric(y)) {
-      return(rep(NA_real_, n))
+      rep(NA_real_, n)
     } else if (is.logical(y)) {
-      return(rep(NA, n))
+      rep(NA, n)
     } else if (is.list(y)) {
-      return(vector("list", n))
+      rep(list(NA), n)
     } else {
-      return(rep(NA, n))
+      rep(NA, n)
     }
   }
 
+  # If one data frame is empty, return the other.
   if (!any(nrow(y))) return(x)
   if (!any(nrow(x))) return(y)
 
-  # Compute the union of all column names.
+  # Ensure both data frames share the same set of columns.
   all.columns <- union(names(x), names(y))
-
-  # Ensure both x and y have all columns by adding missing ones.
   x <- AddColumns(x, y)
   y <- AddColumns(y, x)
-
-  # Reorder both data frames to have the same column order.
   x <- dplyr::select(x, dplyr::all_of(all.columns))
   y <- dplyr::select(y, dplyr::all_of(all.columns))
-
-  # Get common columns.
   common.cols <- intersect(names(x), names(y))
 
-  # For each common column (except key), if x's column is entirely NA,
-  # reinitialize it with an NA vector having the same type as y's column.
+  # Coerce columns to compatible types.
   for (col in setdiff(common.cols, key)) {
     if (all(is.na(x[[col]]))) {
       x[[col]] <- CoerceNa(x[[col]], y[[col]])
     } else if (!identical(class(x[[col]]), class(y[[col]]))) {
-      # If there are valid values in x, then convert y's column to x's type.
       if (is.logical(x[[col]])) {
         y[[col]] <- as.logical(y[[col]])
       } else if (is.numeric(x[[col]])) {
@@ -316,42 +325,70 @@ UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
       } else if (is.factor(x[[col]])) {
         y[[col]] <- factor(y[[col]], levels = levels(x[[col]]))
       } else if (is.list(x[[col]])) {
-        y[[col]] <- as.list(y[[col]])
+        y[[col]] <- lapply(y[[col]], \(val) {
+          if (inherits(val, "data.frame") || inherits(val, "tbl_df")) {
+            val
+          } else if (length(val) == 0) {
+            list(NA)
+          } else if (!is.list(val)) {
+            list(val)
+          } else {
+            val
+          }
+        })
       }
     }
   }
 
+  # For each common column, if any cell in x or y is a data.frame/tibble,
+  # normalize all cells in that column to a tibble.
+  for (col in common.cols) {
+    has.df.x <- any(sapply(x[[col]], \(cell) {
+      inherits(cell, "data.frame") || inherits(cell, "tbl_df")
+      }))
+    has.df.y <- any(sapply(y[[col]], \(cell) {
+      inherits(cell, "data.frame") || inherits(cell, "tbl_df")
+      }))
+    if (has.df.x || has.df.y) {
+      NormalizeCell <- \(cell) {
+        if (inherits(cell, "data.frame") || inherits(cell, "tbl_df")) {
+          cell
+        } else {
+          # If cell is atomic or a one-element list with atomic content, wrap it.
+          if (is.atomic(cell)) {
+            tibble::tibble(value = cell)
+          } else if (is.list(cell) && length(cell) == 1 && is.atomic(cell[[1]])) {
+            tibble::tibble(value = cell[[1]])
+          } else {
+            tibble::tibble(value = cell)
+          }
+        }
+      }
+      x[[col]] <- lapply(x[[col]], NormalizeCell)
+      y[[col]] <- lapply(y[[col]], NormalizeCell)
+    }
+  }
+
   if (check.missing) {
-    # Helper to determine if a cell value is "missing":
-    # For list columns, consider it missing if it is empty or if it is a
-    # one-element list whose element is empty or all NA.
+    # Helper to determine if a value is "missing."
     IsMissing <- \(val) {
       if (is.list(val)) {
-        # For list values, consider them missing if:
-        # - The list is empty, or
-        # - It has one element, and that element is either empty or all NA.
-        return(
-          length(val) == 0 ||
-            (length(val) == 1 &&
-               (length(val[[1]]) == 0 || all(is.na(val[[1]])))
-            )
-        )
+        (length(val) == 0) ||
+          (length(val) == 1 && (length(val[[1]]) == 0 || all(is.na(val[[1]]))))
       } else {
-        # For non-list values, simply check if the value is NA.
-        return(is.na(val))
+        is.na(val)
       }
     }
 
-    # Create composite keys for matching.
+    # Create composite keys by pasting key column values.
     CompositeKey <- \(df, keys) {
       do.call(paste, c(df[keys], sep = "___"))
     }
     x.key <- CompositeKey(x, key)
     y.key <- CompositeKey(y, key)
-
     common.keys <- intersect(x.key, y.key)
 
-    # For each matching composite key, update row-by-row.
+    # Update matching rows in x based on nonmissing values from y.
     for (k in common.keys) {
       ix <- which(x.key == k)
       iy <- which(y.key == k)
@@ -359,14 +396,13 @@ UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
         new.val <- y[[col]][iy]
         if (!IsMissing(new.val)) {
           if (is.list(x[[col]])) {
-            # If new.val is a single element, update all matching rows.
             if (length(new.val) == 1) {
               for (j in seq_along(ix)) {
-                x[[col]][[ix[j]]] <- new.val[[1]]
+                x[[col]][[ix[j]]] <- if (length(new.val[[1]]) == 0) list(NA) else new.val[[1]]
               }
             } else {
               for (j in seq_along(ix)) {
-                x[[col]][[ix[j]]] <- new.val[[j]]
+                x[[col]][[ix[j]]] <- if (length(new.val[[j]]) == 0) list(NA) else new.val[[j]]
               }
             }
           } else {
@@ -376,13 +412,31 @@ UpdateInsert <- \(x, y, key = "key", check.missing = FALSE) {
       }
     }
 
+    # Append rows in y that are not present in x.
     new.keys <- setdiff(y.key, x.key)
     if (length(new.keys) > 0) {
       new.rows <- y[which(y.key %in% new.keys), ]
+      # Normalize new rows too.
+      for (col in all.columns) {
+        if (any(sapply(new.rows[[col]], \(cell) inherits(cell, "data.frame") ||
+                       inherits(cell, "tbl_df")))) {
+          new.rows[[col]] <- lapply(new.rows[[col]], \(cell) {
+            if (inherits(cell, "data.frame") || inherits(cell, "tbl_df")) {
+              cell
+            } else if (is.atomic(cell)) {
+              tibble::tibble(value = cell)
+            } else if (is.list(cell) && length(cell) == 1 && is.atomic(cell[[1]])) {
+              tibble::tibble(value = cell[[1]])
+            } else {
+              tibble::tibble(value = cell)
+            }
+          })
+        }
+      }
       x <- dplyr::bind_rows(x, new.rows)
     }
+
   } else {
-    # Standard upsert: update matching rows and insert new rows.
     x <- dplyr::rows_upsert(x, y, by = key)
   }
 
